@@ -7,7 +7,8 @@
 
 import React from 'react';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Home from './components/pages/Home';
+import Game from './components/pages/Game';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 
@@ -17,9 +18,9 @@ function App() {
       <Router>
         <Navbar />
         <Switch>
-          
+          <Route path='/' exact component={Home} />
+          <Route path='/inicio' exact component={Game} />
         </Switch>
-        <Footer />
       </Router>
     </>
   );

@@ -1,0 +1,36 @@
+@import "../styles/_tools.respond_to.sass";
+@import "../styles/_tools.fluid_scale.sass";
+
+.container {
+  display: grid;
+  margin: auto;
+  grid-template-columns: 70% 30%;
+  grid-template-areas:
+    "board chat";
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+}
+
+.board {
+  grid-area: board;
+  margin: auto;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.chat {
+  grid-area: chat;
+  margin: auto;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.img{
+  width: 100%;
+  height: 100%;
+}
