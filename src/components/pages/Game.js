@@ -10,6 +10,7 @@ import { fade,makeStyles } from '@material-ui/core/styles';
 import Application from '../application.module.scss'
 import SelectGame from "../SelectGame"
 import Tapete from "../Board"
+import Customize from "../Customize"
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -57,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Game() {
   //const [background,setBackground] = React.useState("/images/tapete1.jpg");
   const classes = useStyles();
-  const [gamemode,setGamemode] = React.useState(0);
+  const [gamemode,setGamemode] = React.useState(1);
   const screen = SelectGame(setGamemode);
   
   return (
@@ -70,30 +71,71 @@ export default function Game() {
             </h1>
             {screen}
           </div>
-          :
+          : gamemode === 1 ?
           <div className={Application.board}>  
             <h1 className={Application.header}>
               Partida individual online
             </h1>
             <Tapete />
           </div>
+          : gamemode === 2 ?
+          <div className={Application.board}>  
+            <h1 className={Application.header}>
+              Partida por parejas online
+            </h1>
+            <Tapete />
+          </div>
+          : gamemode === 3 ?
+          <div className={Application.board}>  
+            <h1 className={Application.header}>
+              Partida contra la IA
+            </h1>
+            <Tapete />
+          </div>
+          :
+          <div className={Application.board}>  
+            <h1 className={Application.header}>
+              Customizar
+            </h1>
+            <Customize />
+          </div>
         }
       <div className={Application.chat}>
-        <h1 className={Application.header}>
-          Amigos
-        </h1>
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
+        <div className={Application.amigos}>
+          <h1 className={Application.header}>
+            Amigos
+          </h1>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Buscar usuario"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
           </div>
-          <InputBase
-            placeholder="Buscar usuario"
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ 'aria-label': 'search' }}
-          />
+        </div>
+        <div className={Application.torneos}>
+          <h1 className={Application.header}>
+            Torneos
+          </h1>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Buscar torneo"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </div>
         </div>
       </div>
     </div>
