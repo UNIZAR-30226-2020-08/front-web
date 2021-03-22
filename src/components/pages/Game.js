@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Game() {
   //const [background,setBackground] = React.useState("/images/tapete1.jpg");
   const classes = useStyles();
-  const [gamemode,setGamemode] = React.useState(1);
+  const [gamemode,setGamemode] = React.useState(0);
   const screen = SelectGame(setGamemode);
   
   return (
