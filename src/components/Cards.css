@@ -1,0 +1,19 @@
+.fade-img {
+  animation-name: fade-img;
+  animation-duration: 2s;
+}
+
+.cards__item__img {
+  border-radius: 10px;
+  position: absolute;
+  height: 80%;
+  max-width: 80%;
+  object-fit: cover;
+  left: 0;
+  transition: all 0.2s linear;
+}
+
+.cards__item__img:hover {
+  transform: scale(1.1);
+}
+
