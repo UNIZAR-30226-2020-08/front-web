@@ -1,11 +1,13 @@
 import React from 'react';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import AddIcon from "@material-ui/icons/Add";
+import { makeStyles } from '@material-ui/core/styles';
+import Application from "./application.module.scss";
 
 const exampleRooms = [
     {
@@ -27,28 +29,69 @@ const exampleRooms = [
     {
       name: 'Sala 5',
       numusers: '3/4'
+    },
+    {
+      name: 'Sala 6',
+      numusers: '3/4'
+    },
+    {
+      name: 'Sala 7',
+      numusers: '3/4'
+    },
+    {
+      name: 'Sala 8',
+      numusers: '3/4'
+    },
+    {
+      name: 'Sala 9',
+      numusers: '3/4'
+    },
+    {
+      name: 'Sala 10',
+      numusers: '3/4'
+    },
+    {
+      name: 'Sala 11',
+      numusers: '3/4'
     }
   ]
 
-function SelectRoom() {
-    const [room,setRoom] = React.useState("");
-   
-    function AvailableRooms() {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "90%",
+    height: "80vh",
+    borderRadius: "10px",
+    backgroundColor: theme.palette.background.paper,
+    margin: "auto",
+    overflow: "auto"
+  },
+  cont: {
+    width: "100%",
+    height: "100%",
+    margin: "auto",
+    overflow: "hidden"
+  },
+  aux: {
+    overflow: "auto" 
+  }
+}));
+
+function SelectRoom(setRoom,setMatched) {
+    const classes = useStyles();
+
+    function AvailableRooms(setRoom,setMatched) {
         return exampleRooms.map((value) => {
           return(
-            <ListItem button className="listItem">
+            <ListItem className="listItem">
                 <ListItemText
-                primary={value.nombre}
+                primary={value.name}
                 secondary={"Usuarios en la sala: " + value.numusers}
                 />
                 <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="Unirse" onClick= {() => {setRoom(value.name)}}>
-                    { room===value.name ?
-                    <RadioButtonCheckedIcon />
-                    :
-                    <RadioButtonUncheckedIcon />
-                    }
-                </IconButton>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {setRoom(value.name);
+                                                                                            setMatched(true)}}>
+                    Unirse
+                </Button>
                 </ListItemSecondaryAction>
             </ListItem>
           )
@@ -56,19 +99,21 @@ function SelectRoom() {
     }  
 
     return (
+      <div className={Application.selectRoom}>
         <List className={classes.root}>
-            {AvailableRooms(usuario)}
-            <ListItem button className="listItem">
-                <ListItemText
-                primary="Crear una nueva sala"
-                />
-                <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="Añadir sala" onClick={() => {}}>
-                    <AddIcon />
-                </IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
+          <ListItem button className="listItem">
+            <ListItemText
+            primary="Crear una nueva sala"
+            />
+            <ListItemSecondaryAction>
+            <IconButton edge="end" aria-label="Añadir sala" onClick={() => {}}>
+                <AddIcon />
+            </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+          {AvailableRooms(setRoom,setMatched)}
         </List>
+      </div>
     );
 }
 

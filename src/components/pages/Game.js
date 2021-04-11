@@ -9,10 +9,12 @@ import React from 'react';
 import { fade,makeStyles } from '@material-ui/core/styles';
 import Application from '../application.module.scss'
 import SelectGame from "../SelectGame"
+import SelectRoom from "../SelectRoom"
 import Tapete from "../Board"
 import Customize from "../Customize"
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
+import Friends from '../Amigos'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -59,8 +61,12 @@ export default function Game() {
   //const [background,setBackground] = React.useState("/images/tapete1.jpg");
   const classes = useStyles();
   const [gamemode,setGamemode] = React.useState(0);
-  const screen = SelectGame(setGamemode);
-  
+  const [room,setRoom] = React.useState("");
+  const [matched,setMatched] = React.useState(false);
+
+  const selectGame = SelectGame(setGamemode);
+  const selectRoom = SelectRoom(setRoom,setMatched);
+
   return (
     <div className={Application.container}>
         { gamemode === 0 ?
@@ -69,21 +75,21 @@ export default function Game() {
             <h1 className={Application.header}>
               Selecciona un modo de juego
             </h1>
-            {screen}
+            {selectGame}
           </div>
           : gamemode === 1 ?
           <div className={Application.board}>  
             <h1 className={Application.header}>
               Partida individual online
             </h1>
-            <Tapete />
+            {matched ? <Tapete /> : selectRoom}
           </div>
           : gamemode === 2 ?
           <div className={Application.board}>  
             <h1 className={Application.header}>
               Partida por parejas online
             </h1>
-            <Tapete />
+            {matched ? <Tapete /> : selectRoom}
           </div>
           : gamemode === 3 ?
           <div className={Application.board}>  
@@ -118,6 +124,7 @@ export default function Game() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+          <Friends/>
         </div>
         <div className={Application.torneos}>
           <h1 className={Application.header}>

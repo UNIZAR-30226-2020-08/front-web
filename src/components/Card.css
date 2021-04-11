@@ -6,7 +6,7 @@
 .cards__item__img {
   border-radius: 10px;
   position: absolute;
-  height: 80%;
+  max-height: 80%;
   max-width: 80%;
   object-fit: cover;
   left: 0;
