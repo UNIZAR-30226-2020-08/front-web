@@ -7,7 +7,7 @@ function CardItem(props) {
     <>
         <Link className='cards__item__link' >
             <img
-              className='cards__item__img'
+              className={props.alternative ? 'cards__item__img alternative' : 'cards__item__img'}
               alt={props.text}
               src={props.src}
             />

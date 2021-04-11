@@ -60,9 +60,11 @@ export default function Board() {
       />
      </div>
      <div className={Application.mazo1}>
-      <h1 className={Application.header}>
-        Mazo1
-      </h1> 
+     <Card
+        src='images/baraja1/dosbastos.jpg'
+        text='Palo'
+        alternative='1'
+      />
      </div>
      <div className={Application.mazo2}>
       <Card

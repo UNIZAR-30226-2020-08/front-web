@@ -17,3 +17,8 @@
   transform: scale(1.1);
 }
 
+.alternative{
+  margin-left: 2rem;
+  transform: rotate(-90deg);
+}
+
