@@ -15,6 +15,7 @@ import Customize from "../Customize"
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Friends from '../Amigos'
+import Tournaments from '../Torneos';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -143,6 +144,7 @@ export default function Game() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+          <Tournaments/>
         </div>
       </div>
     </div>
