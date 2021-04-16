@@ -18,7 +18,7 @@ export default function Board() {
       <Usuario
         nombre="AARXN17"
         copas={"300"+"🏆"}
-        image="images/userlogo.png"
+        image="images/userlogo1.png"
       />
      </div>
      <div className={Application.carta1}>
@@ -37,7 +37,7 @@ export default function Board() {
       <Usuario
         nombre="ANGELIK"
         copas={"216"+"🏆"}
-        image="images/userlogo.png"
+        image="images/userlogo1.png"
       />
      </div>
      <div className={Application.carta2}>
@@ -50,7 +50,7 @@ export default function Board() {
       <Usuario
         nombre="DIEGGG"
         copas={"251"+"🏆"}
-        image="images/userlogo.png"
+        image="images/userlogo1.png"
       />
      </div>
      <div className={Application.carta3}>
