@@ -18,10 +18,10 @@ import CardContent from "@material-ui/core/CardContent";
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
+import Friends from '../Amigos'
+import Tournaments from '../Torneos'
 
 const handleChange = (event) => {
     const name = event.target.name;
@@ -168,11 +168,21 @@ const useStyles = makeStyles((theme) => ({
                                     id: 'outlined-age-native-simple',
                                 }}
                                 >
-                                <option aria-label="None" value="" />
-                                <option value={10}>Individual</option>
+                                <option value={10}>Individual</option>                                
                                 <option value={20}>Parejas</option>
                                 </Select>
                             </FormControl>
+                            <Grid item xs={12}>
+                              <TextField
+                                  autoComplete="code"
+                                  name="code"
+                                  variant="outlined"
+                                  fullWidth
+                                  id="code"
+                                  label="Código"
+                                  autoFocus
+                              />
+                            </Grid>
                             <Grid item xs={12}>
                               <TextField
                                   variant="outlined"
@@ -193,7 +203,7 @@ const useStyles = makeStyles((theme) => ({
                               color="primary"
                               className={classes.ultimasPartidas}
                           >
-                              Últimas Partidas
+                              Crear
                           </Button>
                           </form>
                       </div>
@@ -201,43 +211,45 @@ const useStyles = makeStyles((theme) => ({
               </Card>
           </Container>
           <div className={Application.chat}>
-            <div className={Application.amigos}>
-              <h1 className={Application.header}>
-                Amigos
-              </h1>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                <InputBase
-                  placeholder="Buscar usuario"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </div>
+        <div className={Application.amigos}>
+          <h1 className={Application.header}>
+            Amigos
+          </h1>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
             </div>
-            <div className={Application.torneos}>
-              <h1 className={Application.header}>
-                Torneos
-              </h1>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                <InputBase
-                  placeholder="Buscar torneo"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </div>
-            </div>
+            <InputBase
+              placeholder="Buscar usuario"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </div>
+          <Friends/>
         </div>
+        <div className={Application.torneos}>
+          <h1 className={Application.header}>
+            Torneos
+          </h1>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Buscar torneo"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </div>
+          <Tournaments/>
+        </div>
+      </div>
       </div>
     );
   }

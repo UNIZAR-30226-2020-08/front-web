@@ -17,6 +17,8 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import Friends from '../Amigos'
+import Tournaments from '../Torneos'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     text: {
       borderColor: 'white',
     },
-    customizar: {
+    cambiarcontra: {
       margin: theme.spacing(3, 0, 2),
       backgroundColor: "white",
       color: "green"
@@ -121,14 +123,13 @@ const useStyles = makeStyles((theme) => ({
                           <form className={classes.form} noValidate>
                             <Grid container spacing={2}>
                               <Grid item xs={12} sm={6}>
-                               <TextField
-                                  autoComplete="fname"
-                                  name="firstName"
-                                  variant="outlined"
-                                  fullWidth
-                                  id="firstName"
-                                  label="Nombre"
-                                  autoFocus
+                              <TextField
+                                variant="outlined"
+                                fullWidth
+                                id="firsttName"
+                                label="Nombre"
+                                name="firstName"
+                                autoComplete="fname"
                               />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -162,15 +163,33 @@ const useStyles = makeStyles((theme) => ({
                                   autoComplete="current-password"
                               />
                             </Grid>
+                            <Grid item xs={12} sm={6}>
+                              <TextField
+                                variant="outlined"
+                                fullWidth
+                                id="copes"
+                                label="Copas"
+                                name="copes"
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                             <TextField
+                                variant="outlined"
+                                fullWidth
+                                id="playedgames"
+                                label="Partidas Jugadas"
+                                name="playedgames"
+                              />
+                            </Grid>
                           </Grid>
                           <Button
                               type="customizar"
                               fullWidth
                               variant="contained"
                               color="primary"
-                              className={classes.customizar}
+                              className={classes.cambiarcontra}
                           >
-                              Customizar
+                              Cambiar Contraseña
                           </Button>
                           <Button
                               type="ultimasPartidas"
@@ -187,43 +206,45 @@ const useStyles = makeStyles((theme) => ({
               </Card>
           </Container>
           <div className={Application.chat}>
-            <div className={Application.amigos}>
-              <h1 className={Application.header}>
-                Amigos
-              </h1>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                <InputBase
-                  placeholder="Buscar usuario"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </div>
+        <div className={Application.amigos}>
+          <h1 className={Application.header}>
+            Amigos
+          </h1>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
             </div>
-            <div className={Application.torneos}>
-              <h1 className={Application.header}>
-                Torneos
-              </h1>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                <InputBase
-                  placeholder="Buscar torneo"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </div>
-            </div>
+            <InputBase
+              placeholder="Buscar usuario"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </div>
+          <Friends/>
         </div>
+        <div className={Application.torneos}>
+          <h1 className={Application.header}>
+            Torneos
+          </h1>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Buscar torneo"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </div>
+          <Tournaments/>
+        </div>
+      </div>
       </div>
     );
   }
