@@ -16,7 +16,8 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Friends from '../Amigos'
 import Tournaments from '../Torneos';
-
+import AuthenticationDataService from "../../services/auth.service";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -61,16 +62,21 @@ const useStyles = makeStyles((theme) => ({
 export default function Game() {
   //const [background,setBackground] = React.useState("/images/tapete1.jpg");
   const classes = useStyles();
+  const history = useHistory();
   const [gamemode,setGamemode] = React.useState(0);
   const [room,setRoom] = React.useState("");
   const [matched,setMatched] = React.useState(false);
 
   const selectGame = SelectGame(setGamemode);
-  const selectRoom = SelectRoom(setRoom,setMatched);
+  const selectRoom = SelectRoom(setRoom,setMatched,gamemode);
+
+  const user = AuthenticationDataService.getCurrentUser();
 
   return (
     <div className={Application.container}>
-        { gamemode === 0 ?
+        { ! user ?
+          history.push("/")
+        : gamemode === 0 ?
           <div className={Application.board}>
             <img src="images/LOGO2.png" alt="logo las10ultimas" className={Application.icon}/>
             <h1 className={Application.header}>

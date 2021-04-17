@@ -181,10 +181,10 @@ export default function SignIn() {
                           error={errorPasswd || failAuth} 
                           helperText={errorPasswd ? 'La contraseña no puede ser vacía' : failAuth ? 'Correo o contraseña incorrectos' : ' ' }
                       />
-                      <FormControlLabel
+                      {/*<FormControlLabel
                           control={<Checkbox value="recuerdame" color="green" />}
                           label="Recuérdame"
-                      />
+                      />*/}
                       <Button
                           fullWidth
                           variant="contained"

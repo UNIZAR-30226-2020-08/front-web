@@ -1,182 +1,91 @@
-/*Proyecto:     Las10últimas
-//Fecha:        marzo-2021
-//Autor:        WBDevelopment
-//Módulo:       Front-end del sistema Las10últimas
-//Fichero:      Navbar.js
-//Descripción:  Componente Navbar usado a lo largo del front-end de las10últimas como barra de navegación*/
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-//import MailIcon from '@material-ui/icons/Mail';
-//import NotificationsIcon from '@material-ui/icons/Notifications';
-//import Badge from '@material-ui/core/Badge';
+import React, { useState, useEffect } from 'react';
+import { Button } from './Button';
+import { Link } from 'react-router-dom';
+import './Navbar.css';
+import AuthenticationDataService from "../services/auth.service";
 
-const useStyles = makeStyles((theme) => ({
-  grow: {
-    flexGrow: 1,
-    color: 'transparent'
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  appBar: {
-    backgroundColor:"Green"
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
-}));
+function Navbar() {
+  const [click, setClick] = useState(false);
+  const [button, setButton] = useState(true);
 
-export default function PrimarySearchAppBar() {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const handleClick = () => setClick(!click);
+  const closeMobileMenu = () => setClick(false);
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const showButton = () => {
+    if (window.innerWidth <= 960) {
+      setButton(false);
+    } else {
+      setButton(true);
+    }
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+  useEffect(() => {
+    showButton();
+  }, []);
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
+  window.addEventListener('resize', showButton);
 
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+  const user = AuthenticationDataService.getCurrentUser();
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Mi cuenta</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      {/*<MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Mensajes</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notificaciones</p>
-      </MenuItem>*/}
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Perfil</p>
-      </MenuItem>
-    </Menu>
-  );
+  const handleLogOut = () => {
+    AuthenticationDataService.logout();
+  }
 
   return (
-    <div className={classes.grow}>
-      <AppBar className={classes.appBar} position="static">
-        <Toolbar>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Las10últimas
-          </Typography>
+    <>
+      <nav className='navbar'>
+        <div className='navbar-container'>
+          <Link to='/' className="navbar-logo" onClick={closeMobileMenu}>
+          Las10últimas
+          </Link>
+          { user ?
+          <div className='menu-icon' onClick={handleClick}>
+            <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
+          </div>
+          :
+          <div>
+          </div>
+          }
+          { user ?
+           <ul className={click ? 'nav-menu active' : 'nav-menu'}> 
+           <li className='nav-item'>
+              <Link
+                to='/profile'
+                className='nav-links'
+                onClick={closeMobileMenu}
+              >
+                {user.data.username + "🏆" + user.data.copas}
+              </Link>
+            </li>
+            <li>
+            <Link
+            to='/'
+            className='nav-links-mobile'
+            onClick={handleLogOut}
+            >
+              Cerrar Sesión
+            </Link>
+            </li>
+            </ul>
+            :
+            <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+            <li>
+            </li>
+            </ul>
+          }
           
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            {/*<IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>*/}
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+          { user ?
+          <div>
+          {button && <Button buttonStyle='btn--outline' path='/' onClick={handleLogOut}>Cerrar Sesión</Button>}
           </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
+          :
+          <div>
           </div>
-        </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </div>
+          }
+        </div>
+      </nav>
+    </>
   );
 }
+
+export default Navbar;

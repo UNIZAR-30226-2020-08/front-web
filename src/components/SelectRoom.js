@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from '@material-ui/core/styles';
 import Application from "./application.module.scss";
+import PartidaService from "../services/partida.service"
 
 const exampleRooms = [
     {
@@ -76,10 +77,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function SelectRoom(setRoom,setMatched) {
+function SelectRoom(setRoom,setMatched,gamemode) {
     const classes = useStyles();
+    const [loaded,setLoaded] = React.useState(false);
 
     function AvailableRooms(setRoom,setMatched) {
+        if (!loaded){
+          
+        }
         return exampleRooms.map((value) => {
           return(
             <ListItem className="listItem">
