@@ -8,7 +8,7 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from '@material-ui/core/styles';
 import Application from "./application.module.scss";
-import PartidaService from "../services/partida.service"
+import partidaService from '../services/partida.service';
 
 const exampleRooms = [
     {
@@ -80,16 +80,28 @@ const useStyles = makeStyles((theme) => ({
 function SelectRoom(setRoom,setMatched,gamemode) {
     const classes = useStyles();
     const [loaded,setLoaded] = React.useState(false);
+    const [loading,setLoading] = React.useState(false);
+    const [fail,setFail] = React.useState(false);
+    const [rooms,setRooms] = React.useState([]);
 
     function AvailableRooms(setRoom,setMatched) {
-        if (!loaded){
-          
+        if (!loaded && gamemode>0){
+            setLoaded(true);
+            partidaService.getAll(gamemode-1).then(response => {
+                setRooms(response);
+                setLoading(false);
+            })
+            .catch(e => {
+              console.log(e);
+              setLoading(false);
+              setFail(true);
+            });
         }
-        return exampleRooms.map((value) => {
+        return rooms.map((value) => {
           return(
             <ListItem className="listItem">
                 <ListItemText
-                primary={value.name}
+                primary={value.nombre}
                 secondary={"Usuarios en la sala: " + value.numusers}
                 />
                 <ListItemSecondaryAction>

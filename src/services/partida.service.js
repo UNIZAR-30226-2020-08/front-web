@@ -4,9 +4,7 @@ import http from '../http-common';
 class PartidaService {
   getAll(tipo) {
     return axios
-      .post(http.URL_PARTIDA_GETALL, {
-        tipo,
-      })
+      .get(http.URL_PARTIDA_GETALL + tipo)
       .then(response => {
         return response.data;
       });

@@ -112,7 +112,6 @@ export default function ButtonBases(setGamemode) {
             width: image.width,
           }}
           onClick={()=>{
-            console.log(image.mode_id);
             setGamemode(image.mode_id);
           }}
         >
