@@ -21,9 +21,7 @@ class AuthenticationDataService {
     return axios.post(http.URL_AUTH_SIGNUP, {username, email, password},{ headers: AuthHeaderService.authHeader() }); 
   }
 
-  updateUser(username,email,passwd) {
-    return axios.post(http.URL_AUTH_UPDATEUSER, {username, email,passwd},{ headers: AuthHeaderService.authHeader() }); 
-  }
+  
 
   logout() {
     localStorage.removeItem("user");

@@ -8,7 +8,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import { fade,makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -22,11 +21,22 @@ import Tournaments from '../Torneos'
 import { Link } from 'react-router-dom';
 import AuthenticationDataService from "../../services/auth.service";
 import { useHistory } from "react-router-dom";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import EmailIcon from '@material-ui/icons/Email';
+import LocalBarIcon from '@material-ui/icons/LocalBar';
+import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 
 import CardMedia from '@material-ui/core/CardMedia';
 
@@ -67,13 +77,15 @@ const useStyles = makeStyles((theme) => ({
     },
     cambiarperfil: {
       margin: theme.spacing(3, 0, 2),
-      backgroundColor: "white",
-      color: "green"
+      backgroundColor: "green",
+      color: "white",
+      borderRadius: 8,
     },
     ultimasPartidas: {
       margin: theme.spacing(3, 0, 2),
-      backgroundColor: "white",
-      color: "green"
+      backgroundColor: "green",
+      color: "white",
+      borderRadius: 8,
     },
     search: {
       position: 'relative',
@@ -117,6 +129,26 @@ const useStyles = makeStyles((theme) => ({
     },
     media1: {
       maxWidth: 345,
+      
+    },
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paper1: {
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+    mostrartexto: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: "green",
+      border: 1,
+      borderColor: "white",
+      borderRadius: 16
     },
     media2: {
       height: 140,
@@ -128,6 +160,22 @@ const useStyles = makeStyles((theme) => ({
     const history = useHistory();
 
     const user = AuthenticationDataService.getCurrentUser();
+
+    const [open1,setOpen1] = React.useState(false);
+    const [open2,setOpen2] = React.useState(false);
+
+    const handleOpen1 = () => {
+      setOpen1(true);
+    };
+    const handleOpen2 = () => {
+      setOpen2(true);
+    };
+  
+    const handleClose = () => {
+      setOpen1(false);
+      setOpen2(false);
+    };
+
   
     return (
       <div className={Application.container}>
@@ -147,69 +195,50 @@ const useStyles = makeStyles((theme) => ({
                         <div className={classes.paper}>
                           <form className={classes.form} noValidate>
                             <Grid container spacing={2}>
-                              <Grid item xs={12} sm={6}>
-                                <TextField
-                                  variant="outlined"
-                                  fullWidth
-                                  id="firsttName"
-                                  label="Nombre"
-                                  name="firstName"
-                                  autoComplete="fname"
-                                />
-                              </Grid>
-                              <Grid item xs={12} sm={6}>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth
-                                    id="lastName"
-                                    label="Apellidos"
-                                    name="lastName"
-                                    autoComplete="lname"
-                                  />
+                              <Grid item xs={12}>
+                              <List component="nav" className={classes.mostrartexto} aria-label="Nombre de Usuario">
+                                <ListItem>
+                                  <ListItemIcon>
+                                  <AccountCircleIcon></AccountCircleIcon>
+                                  </ListItemIcon>
+                                  <ListItemText  primary={user.data.Username}/>
+                                </ListItem>
+                              </List>
                               </Grid>
                             <Grid item xs={12}>
-                              <TextField
-                                  variant="outlined"
-                                  fullWidth
-                                  id="email"
-                                  label="Email"
-                                  name="email"
-                                  autoComplete="email"
-                              />
-                            </Grid>
-                            <Grid item xs={12}>
-                              <TextField
-                                  variant="outlined"
-                                  fullWidth
-                                  name="password"
-                                  label="Contraseña"
-                                  type="password"
-                                  id="password"
-                                  autoComplete="current-password"
-                              />
+                            <List component="nav" className={classes.mostrartexto} aria-label="Email">
+                                <ListItem>
+                                  <ListItemIcon>
+                                  <EmailIcon></EmailIcon>
+                                  </ListItemIcon>
+                                  <ListItemText primary="angel@gmail.com"/>
+                                </ListItem>
+                              </List>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                              <TextField
-                                variant="outlined"
-                                fullWidth
-                                id="copes"
-                                label="Copas"
-                                name="copes"
-                              />
+                          <List component="nav" className={classes.mostrartexto} aria-label="Copas">
+                                <ListItem >
+                                  <ListItemIcon>
+                                    <LocalBarIcon></LocalBarIcon>
+                                  </ListItemIcon>
+                                  <ListItemText primary="2000"/>
+                                </ListItem>
+                              </List>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                             <TextField
-                                variant="outlined"
-                                fullWidth
-                                id="playedgames"
-                                label="Partidas Jugadas"
-                                name="playedgames"
-                              />
+                            <List component="nav" className={classes.mostrartexto} aria-label="Partidas Jugadas">
+                                <ListItem >
+                                  <ListItemIcon>
+                                    <SportsEsportsIcon></SportsEsportsIcon>
+                                  </ListItemIcon>
+                                  <ListItemText primary="250"/>
+                                </ListItem>
+                              </List>
                             </Grid>
                           </Grid>
-                          <Grid container spacing={3}>
+                          <Grid container spacing={2}>
                           <Grid item xs={12} sm={6}>
-                          <Card className={classes.media1}>
+                          <Card button onClick={handleOpen1} className={classes.media1}>
                                 <CardActionArea>
                                   <CardMedia
                                     className={classes.media2}
@@ -222,15 +251,11 @@ const useStyles = makeStyles((theme) => ({
                                     </Typography>
                                   
                                   </CardContent>
-                                </CardActionArea>
-                                  <Button size="small" color="primary">
-                                    Cambiar
-                                  </Button>
-
+                                </CardActionArea>                                
                               </Card>                            
                               </Grid>
                               <Grid item xs={12} sm={6}>                             
-                              <Card className={classes.media1}>
+                              <Card button onClick={handleOpen2} className={classes.media1}>
                                 <CardActionArea>
                                   <CardMedia
                                     className={classes.media2}
@@ -243,12 +268,7 @@ const useStyles = makeStyles((theme) => ({
                                     </Typography>
                                   
                                   </CardContent>
-                                </CardActionArea>
-                               
-                                  <Button size="small" color="primary">
-                                    Cambiar
-                                  </Button>
-                        
+                                </CardActionArea>                                                
                               </Card>
                               </Grid>
                               </Grid>
@@ -260,7 +280,7 @@ const useStyles = makeStyles((theme) => ({
                               color="primary"
                               className={classes.cambiarperfil}
                           >
-                              Cambiar Perfil
+                              Editar Perfil
                           </Button>
                           </Link>
                           <Button
@@ -317,6 +337,116 @@ const useStyles = makeStyles((theme) => ({
           </div>
           <Tournaments/>
         </div>
+        <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open1}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open1}>
+          <div className={classes.paper1}>
+            <h2 id="transition-modal-title">Tapetes disponibles</h2>          
+            <div id="transition-modal-description">
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+              <Card button className={classes.media1}>
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media2}
+                        image="images/tapete1.jpg"
+                        title="tapete1"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Tapete 1
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>                              
+                  </Card>                            
+                  </Grid>
+                  <Grid item xs={12} sm={6}>                             
+                  <Card button className={classes.media1}>
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media2}
+                        image="images/tapete2.jpg"
+                        title="tapete2"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Tapete 2
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                    </Card>
+                  </Grid>
+                  </Grid>
+            </div>
+          </div>
+        </Fade>
+      </Modal>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open2}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open2}>
+          <div className={classes.paper1}>
+            <h2 id="transition-modal-title">Cartas disponibles</h2>          
+            <div id="transition-modal-description">
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+              <Card button className={classes.media1}>
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media2}
+                        image="images/baraja1/ascopas.jpg"
+                        title="ascopas"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Cartas 1
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>                                
+                  </Card>                            
+                  </Grid>
+                  <Grid item xs={12} sm={6}>                             
+                  <Card button className={classes.media1}>
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media2}
+                        image="images/baraja1/asoros.jpg"
+                        title="asoros"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Cartas 2
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                      
+                    </Card>
+                  </Grid>
+                  </Grid>
+            </div>
+          </div>
+        </Fade>
+      </Modal>
       </div>
       </div>
     );
