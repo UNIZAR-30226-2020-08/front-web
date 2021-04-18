@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Application from "./application.module.scss";
 import partidaService from '../services/partida.service';
 
-const exampleRooms = [
+/*const exampleRooms = [
     {
       name: 'Sala 1',
       numusers: '4/4'
@@ -55,7 +55,7 @@ const exampleRooms = [
       name: 'Sala 11',
       numusers: '3/4'
     }
-  ]
+  ]*/
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,8 +80,8 @@ const useStyles = makeStyles((theme) => ({
 function SelectRoom(setRoom,setMatched,gamemode) {
     const classes = useStyles();
     const [loaded,setLoaded] = React.useState(false);
-    const [loading,setLoading] = React.useState(false);
-    const [fail,setFail] = React.useState(false);
+    //const [loading,setLoading] = React.useState(false);
+    //const [fail,setFail] = React.useState(false);
     const [rooms,setRooms] = React.useState([]);
 
     function AvailableRooms(setRoom,setMatched) {
@@ -89,17 +89,17 @@ function SelectRoom(setRoom,setMatched,gamemode) {
             setLoaded(true);
             partidaService.getAll(gamemode-1).then(response => {
                 setRooms(response);
-                setLoading(false);
+                //setLoading(false);
             })
             .catch(e => {
               console.log(e);
-              setLoading(false);
-              setFail(true);
+              //setLoading(false);
+              //setFail(true);
             });
         }
         return rooms.map((value) => {
           return(
-            <ListItem className="listItem">
+            <ListItem className="listItem" key={value.nombre}>
                 <ListItemText
                 primary={value.nombre}
                 secondary={"Usuarios en la sala: " + value.numusers}

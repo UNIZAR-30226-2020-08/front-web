@@ -81,7 +81,7 @@ function Friends() {
     function AvailableRooms() {
         return exampleFriends.map((value) => {
           return(
-            <ListItem className="listItem">
+            <ListItem key={value.name} className="listItem">
                 <ListItemText
                 primary={value.name}
                 secondary={value.copas+"🏆"}

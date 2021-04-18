@@ -26,7 +26,7 @@ import { useHistory } from "react-router-dom";
 import AuthenticationDataService from "../../services/auth.service";
 
 const handleChange = (event) => {
-    const name = event.target.name;
+    //const name = event.target.name;
     /*setState({
         ...state,
         [name]: event.target.value,

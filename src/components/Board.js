@@ -17,13 +17,13 @@ export default function Board() {
      <div className={Application.usuario1}>
       <Usuario
         nombre="AARXN17"
-        copas={"300"+"🏆"}
+        copas={"300 🏆"}
         image="images/userlogo1.png"
       />
      </div>
      <div className={Application.carta1}>
       <Card
-        src='images/baraja1/asoros.jpg'
+        src='images/baraja1/NO.jpg'
         text='As de Oros'
       />
      </div>
@@ -36,26 +36,26 @@ export default function Board() {
      <div className={Application.usuario2}>
       <Usuario
         nombre="ANGELIK"
-        copas={"216"+"🏆"}
+        copas={"216 🏆"}
         image="images/userlogo1.png"
       />
      </div>
      <div className={Application.carta2}>
       <Card
-        src='images/baraja1/seisoros.jpg'
+        src='images/baraja1/NO.jpg'
         text='Seis de Oros'
       />
      </div>
      <div className={Application.usuario3}>
       <Usuario
         nombre="DIEGGG"
-        copas={"251"+"🏆"}
+        copas={"251 🏆"}
         image="images/userlogo1.png"
       />
      </div>
      <div className={Application.carta3}>
       <Card
-        src='images/baraja1/cuatrooros.jpg'
+        src='images/baraja1/NO.jpg'
         text='Cuatro de Oros'
       />
      </div>
@@ -75,12 +75,13 @@ export default function Board() {
      <div className={Application.controles2}>
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton}>CANTAR</Button>
-        <Button variant="contained" className={Application.actionButton}>CAMBIAR 7</Button>
+        <Button variant="contained" className={Application.actionButton}>CAMBIAR</Button>
+        <Button variant="contained" className={Application.actionButton}>ROBAR</Button>
       </h1>
      </div>
      <div className={Application.carta00}>
       <Card
-        src='images/baraja1/asbastos.jpg'
+        src='images/baraja1/NO.jpg'
         text='As de Bastos'
       />
      </div>
