@@ -7,7 +7,7 @@ import './Chat.css';
 
 const Chat = (name,socket) => {
   const room = "Chat"
-  const [users, setUsers] = useState('');
+
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   
@@ -16,9 +16,6 @@ const Chat = (name,socket) => {
       setMessages(messages => [ ...messages, message ]);
     });
     
-    socket.on("roomData", ({ users }) => {
-      setUsers(users);
-    });
 }, []);
 
   const sendMessage = (event) => {

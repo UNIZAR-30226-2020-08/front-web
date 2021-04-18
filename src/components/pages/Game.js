@@ -77,6 +77,7 @@ export default function Game() {
   const username = user ? user.data.username : "anonimus"
   const selectRoom = SelectRoom(setRoom,setMatched,gamemode,socket,username);
   const chat=Chat(username,socket);
+  const tapete=Tapete(socket);
 
   return (
     <div className={Application.container}>
@@ -95,21 +96,21 @@ export default function Game() {
             <h1 className={Application.header}>
               Partida individual online
             </h1>
-            {matched ? <Tapete /> : selectRoom}
+            {matched ? tapete : selectRoom}
           </div>
           : gamemode === 2 ?
           <div className={Application.board}>  
             <h1 className={Application.header}>
               Partida por parejas online
             </h1>
-            {matched ? <Tapete /> : selectRoom}
+            {matched ? tapete : selectRoom}
           </div>
           : gamemode === 3 ?
           <div className={Application.board}>  
             <h1 className={Application.header}>
               Partida contra la IA
             </h1>
-            <Tapete />
+            
           </div>
           :
           <div className={Application.board}>  

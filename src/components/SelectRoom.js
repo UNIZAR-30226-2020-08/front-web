@@ -88,8 +88,6 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
       setRoom(value.nombre);
       setMatched(true);
       let rm = value.nombre;
-      console.log(rm);
-      console.log(username);
       socket.emit('join', { name:username, room:rm }, (error) => {
         if(error) {
           alert(error);
@@ -103,6 +101,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
             partidaService.getAll(gamemode-1).then(response => {
                 setRooms(response);
                 //setLoading(false);
+                console.log(response);
             })
             .catch(e => {
               console.log(e);
