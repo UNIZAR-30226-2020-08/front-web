@@ -23,7 +23,7 @@ export default function Board() {
      </div>
      <div className={Application.carta1}>
       <Card
-        src='images/baraja1/NO.jpg'
+        src='images/baraja1/NO.png'
         text='As de Oros'
       />
      </div>
@@ -42,7 +42,7 @@ export default function Board() {
      </div>
      <div className={Application.carta2}>
       <Card
-        src='images/baraja1/NO.jpg'
+        src='images/baraja1/NO.png'
         text='Seis de Oros'
       />
      </div>
@@ -55,7 +55,7 @@ export default function Board() {
      </div>
      <div className={Application.carta3}>
       <Card
-        src='images/baraja1/NO.jpg'
+        src='images/baraja1/NO.png'
         text='Cuatro de Oros'
       />
      </div>
@@ -81,7 +81,7 @@ export default function Board() {
      </div>
      <div className={Application.carta00}>
       <Card
-        src='images/baraja1/NO.jpg'
+        src='images/baraja1/NO.png'
         text='As de Bastos'
       />
      </div>
