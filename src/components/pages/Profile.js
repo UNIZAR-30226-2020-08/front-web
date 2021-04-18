@@ -131,8 +131,8 @@ const useStyles = makeStyles((theme) => ({
   
     return (
       <div className={Application.container}>
-        { user ?
-          history.push("/profile")
+        {! user ?
+          history.push("/")
           :
           <Container component="main" maxWidth="xs" className={classes.container}>
           <div className={classes.top}>
