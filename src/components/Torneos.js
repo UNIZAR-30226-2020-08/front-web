@@ -71,7 +71,7 @@ function Tournaments() {
     function AvailableTournaments() {
         return exampleTournaments.map((value) => {
           return(
-            <ListItem className="listItem">
+            <ListItem key={value.name} className="listItem">
                 <ListItemText
                 primary={value.name}
                 secondary={value.participants+" participantes"}

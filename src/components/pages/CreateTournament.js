@@ -24,7 +24,7 @@ import Friends from '../Amigos'
 import Tournaments from '../Torneos'
 
 const handleChange = (event) => {
-    const name = event.target.name;
+    //const name = event.target.name;
     /*setState({
         ...state,
         [name]: event.target.value,
@@ -129,7 +129,9 @@ const useStyles = makeStyles((theme) => ({
         age: '',
         name: 'hai',
       });
-  
+
+    setState('','hai');
+
     return (
       <div className={Application.container}>
           <Container component="main" maxWidth="xs" className={classes.container}>

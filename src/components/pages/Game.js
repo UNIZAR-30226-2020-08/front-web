@@ -18,6 +18,7 @@ import Friends from '../Amigos'
 import Tournaments from '../Torneos';
 import AuthenticationDataService from "../../services/auth.service";
 import { useHistory } from "react-router-dom";
+import Chat from '../Chat/Chat';
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -66,11 +67,11 @@ export default function Game() {
   const [gamemode,setGamemode] = React.useState(0);
   const [room,setRoom] = React.useState("");
   const [matched,setMatched] = React.useState(false);
-
   const selectGame = SelectGame(setGamemode);
   const selectRoom = SelectRoom(setRoom,setMatched,gamemode);
-
   const user = AuthenticationDataService.getCurrentUser();
+  //const myContext = useContext(AppContext);
+  const chat=Chat(user ? user.data.username : "anonimos",room);
 
   return (
     <div className={Application.container}>
@@ -113,6 +114,7 @@ export default function Game() {
             <Customize />
           </div>
         }
+      {! matched ?
       <div className={Application.chat}>
         <div className={Application.amigos}>
           <h1 className={Application.header}>
@@ -153,6 +155,11 @@ export default function Game() {
           <Tournaments/>
         </div>
       </div>
+      :
+      <div className={Application.chat}>
+        {chat}
+      </div>
+      }
     </div>
   );
 }

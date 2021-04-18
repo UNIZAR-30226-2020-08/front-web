@@ -17,7 +17,6 @@ import './App.css';
 
 function App() {
   return (
-    <>
       <Router>
         <Navbar />
         <Switch>
@@ -28,7 +27,6 @@ function App() {
           <Route path='/createtournament' exact component={CreateTournament} />
         </Switch>
       </Router>
-    </>
   );
 }
 
