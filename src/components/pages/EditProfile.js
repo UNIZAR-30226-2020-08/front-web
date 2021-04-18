@@ -174,12 +174,38 @@ const useStyles = makeStyles((theme) => ({
       }
     }
 
-    const handleUpdate = () => {
+
+    const handleUpdate2 = () => {
       var noErrors = true;
       if(!emailRegEx.test(mail)){
         setErrorMail(true);
         noErrors= false;
       }
+      if (noErrors){
+        setLoading(true);
+        var data = {
+          username: user.data.username,
+          email: mail,
+        };
+        AuthenticationDataService.updateEmail(data.username,data.email)
+          .then(response => {
+            if(response.data.username === username){
+              history.push("/");
+            }else{
+              setLoading(false);
+              setFailAuth(true);
+            }
+          })
+          .catch(e => {
+            console.log(e);
+            setLoading(false);
+            setFailAuth(true);
+          });
+      }
+    }
+
+    const handleUpdate3 = () => {
+      var noErrors = true;
       if(passwd === ""){
         setErrorPasswd(true);
         noErrors = false;
@@ -187,11 +213,10 @@ const useStyles = makeStyles((theme) => ({
       if (noErrors){
         setLoading(true);
         var data = {
-          username: username,
-          email: mail,
+          username: user.data.username,
           passwd: passwd
         };
-        AuthenticationDataService.updateUser(data.username,data.email,data.passwd)
+        AuthenticationDataService.updatePassword(data.username,data.passwd)
           .then(response => {
             if(response.data.username === username){
               history.push("/");
@@ -225,21 +250,7 @@ const useStyles = makeStyles((theme) => ({
                       <img src="images/LOGO.png" alt="logo las10ultimas" className={Application.icon}/>                                           
                         <div className={classes.paper}>
                           <form className={classes.form} noValidate>
-                            <Grid container spacing={2}>
-                              <Grid item xs={12}>
-                              <TextField
-                                variant="outlined"
-                                fullWidth
-                                id="username"
-                                label="Nombre de Usuario"
-                                name="username"
-                                autoComplete="username"
-                                onChange={onChangeUsername}
-                                value={username}
-                                error={errorUsername || failAuth} 
-                                helperText={errorUsername ? 'Introduce tu nuevo nombre de usuario' : failAuth ? 'Usuario incorrecto' : ' ' }
-                              />
-                            </Grid>                           
+                            <Grid container spacing={2}>                          
                             <Grid item xs={12}>
                               <TextField
                                   variant="outlined"
@@ -254,6 +265,16 @@ const useStyles = makeStyles((theme) => ({
                                   helperText={errorMail ? 'Introduce tu nuevo correo electronico' : failAuth ? 'No se pudo actualizar este usuario' : ' ' }
                               />
                             </Grid>
+                            <Button
+                              type="customizar"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={handleUpdate2}
+                              className={classes.submit}
+                          >
+                              Cambiar email 
+                          </Button>  
                             <Grid item xs={12}>
                               <TextField
                                   variant="outlined"
@@ -291,10 +312,10 @@ const useStyles = makeStyles((theme) => ({
                               fullWidth
                               variant="contained"
                               color="primary"
-                              onClick={handleUpdate}
+                              onClick={handleUpdate3}
                               className={classes.submit}
                           >
-                              Cambiar Perfil
+                              Cambiar Contraseña
                           </Button>                        
                           </form>
                       </div>

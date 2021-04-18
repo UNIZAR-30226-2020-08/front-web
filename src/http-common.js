@@ -7,6 +7,7 @@ module.exports = {
   AUTH_SECRET: "C0ntra5enya-s3creta-t0ken",
   URL_AUTH_SIGNIN: BASE_URL + "auth/signin/",
   URL_AUTH_SIGNUP: BASE_URL + "auth/signup/",
-  URL_AUTH_UPDATEUSER: BASE_URL + "usuario/updateUser",
+  URL_USER_UPDATEMAIL: BASE_URL + "usuario/updateMail/",
+  URL_USER_UPDATEPASSWORD: BASE_URL + "usuario/updatePassword/",
   URL_PARTIDA_GETALL: BASE_URL + "partida/findAllGames/",
 };
