@@ -24,9 +24,11 @@ import AuthenticationDataService from "../../services/auth.service";
 import { useHistory } from "react-router-dom";
 
 
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 
 import CardMedia from '@material-ui/core/CardMedia';
 
@@ -118,6 +120,17 @@ const useStyles = makeStyles((theme) => ({
     media1: {
       maxWidth: 345,
     },
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paper1: {
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
     media2: {
       height: 140,
     }
@@ -128,6 +141,22 @@ const useStyles = makeStyles((theme) => ({
     const history = useHistory();
 
     const user = AuthenticationDataService.getCurrentUser();
+
+    const [open1,setOpen1] = React.useState(false);
+    const [open2,setOpen2] = React.useState(false);
+
+    const handleOpen1 = () => {
+      setOpen1(true);
+    };
+    const handleOpen2 = () => {
+      setOpen2(true);
+    };
+  
+    const handleClose = () => {
+      setOpen1(false);
+      setOpen2(false);
+    };
+
   
     return (
       <div className={Application.container}>
@@ -207,7 +236,7 @@ const useStyles = makeStyles((theme) => ({
                               />
                             </Grid>
                           </Grid>
-                          <Grid container spacing={3}>
+                          <Grid container spacing={2}>
                           <Grid item xs={12} sm={6}>
                           <Card className={classes.media1}>
                                 <CardActionArea>
@@ -223,10 +252,9 @@ const useStyles = makeStyles((theme) => ({
                                   
                                   </CardContent>
                                 </CardActionArea>
-                                  <Button size="small" color="primary">
+                                  <Button size="small" color="primary" onClick={handleOpen1}>
                                     Cambiar
-                                  </Button>
-
+                                  </Button>                                 
                               </Card>                            
                               </Grid>
                               <Grid item xs={12} sm={6}>                             
@@ -243,12 +271,10 @@ const useStyles = makeStyles((theme) => ({
                                     </Typography>
                                   
                                   </CardContent>
-                                </CardActionArea>
-                               
-                                  <Button size="small" color="primary">
+                                </CardActionArea>                           
+                                  <Button size="small" color="primary"  onClick={handleOpen2}>
                                     Cambiar
-                                  </Button>
-                        
+                                  </Button>                      
                               </Card>
                               </Grid>
                               </Grid>
@@ -317,6 +343,127 @@ const useStyles = makeStyles((theme) => ({
           </div>
           <Tournaments/>
         </div>
+        <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open1}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open1}>
+          <div className={classes.paper1}>
+            <h2 id="transition-modal-title">Tapetes disponibles</h2>          
+            <div id="transition-modal-description">
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+              <Card className={classes.media1}>
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media2}
+                        image="images/tapete1.jpg"
+                        title="tapete1"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Tapete 1
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                      <Button size="small" color="primary">
+                        Usar
+                      </Button>                                 
+                  </Card>                            
+                  </Grid>
+                  <Grid item xs={12} sm={6}>                             
+                  <Card className={classes.media1}>
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media2}
+                        image="images/tapete2.jpg"
+                        title="tapete2"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Tapete 2
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                      <Button size="small" color="primary">
+                        Usar
+                      </Button>
+                    </Card>
+                  </Grid>
+                  </Grid>
+            </div>
+          </div>
+        </Fade>
+      </Modal>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open2}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open2}>
+          <div className={classes.paper1}>
+            <h2 id="transition-modal-title">Cartas disponibles</h2>          
+            <div id="transition-modal-description">
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+              <Card className={classes.media1}>
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media2}
+                        image="images/baraja1/ascopas.jpg"
+                        title="ascopas"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Tapete 1
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                      <Button size="small" color="primary">
+                        Usar
+                      </Button>                                 
+                  </Card>                            
+                  </Grid>
+                  <Grid item xs={12} sm={6}>                             
+                  <Card className={classes.media1}>
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media2}
+                        image="images/baraja1/asoros.jpg"
+                        title="asoros"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Tapete 2
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                      <Button size="small" color="primary">
+                        Usar
+                      </Button>
+                    </Card>
+                  </Grid>
+                  </Grid>
+            </div>
+          </div>
+        </Fade>
+      </Modal>
       </div>
       </div>
     );
