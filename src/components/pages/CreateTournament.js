@@ -22,6 +22,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Friends from '../Amigos'
 import Tournaments from '../Torneos'
+import { useHistory } from "react-router-dom";
+import AuthenticationDataService from "../../services/auth.service";
 
 const handleChange = (event) => {
     const name = event.target.name;
@@ -125,13 +127,18 @@ const useStyles = makeStyles((theme) => ({
 
   export default function CreateTournament() {
     const classes = useStyles();
+    const history = useHistory();
     const [state, setState] = React.useState({
         age: '',
         name: 'hai',
       });
+      const user = AuthenticationDataService.getCurrentUser();
   
     return (
       <div className={Application.container}>
+        {! user ?
+          history.push("/")
+          :
           <Container component="main" maxWidth="xs" className={classes.container}>
           <div className={classes.top}>
             <h1 className={Application.header}>
@@ -210,6 +217,7 @@ const useStyles = makeStyles((theme) => ({
                   </CardContent>
               </Card>
           </Container>
+        }
           <div className={Application.chat}>
         <div className={Application.amigos}>
           <h1 className={Application.header}>
