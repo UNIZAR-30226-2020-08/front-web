@@ -223,11 +223,10 @@ const useStyles = makeStyles((theme) => ({
                                   
                                   </CardContent>
                                 </CardActionArea>
-                                <CardActions>
                                   <Button size="small" color="primary">
                                     Cambiar
                                   </Button>
-                                </CardActions>
+
                               </Card>                            
                               </Grid>
                               <Grid item xs={12} sm={6}>                             
@@ -245,11 +244,11 @@ const useStyles = makeStyles((theme) => ({
                                   
                                   </CardContent>
                                 </CardActionArea>
-                                <CardActions>
+                               
                                   <Button size="small" color="primary">
                                     Cambiar
                                   </Button>
-                                </CardActions>
+                        
                               </Card>
                               </Grid>
                               </Grid>
