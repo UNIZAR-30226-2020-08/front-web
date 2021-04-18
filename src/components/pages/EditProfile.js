@@ -185,12 +185,13 @@ const useStyles = makeStyles((theme) => ({
         setLoading(true);
         var data = {
           username: user.data.username,
+          passwd: user.data.password,
           email: mail,
         };
-        AuthenticationDataService.updateEmail(data.username,data.email)
+        AuthenticationDataService.update(data.username,data.passwd,data.email)
           .then(response => {
             if(response.data.username === username){
-              history.push("/");
+              history.push("/profile");
             }else{
               setLoading(false);
               setFailAuth(true);
@@ -214,12 +215,13 @@ const useStyles = makeStyles((theme) => ({
         setLoading(true);
         var data = {
           username: user.data.username,
+          email: user.data.email,
           passwd: passwd
         };
-        AuthenticationDataService.updatePassword(data.username,data.passwd)
+        AuthenticationDataService.update(data.username,data.email,data.passwd)
           .then(response => {
             if(response.data.username === username){
-              history.push("/");
+              history.push("/profile");
             }else{
               setLoading(false);
               setFailAuth(true);

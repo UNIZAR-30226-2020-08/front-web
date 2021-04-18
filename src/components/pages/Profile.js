@@ -201,7 +201,7 @@ const useStyles = makeStyles((theme) => ({
                                   <ListItemIcon>
                                   <AccountCircleIcon></AccountCircleIcon>
                                   </ListItemIcon>
-                                  <ListItemText  primary={user.data.Username}/>
+                                  <ListItemText  primary={user.data.username}/>
                                 </ListItem>
                               </List>
                               </Grid>
@@ -211,7 +211,7 @@ const useStyles = makeStyles((theme) => ({
                                   <ListItemIcon>
                                   <EmailIcon></EmailIcon>
                                   </ListItemIcon>
-                                  <ListItemText primary="angel@gmail.com"/>
+                                  <ListItemText primary={user.data.email}/>
                                 </ListItem>
                               </List>
                             </Grid>
@@ -221,7 +221,7 @@ const useStyles = makeStyles((theme) => ({
                                   <ListItemIcon>
                                     <LocalBarIcon></LocalBarIcon>
                                   </ListItemIcon>
-                                  <ListItemText primary="2000"/>
+                                  <ListItemText primary={user.data.copas}/>
                                 </ListItem>
                               </List>
                             </Grid>
@@ -272,7 +272,7 @@ const useStyles = makeStyles((theme) => ({
                               </Card>
                               </Grid>
                               </Grid>
-                          <Link to="/EditProfile" color="inherit">
+                          <Link to="/EditProfile">
                           <Button
                               type="customizar"
                               fullWidth
