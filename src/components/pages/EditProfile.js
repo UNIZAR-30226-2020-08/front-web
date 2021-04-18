@@ -19,19 +19,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Friends from '../Amigos'
 import Tournaments from '../Torneos'
-import { Link } from 'react-router-dom';
-import AuthenticationDataService from "../../services/auth.service";
-import { useHistory } from "react-router-dom";
-
-
-
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-
-import CardMedia from '@material-ui/core/CardMedia';
-
-import Typography from '@material-ui/core/Typography';
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -114,30 +101,18 @@ const useStyles = makeStyles((theme) => ({
     },   
     link: {
       color: "green"
-    },
-    media1: {
-      maxWidth: 345,
-    },
-    media2: {
-      height: 140,
     }
   }));
 
-  export default function Profile() {
+  export default function EditProfile() {
     const classes = useStyles();
-    const history = useHistory();
-
-    const user = AuthenticationDataService.getCurrentUser();
   
     return (
       <div className={Application.container}>
-        {! user ?
-          history.push("/")
-          :
           <Container component="main" maxWidth="xs" className={classes.container}>
           <div className={classes.top}>
             <h1 className={Application.header}>
-                Mi Cuenta
+                Editar Cuenta
             </h1>
           </div>
               <CssBaseline />
@@ -148,25 +123,25 @@ const useStyles = makeStyles((theme) => ({
                           <form className={classes.form} noValidate>
                             <Grid container spacing={2}>
                               <Grid item xs={12} sm={6}>
-                                <TextField
-                                  variant="outlined"
-                                  fullWidth
-                                  id="firsttName"
-                                  label="Nombre"
-                                  name="firstName"
-                                  autoComplete="fname"
-                                />
-                              </Grid>
-                              <Grid item xs={12} sm={6}>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth
-                                    id="lastName"
-                                    label="Apellidos"
-                                    name="lastName"
-                                    autoComplete="lname"
-                                  />
-                              </Grid>
+                              <TextField
+                                variant="outlined"
+                                fullWidth
+                                id="firsttName"
+                                label="Nombre"
+                                name="firstName"
+                                autoComplete="fname"
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                             <TextField
+                                variant="outlined"
+                                fullWidth
+                                id="lastName"
+                                label="Apellidos"
+                                name="lastName"
+                                autoComplete="lname"
+                              />
+                            </Grid>
                             <Grid item xs={12}>
                               <TextField
                                   variant="outlined"
@@ -188,71 +163,19 @@ const useStyles = makeStyles((theme) => ({
                                   autoComplete="current-password"
                               />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12}>
                               <TextField
-                                variant="outlined"
-                                fullWidth
-                                id="copes"
-                                label="Copas"
-                                name="copes"
+                                  variant="outlined"
+                                  fullWidth
+                                  name="repeatpassword"
+                                  label="Repetir Contraseña"
+                                  type="repeatpassword"
+                                  id="repeatpassword"
+                                  autoComplete="current-password"
                               />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                             <TextField
-                                variant="outlined"
-                                fullWidth
-                                id="playedgames"
-                                label="Partidas Jugadas"
-                                name="playedgames"
-                              />
-                            </Grid>
+                            
                           </Grid>
-                          <Grid container spacing={3}>
-                          <Grid item xs={12} sm={6}>
-                          <Card className={classes.media1}>
-                                <CardActionArea>
-                                  <CardMedia
-                                    className={classes.media2}
-                                    image="images/tapete1.jpg"
-                                    title="As Oros"
-                                  />
-                                  <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                      Tapete 1
-                                    </Typography>
-                                  
-                                  </CardContent>
-                                </CardActionArea>
-                                  <Button size="small" color="primary">
-                                    Cambiar
-                                  </Button>
-
-                              </Card>                            
-                              </Grid>
-                              <Grid item xs={12} sm={6}>                             
-                              <Card className={classes.media1}>
-                                <CardActionArea>
-                                  <CardMedia
-                                    className={classes.media2}
-                                    image="images/baraja1/asoros.jpg"
-                                    title="As Oros"
-                                  />
-                                  <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                      Cartas 1
-                                    </Typography>
-                                  
-                                  </CardContent>
-                                </CardActionArea>
-                               
-                                  <Button size="small" color="primary">
-                                    Cambiar
-                                  </Button>
-                        
-                              </Card>
-                              </Grid>
-                              </Grid>
-                          <Link to="/EditProfile" color="inherit">
                           <Button
                               type="customizar"
                               fullWidth
@@ -261,24 +184,13 @@ const useStyles = makeStyles((theme) => ({
                               className={classes.cambiarperfil}
                           >
                               Cambiar Perfil
-                          </Button>
-                          </Link>
-                          <Button
-                              type="ultimasPartidas"
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              className={classes.ultimasPartidas}
-                          >
-                              Últimas Partidas
-                          </Button>
+                          </Button>                        
                           </form>
                       </div>
                   </CardContent>
               </Card>
           </Container>
-        }
-        <div className={Application.chat}>
+          <div className={Application.chat}>
         <div className={Application.amigos}>
           <h1 className={Application.header}>
             Amigos
