@@ -19,9 +19,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Friends from '../Amigos'
 import Tournaments from '../Torneos'
-import { Link } from 'react-router-dom';
-import AuthenticationDataService from "../../services/auth.service";
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -107,21 +104,15 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-  export default function Profile() {
+  export default function EditProfile() {
     const classes = useStyles();
-    const history = useHistory();
-
-    const user = AuthenticationDataService.getCurrentUser();
   
     return (
       <div className={Application.container}>
-        { user ?
-          history.push("/profile")
-          :
           <Container component="main" maxWidth="xs" className={classes.container}>
           <div className={classes.top}>
             <h1 className={Application.header}>
-                Mi Cuenta
+                Editar Cuenta
             </h1>
           </div>
               <CssBaseline />
@@ -172,27 +163,19 @@ const useStyles = makeStyles((theme) => ({
                                   autoComplete="current-password"
                               />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12}>
                               <TextField
-                                variant="outlined"
-                                fullWidth
-                                id="copes"
-                                label="Copas"
-                                name="copes"
+                                  variant="outlined"
+                                  fullWidth
+                                  name="repeatpassword"
+                                  label="Repetir Contraseña"
+                                  type="repeatpassword"
+                                  id="repeatpassword"
+                                  autoComplete="current-password"
                               />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                             <TextField
-                                variant="outlined"
-                                fullWidth
-                                id="playedgames"
-                                label="Partidas Jugadas"
-                                name="playedgames"
-                              />
-                            </Grid>
+                            
                           </Grid>
-                         
-                          <Link to="/EditProfile">
                           <Button
                               type="customizar"
                               fullWidth
@@ -201,24 +184,13 @@ const useStyles = makeStyles((theme) => ({
                               className={classes.cambiarperfil}
                           >
                               Cambiar Perfil
-                          </Button>
-                          </Link>
-                          <Button
-                              type="ultimasPartidas"
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              className={classes.ultimasPartidas}
-                          >
-                              Últimas Partidas
-                          </Button>
+                          </Button>                        
                           </form>
                       </div>
                   </CardContent>
               </Card>
           </Container>
-        }
-        <div className={Application.chat}>
+          <div className={Application.chat}>
         <div className={Application.amigos}>
           <h1 className={Application.header}>
             Amigos
