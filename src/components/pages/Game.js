@@ -5,7 +5,7 @@
 //Fichero:      Home.js
 //Descripción:  Pagina de inicio del sistema Las10últimas*/
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import { fade,makeStyles } from '@material-ui/core/styles';
 import Application from '../application.module.scss'
 import SelectGame from "../SelectGame"
@@ -19,6 +19,11 @@ import Tournaments from '../Torneos';
 import AuthenticationDataService from "../../services/auth.service";
 import { useHistory } from "react-router-dom";
 import Chat from '../Chat/Chat';
+import io from "socket.io-client";
+
+const ENDPOINT = 'http://localhost:5000/';
+
+const socket = io(ENDPOINT);;
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -65,13 +70,13 @@ export default function Game() {
   const classes = useStyles();
   const history = useHistory();
   const [gamemode,setGamemode] = React.useState(0);
-  const [room,setRoom] = React.useState("");
+  const [room,setRoom] = React.useState("none");
   const [matched,setMatched] = React.useState(false);
   const selectGame = SelectGame(setGamemode);
-  const selectRoom = SelectRoom(setRoom,setMatched,gamemode);
   const user = AuthenticationDataService.getCurrentUser();
-  //const myContext = useContext(AppContext);
-  const chat=Chat(user ? user.data.username : "anonimos",room);
+  const username = user ? user.data.username : "anonimus"
+  const selectRoom = SelectRoom(setRoom,setMatched,gamemode,socket,username);
+  const chat=Chat(username,socket);
 
   return (
     <div className={Application.container}>

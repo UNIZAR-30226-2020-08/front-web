@@ -1,31 +1,15 @@
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
 import Messages from '../Messages/Messages';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 
 import './Chat.css';
 
-const ENDPOINT = 'http://localhost:5000/';
-
-let socket;
-
-const Chat = (name) => {
-  const room = "sala1"
+const Chat = (name,socket) => {
+  const room = "Chat"
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-
-    socket = io(ENDPOINT);
-
-    socket.emit('join', { name, room }, (error) => {
-      if(error) {
-        alert(error);
-      }
-    });
-  }, [room]);
   
   useEffect(() => {
     socket.on('message', message => {

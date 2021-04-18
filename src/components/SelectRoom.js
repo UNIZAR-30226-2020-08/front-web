@@ -77,14 +77,27 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function SelectRoom(setRoom,setMatched,gamemode) {
+function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
     const classes = useStyles();
     const [loaded,setLoaded] = React.useState(false);
     //const [loading,setLoading] = React.useState(false);
     //const [fail,setFail] = React.useState(false);
     const [rooms,setRooms] = React.useState([]);
 
-    function AvailableRooms(setRoom,setMatched) {
+    const handleUnirsePartida = (setRoom,setMatched,value,username) => {
+      setRoom(value.nombre);
+      setMatched(true);
+      let rm = value.nombre;
+      console.log(rm);
+      console.log(username);
+      socket.emit('join', { name:username, room:rm }, (error) => {
+        if(error) {
+          alert(error);
+        }
+      })
+    }
+
+    function AvailableRooms(setRoom,setMatched,username) {
         if (!loaded && gamemode>0){
             setLoaded(true);
             partidaService.getAll(gamemode-1).then(response => {
@@ -102,11 +115,10 @@ function SelectRoom(setRoom,setMatched,gamemode) {
             <ListItem className="listItem" key={value.nombre}>
                 <ListItemText
                 primary={value.nombre}
-                secondary={"Usuarios en la sala: " + value.numusers}
+                secondary={"Usuarios en la sala: " + value.jugadores_online}
                 />
                 <ListItemSecondaryAction>
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {setRoom(value.name);
-                                                                                            setMatched(true)}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick={() => handleUnirsePartida(setRoom,setMatched,value,username)}>
                     Unirse
                 </Button>
                 </ListItemSecondaryAction>
@@ -128,7 +140,7 @@ function SelectRoom(setRoom,setMatched,gamemode) {
             </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
-          {AvailableRooms(setRoom,setMatched)}
+          {AvailableRooms(setRoom,setMatched,username)}
         </List>
       </div>
     );
