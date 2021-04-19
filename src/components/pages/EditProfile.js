@@ -20,7 +20,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Friends from '../Amigos'
 import Tournaments from '../Torneos'
 import { useHistory } from "react-router-dom";
-import AuthenticationDataService from "../../services/auth.service";
+import UserService from "../../services/user.service";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
   export default function EditProfile() {
     const classes = useStyles();
     const history = useHistory();
-    const user = AuthenticationDataService.getCurrentUser();
+    const user = UserService.getCurrentUser();
 
     const [mail, setMail] = React.useState("");
     const [errorMail, setErrorMail] = React.useState(false);
@@ -176,36 +176,37 @@ const useStyles = makeStyles((theme) => ({
 
 
     const handleUpdate2 = () => {
-      var noErrors = true;
-      if(!emailRegEx.test(mail)){
-        setErrorMail(true);
-        noErrors= false;
-      }
-      if (noErrors){
-        setLoading(true);
-        var data = {
-          username: user.data.username,
-          passwd: user.data.password,
-          email: mail,
-        };
-        AuthenticationDataService.update(data.username,data.passwd,data.email)
-          .then(response => {
-            if(response.data.username === username){
-              history.push("/profile");
-            }else{
-              setLoading(false);
-              setFailAuth(true);
-            }
-          })
-          .catch(e => {
-            console.log(e);
+     var noErrors = true;
+     if(!emailRegEx.test(mail)){
+     setErrorMail(true);
+     noErrors= false;
+     }
+     if (noErrors){
+      setLoading(true);
+      var data = {
+        username: user.data.username,
+        password: user.data.password,
+        email: mail,
+      };
+      UserService.update(data)
+        .then(response => {
+          if(data.username === data.username){
+            history.push("/");
+          }else{
             setLoading(false);
             setFailAuth(true);
-          });
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          setLoading(false);
+          setFailAuth(true);
+        });
       }
     }
 
     const handleUpdate3 = () => {
+      
       var noErrors = true;
       if(passwd === ""){
         setErrorPasswd(true);
@@ -218,10 +219,10 @@ const useStyles = makeStyles((theme) => ({
           email: user.data.email,
           passwd: passwd
         };
-        AuthenticationDataService.update(data.username,data.email,data.passwd)
+        UserService.update(data.username,data.email,data.passwd)
           .then(response => {
             if(response.data.username === username){
-              history.push("/profile");
+              history.push("/");
             }else{
               setLoading(false);
               setFailAuth(true);

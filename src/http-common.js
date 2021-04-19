@@ -10,3 +10,4 @@ module.exports = {
   URL_USER_UPDATE: BASE_URL + "usuario/update/",
   URL_PARTIDA_GETALL: BASE_URL + "partida/findAllGames/",
 };
+

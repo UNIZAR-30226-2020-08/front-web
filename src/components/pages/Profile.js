@@ -259,7 +259,7 @@ const useStyles = makeStyles((theme) => ({
                                 <CardActionArea>
                                   <CardMedia
                                     className={classes.media2}
-                                    image="images/baraja1/asoros.jpg"
+                                    image="images/baraja1/1B.png"
                                     title="As Oros"
                                   />
                                   <CardContent>
@@ -414,7 +414,7 @@ const useStyles = makeStyles((theme) => ({
                     <CardActionArea>
                       <CardMedia
                         className={classes.media2}
-                        image="images/baraja1/ascopas.jpg"
+                        image="images/baraja1/1B.png"
                         title="ascopas"
                       />
                       <CardContent>
@@ -430,7 +430,7 @@ const useStyles = makeStyles((theme) => ({
                     <CardActionArea>
                       <CardMedia
                         className={classes.media2}
-                        image="images/baraja1/asoros.jpg"
+                        image="images/baraja1/1C.png"
                         title="asoros"
                       />
                       <CardContent>
