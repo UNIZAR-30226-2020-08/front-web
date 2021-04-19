@@ -10,10 +10,13 @@ export default function Board(socket) {
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [cartas,setCartas] = useState({jugador: "andres2000gb", partida: "p1", c1: "NO", c2: "NO", c3: "NO", c4: "NO", c5: "NO", c6: "NO"});
+  const [quedanCartas, setQuedanCartas] = useState(false);
+  const [triunfo,setTriunfo] = useState('NO');
+  const [cartas,setCartas] = useState({jugador: "none", partida: "none", c1: "NO", c2: "NO", c3: "NO", c4: "NO", c5: "NO", c6: "NO"});
   const [cartalanzada,setCartalanzada] = useState('NO');
   const [jugada,setJugada] = useState(['NO','NO','NO'])
-  //console.log(user);
+  console.log(triunfo);
+  console.log(quedanCartas);
   const baraja = user ? user.data.f_carta : 'baraja1';
   const username = user ? user.data.username : 'anonimo';
 
@@ -27,6 +30,12 @@ export default function Board(socket) {
       if (repartidas.jugador===username){
         setCartas(repartidas);
       }
+    });
+
+    socket.on("RepartirTriunfo", ({ triunfoRepartido }) => {
+      console.log(triunfoRepartido);
+      setTriunfo(triunfoRepartido);
+      setQuedanCartas(true);
     });
 }, []);
 
@@ -85,14 +94,14 @@ export default function Board(socket) {
      </div>
      <div className={Application.mazo1}>
      <Card
-        src='images/baraja1/dosbastos.png'
+        src={'images/'+baraja+'/'+triunfo+'.png'}
         text='Palo'
         alternative='1'
       />
      </div>
      <div className={Application.mazo2}>
       <Card
-        src='images/baraja1/reverso.png'
+        src={'images/'+baraja+'/'+(quedanCartas ? "reverso" : "NO") +'.png'}
         text='Tus Bazas'
       />
      </div>
