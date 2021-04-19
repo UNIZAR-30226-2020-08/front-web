@@ -3,8 +3,12 @@ import http from '../http-common';
 
 class UserService {
 
-  updatel(username,email,password) {
-    return axios.put(http.URL_USER_UPDATE + username, {email:email, password:password}); 
+  update(data) {
+    return axios.put(http.URL_USER_UPDATE + data.username, data); 
+  }
+
+  getCurrentUser() {
+    return JSON.parse(localStorage.getItem('user'));
   }
 }
 
