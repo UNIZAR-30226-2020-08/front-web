@@ -101,7 +101,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
             partidaService.getAll(gamemode-1).then(response => {
                 setRooms(response);
                 //setLoading(false);
-                console.log(response);
+                //console.log(response);
             })
             .catch(e => {
               console.log(e);

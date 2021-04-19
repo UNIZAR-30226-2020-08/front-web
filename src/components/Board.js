@@ -10,22 +10,23 @@ export default function Board(socket) {
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [cartas,setCartas] = useState(['NO','NO','NO','NO','NO','NO']);
+  const [cartas,setCartas] = useState({jugador: "andres2000gb", partida: "p1", c1: "NO", c2: "NO", c3: "NO", c4: "NO", c5: "NO", c6: "NO"});
   const [cartalanzada,setCartalanzada] = useState('NO');
   const [jugada,setJugada] = useState(['NO','NO','NO'])
-  console.log(user);
+  //console.log(user);
   const baraja = user ? user.data.f_carta : 'baraja1';
+  const username = user ? user.data.username : 'anonimo';
 
   useEffect(() => { 
     socket.on("roomData", ({ users }) => {
       setUsers(users);
     });
 
-    socket.on("RepartirCartas", ({ cartas }) => {
-      console.log(cartas);
-      cartas.jugador = undefined;
-      cartas.partida = undefined;
-      setCartas(cartas);
+    socket.on("RepartirCartas", ({ repartidas }) => {
+      console.log(repartidas);
+      if (repartidas.jugador===username){
+        setCartas(repartidas);
+      }
     });
 }, []);
 
@@ -110,38 +111,38 @@ export default function Board(socket) {
      </div>
      <div className={Application.carta01}>
       <Card
-        src={'images/'+baraja+'/'+cartas[0]+'.png'}
-        text={cartas[0]}
+        src={'images/'+baraja+'/'+cartas.c1+'.png'}
+        text={cartas.c1}
       />
      </div>
      <div className={Application.carta02}>
       <Card
-        src={'images/'+baraja+'/'+cartas[1]+'.png'}
-        text={cartas[1]}
+        src={'images/'+baraja+'/'+cartas.c2+'.png'}
+        text={cartas.c2}
       />
      </div>
      <div className={Application.carta03}>
       <Card
-        src={'images/'+baraja+'/'+cartas[2]+'.png'}
-        text={cartas[2]}
+        src={'images/'+baraja+'/'+cartas.c3+'.png'}
+        text={cartas.c3}
       />
      </div>
      <div className={Application.carta04}>
       <Card
-        src={'images/'+baraja+'/'+cartas[3]+'.png'}
-        text={cartas[3]}
+        src={'images/'+baraja+'/'+cartas.c4+'.png'}
+        text={cartas.c4}
       />
      </div>
      <div className={Application.carta05}>
       <Card
-        src={'images/'+baraja+'/'+cartas[4]+'.png'}
-        text={cartas[4]}
+        src={'images/'+baraja+'/'+cartas.c5+'.png'}
+        text={cartas.c5}
       />
      </div>
      <div className={Application.carta06}>
       <Card
-        src={'images/'+baraja+'/'+cartas[5]+'.png'}
-        text={cartas[5]}
+        src={'images/'+baraja+'/'+cartas.c6+'.png'}
+        text={cartas.c6}
       />
      </div>
      <div className={Application.bazas2}>
