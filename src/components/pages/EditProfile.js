@@ -142,6 +142,7 @@ const useStyles = makeStyles((theme) => ({
     }
     
     const onChangeMail = (e) => {
+      console.log("Llegaa");
       setMail(e.target.value);
       if (!emailRegEx.test(e.target.value)){
         setErrorMail(true);
@@ -176,6 +177,7 @@ const useStyles = makeStyles((theme) => ({
 
 
     const handleUpdate2 = () => {
+     console.log("llega")
      var noErrors = true;
      if(!emailRegEx.test(mail)){
      setErrorMail(true);
@@ -275,9 +277,9 @@ const useStyles = makeStyles((theme) => ({
                               color="primary"
                               onClick={handleUpdate2}
                               className={classes.submit}
-                          >
-                              Cambiar email 
-                          </Button>  
+                              >
+                                  Cambiar email 
+                              </Button>  
                             <Grid item xs={12}>
                               <TextField
                                   variant="outlined"
