@@ -142,7 +142,7 @@ const useStyles = makeStyles((theme) => ({
     }
     
     const onChangeMail = (e) => {
-      console.log("Llegaa");
+      console.log("Llegaamod");
       setMail(e.target.value);
       if (!emailRegEx.test(e.target.value)){
         setErrorMail(true);
@@ -177,7 +177,7 @@ const useStyles = makeStyles((theme) => ({
 
 
     const handleUpdate2 = () => {
-     console.log("llega")
+     console.log("llegahandle");
      var noErrors = true;
      if(!emailRegEx.test(mail)){
      setErrorMail(true);
@@ -208,7 +208,7 @@ const useStyles = makeStyles((theme) => ({
     }
 
     const handleUpdate3 = () => {
-      
+      console.log("llegahandle3");
       var noErrors = true;
       if(passwd === ""){
         setErrorPasswd(true);
@@ -299,10 +299,10 @@ const useStyles = makeStyles((theme) => ({
                               <TextField
                                   variant="outlined"
                                   fullWidth
-                                  name="password"
+                                  name="passwordbis"
                                   label="Repite la contraseña"
                                   type="password"
-                                  id="password"
+                                  id="passwordbis"
                                   autoComplete="current-password"
                                   onChange={onChangePasswdBis}
                                   value={passwdBis}
