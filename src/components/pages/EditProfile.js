@@ -122,6 +122,7 @@ const useStyles = makeStyles((theme) => ({
     const [username, setUsername] = React.useState("");
     const [passwd, setPasswd] = React.useState("");
     const [failAuth, setFailAuth] = React.useState(false);
+    const [failAuth2, setFailAuth2] = React.useState(false);
     const [errorUsername, setErrorUsername] = React.useState(false);
     const [errorPasswd, setErrorPasswd] = React.useState(false);
     const [passwdBis, setPasswdBis] = React.useState("");
@@ -142,7 +143,7 @@ const useStyles = makeStyles((theme) => ({
     }
     
     const onChangeMail = (e) => {
-      console.log("Llegaamod");
+    
       setMail(e.target.value);
       if (!emailRegEx.test(e.target.value)){
         setErrorMail(true);
@@ -155,6 +156,7 @@ const useStyles = makeStyles((theme) => ({
 
     const onChangePasswd = (e) => {
       setPasswd(e.target.value);
+      
       if (e.target.value === ""){
         setErrorPasswd(true);
       }
@@ -177,7 +179,7 @@ const useStyles = makeStyles((theme) => ({
 
 
     const handleUpdate2 = () => {
-     console.log("llegahandle");
+     
      var noErrors = true;
      if(!emailRegEx.test(mail)){
      setErrorMail(true);
@@ -192,12 +194,7 @@ const useStyles = makeStyles((theme) => ({
       };
       UserService.update(data)
         .then(response => {
-          if(data.username === data.username){
-            history.push("/");
-          }else{
-            setLoading(false);
-            setFailAuth(true);
-          }
+          history.push("/editprofile");
         })
         .catch(e => {
           console.log(e);
@@ -208,7 +205,8 @@ const useStyles = makeStyles((theme) => ({
     }
 
     const handleUpdate3 = () => {
-      console.log("llegahandle3");
+     
+      console.log(passwd);
       var noErrors = true;
       if(passwd === ""){
         setErrorPasswd(true);
@@ -219,21 +217,16 @@ const useStyles = makeStyles((theme) => ({
         var data = {
           username: user.data.username,
           email: user.data.email,
-          passwd: passwd
+          password: passwd,
         };
-        UserService.update(data.username,data.email,data.passwd)
+        UserService.update(data)
           .then(response => {
-            if(response.data.username === username){
-              history.push("/");
-            }else{
-              setLoading(false);
-              setFailAuth(true);
-            }
+            history.push("/editprofile");
           })
           .catch(e => {
             console.log(e);
             setLoading(false);
-            setFailAuth(true);
+            setFailAuth2(true);
           });
       }
     }
@@ -266,8 +259,8 @@ const useStyles = makeStyles((theme) => ({
                                   autoComplete="email"
                                   onChange={onChangeMail}
                                   value={mail}
-                                  error={errorMail || failAuth} 
-                                  helperText={errorMail ? 'Introduce tu nuevo correo electronico' : failAuth ? 'No se pudo actualizar este usuario' : ' ' }
+                                  error={errorMail} 
+                                  helperText={errorMail ? 'Introduce tu nuevo correo electronico' : errorMail ? 'No se pudo actualizar el email de este usuario' : ' ' }
                               />
                             </Grid>
                             <Button
@@ -287,12 +280,12 @@ const useStyles = makeStyles((theme) => ({
                                   name="password"
                                   label="Contraseña"
                                   type="password"
-                                  id="password"
+                                  id="passwd"
                                   autoComplete="current-password"
                                   onChange={onChangePasswd}
                                   value={passwd}
-                                  error={errorPasswd || failAuth} 
-                                  helperText={errorPasswd ? 'La contraseña no puede ser vacía' : failAuth ? 'No se pudo actualizar este usuario' : ' ' }
+                                  error={errorPasswd || failAuth2} 
+                                  helperText={errorPasswd ? 'La contraseña no puede ser vacía' : failAuth2 ? 'No se pudo actualizar la contraseña este usuario' : ' ' }
                               />
                             </Grid>
                             <Grid item xs={12}>
@@ -302,12 +295,12 @@ const useStyles = makeStyles((theme) => ({
                                   name="passwordbis"
                                   label="Repite la contraseña"
                                   type="password"
-                                  id="passwordbis"
+                                  id="passwdbis"
                                   autoComplete="current-password"
                                   onChange={onChangePasswdBis}
                                   value={passwdBis}
-                                  error={errorPasswdBis || failAuth} 
-                                  helperText={errorPasswdBis ? 'Las contraseñas deben coincidir' : failAuth ? 'No se pudo registrar este usuario' : ' ' }
+                                  error={errorPasswdBis || failAuth2} 
+                                  helperText={errorPasswdBis ? 'Las contraseñas deben coincidir' : failAuth2 ? 'No se pudo actualizar la contraseña este usuario' : ' ' }
                               />
                                </Grid>
                             
