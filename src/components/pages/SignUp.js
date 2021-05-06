@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     color: 'white',
+    maxHeight: '85vh'
   },
   avatar: {
     margin: theme.spacing(1),
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'white',
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(1, 0, 1),
     backgroundColor: "white",
     color: "green"
   },
@@ -177,7 +178,7 @@ export default function SignIn() {
                   <div className={classes.paper}>
                       <img src="images/LOGO.png" alt="logo las10ultimas" className={Application.icon}/>
                       <form className={classes.form} noValidate>
-                      <Grid container spacing={2}>
+                      <Grid container spacing={1}>
                           <Grid item xs={12}>
                           <TextField
                               className={classes.text}
