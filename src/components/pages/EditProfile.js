@@ -178,55 +178,42 @@ const useStyles = makeStyles((theme) => ({
     }
 
 
-    const handleUpdate2 = () => {
-     
+    const handleUpdate2 = () => {  
      var noErrors = true;
      if(!emailRegEx.test(mail)){
      setErrorMail(true);
      noErrors= false;
      }
      if (noErrors){
-      setLoading(true);
       var data = {
         username: user.data.username,
-        password: user.data.password,
         email: mail,
       };
       UserService.update(data)
         .then(response => {
-          history.push("/editprofile");
         })
         .catch(e => {
           console.log(e);
-          setLoading(false);
-          setFailAuth(true);
         });
       }
     }
 
     const handleUpdate3 = () => {
-     
-      console.log(passwd);
       var noErrors = true;
       if(passwd === ""){
         setErrorPasswd(true);
         noErrors = false;
       }
       if (noErrors){
-        setLoading(true);
         var data = {
           username: user.data.username,
-          email: user.data.email,
           password: passwd,
         };
         UserService.update(data)
           .then(response => {
-            history.push("/editprofile");
           })
           .catch(e => {
             console.log(e);
-            setLoading(false);
-            setFailAuth2(true);
           });
       }
     }
@@ -260,7 +247,7 @@ const useStyles = makeStyles((theme) => ({
                                   onChange={onChangeMail}
                                   value={mail}
                                   error={errorMail} 
-                                  helperText={errorMail ? 'Introduce tu nuevo correo electronico' : errorMail ? 'No se pudo actualizar el email de este usuario' : ' ' }
+                                  helperText={errorMail ? 'Introduce tu nuevo correo electronico' : ' ' }
                               />
                             </Grid>
                             <Button
@@ -284,8 +271,8 @@ const useStyles = makeStyles((theme) => ({
                                   autoComplete="current-password"
                                   onChange={onChangePasswd}
                                   value={passwd}
-                                  error={errorPasswd || failAuth2} 
-                                  helperText={errorPasswd ? 'La contraseña no puede ser vacía' : failAuth2 ? 'No se pudo actualizar la contraseña este usuario' : ' ' }
+                                  error={errorPasswd} 
+                                  helperText={errorPasswd ? 'La contraseña no puede ser vacía' : ' ' }
                               />
                             </Grid>
                             <Grid item xs={12}>
@@ -299,8 +286,8 @@ const useStyles = makeStyles((theme) => ({
                                   autoComplete="current-password"
                                   onChange={onChangePasswdBis}
                                   value={passwdBis}
-                                  error={errorPasswdBis || failAuth2} 
-                                  helperText={errorPasswdBis ? 'Las contraseñas deben coincidir' : failAuth2 ? 'No se pudo actualizar la contraseña este usuario' : ' ' }
+                                  error={errorPasswdBis} 
+                                  helperText={errorPasswdBis ? 'Las contraseñas deben coincidir' : ' ' }
                               />
                                </Grid>
                             

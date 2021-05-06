@@ -4,10 +4,11 @@ import http from '../http-common';
 class UserService {
 
   update(data) {
-    console.log(data.username);
-    console.log(data.email);
-    console.log(data.password);
     return axios.put(http.URL_USER_UPDATE + data.username, data); 
+  }
+
+  find(data) {
+    return axios.get(http.URL_USER_FIND + data.username, data);
   }
 
   getCurrentUser() {

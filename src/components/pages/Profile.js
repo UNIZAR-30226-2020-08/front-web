@@ -42,6 +42,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 
 import Typography from '@material-ui/core/Typography';
 
+import UserService from "../../services/user.service";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -163,6 +164,87 @@ const useStyles = makeStyles((theme) => ({
 
     const [open1,setOpen1] = React.useState(false);
     const [open2,setOpen2] = React.useState(false);
+    const [mail, setMail] = React.useState("");
+    const [copas, setCopas] = React.useState("");
+    const [partidas, setPartidas] = React.useState("");
+    const [tapete, setTapete] = React.useState("");
+    const [baraja, setBaraja] = React.useState("");
+
+
+    const viewMail = () => { 
+      var data = {
+        username: user.data.username,
+      };
+      UserService.find(data);
+      setMail();
+    }
+
+    const handleBaraja = () => {  
+       var data = {
+         username: user.data.username,
+         f_carta: mail,
+       };
+       UserService.update(data)
+         .then(response => {
+         })
+         .catch(e => {
+           console.log(e);
+         });
+    }
+     
+
+     const handleTapete1 = () => {  
+      var data = {
+        username: user.data.username,
+        f_tapete: 'tapete1',
+      };
+      UserService.update(data)
+        .then(response => {
+        })
+        .catch(e => {
+          console.log(e);
+        });
+      }
+
+      const handleTapete2 = () => {  
+        var data = {
+          username: user.data.username,
+          f_tapete: 't_default',
+        };
+        UserService.update(data)
+          .then(response => {
+          })
+          .catch(e => {
+            console.log(e);
+          });
+        }
+
+        const handleBaraja1 = () => {  
+          var data = {
+            username: user.data.username,
+            f_carta: 'baraja1',
+          };
+          UserService.update(data)
+            .then(response => {
+            })
+            .catch(e => {
+              console.log(e);
+            });
+          }
+    
+          const handleBaraja2 = () => {  
+            var data = {
+              username: user.data.username,
+              f_carta: 'baraja2',
+            };
+            UserService.update(data)
+              .then(response => {
+              })
+              .catch(e => {
+                console.log(e);
+              });
+            }
+    
 
     const handleOpen1 = () => {
       setOpen1(true);
@@ -242,7 +324,7 @@ const useStyles = makeStyles((theme) => ({
                                 <CardActionArea>
                                   <CardMedia
                                     className={classes.media2}
-                                    image="images/tapete1.jpg"
+                                    image={"images/"+user.data.f_tapete+".jpg"}
                                     title="As Oros"
                                   />
                                   <CardContent>
@@ -259,7 +341,7 @@ const useStyles = makeStyles((theme) => ({
                                 <CardActionArea>
                                   <CardMedia
                                     className={classes.media2}
-                                    image="images/baraja1/1B.png"
+                                    image={"images/"+user.data.f_carta+"/0O.png"}
                                     title="As Oros"
                                   />
                                   <CardContent>
@@ -355,7 +437,7 @@ const useStyles = makeStyles((theme) => ({
             <div id="transition-modal-description">
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-              <Card button className={classes.media1}>
+              <Card button onClick={handleTapete1} className={classes.media1}>
                     <CardActionArea>
                       <CardMedia
                         className={classes.media2}
@@ -371,7 +453,7 @@ const useStyles = makeStyles((theme) => ({
                   </Card>                            
                   </Grid>
                   <Grid item xs={12} sm={6}>                             
-                  <Card button className={classes.media1}>
+                  <Card button onClick={handleTapete2} className={classes.media1}>
                     <CardActionArea>
                       <CardMedia
                         className={classes.media2}
@@ -410,7 +492,7 @@ const useStyles = makeStyles((theme) => ({
             <div id="transition-modal-description">
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-              <Card button className={classes.media1}>
+              <Card button onClick={handleBaraja1} className={classes.media1}>
                     <CardActionArea>
                       <CardMedia
                         className={classes.media2}
@@ -426,7 +508,7 @@ const useStyles = makeStyles((theme) => ({
                   </Card>                            
                   </Grid>
                   <Grid item xs={12} sm={6}>                             
-                  <Card button className={classes.media1}>
+                  <Card button onClick={handleBaraja2} className={classes.media1}>
                     <CardActionArea>
                       <CardMedia
                         className={classes.media2}
