@@ -9,5 +9,6 @@ module.exports = {
   URL_AUTH_SIGNUP: BASE_URL + "auth/signup/",
   URL_USER_UPDATE: BASE_URL + "usuario/updateUser/",
   URL_PARTIDA_GETALL: BASE_URL + "partida/findAllGames/",
+  URL_PARTIDA_CREATE: BASE_URL + "partida/"
 };
 

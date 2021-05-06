@@ -9,6 +9,15 @@ import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from '@material-ui/core/styles';
 import Application from "./application.module.scss";
 import partidaService from '../services/partida.service';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 /*const exampleRooms = [
     {
@@ -83,6 +92,27 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
     //const [loading,setLoading] = React.useState(false);
     //const [fail,setFail] = React.useState(false);
     const [rooms,setRooms] = React.useState([]);
+    const [open, setOpen] = React.useState(false);
+    const [correct, setCorrect] = React.useState(false);
+    const [created, setCreated] = React.useState(false);
+    const [checkbox, setCheck] = React.useState(false);
+    const [roomname, setRoomname] = React.useState("");
+
+    const handleCheck = (e) =>{
+      setCheck(e.target.checked);
+    };
+    
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const onChangeRoomname = (e) => {
+      setRoomname(e.target.value);
+    }
 
     const handleUnirsePartida = (setRoom,setMatched,value,username) => {
       setRoom(value.nombre);
@@ -93,6 +123,31 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
           alert(error);
         }
       })
+    }
+
+    function CreateRoom() {
+        setCreated(true);
+        let data = {tipo: (gamemode-1)};
+        if (roomname != ""){
+          data = {tipo: (gamemode-1),
+                  nombre: roomname
+                 };
+        }
+        partidaService.create(data)
+        .then(response => {
+            setCorrect(true);
+        })
+        .catch(e => {
+          setCorrect(false);
+          console.log(e);
+        });
+    }
+
+    function Reset() {
+      setLoaded(false);
+      setOpen(false);
+      setCreated(false);
+      setCorrect(false);
     }
 
     function AvailableRooms(setRoom,setMatched,username) {
@@ -129,18 +184,77 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
     return (
       <div className={Application.selectRoom}>
         <List className={classes.root}>
-          <ListItem button className="listItem">
+          <ListItem button className="listItem" onClick={handleClickOpen}>
             <ListItemText
             primary="Crear una nueva sala"
             />
             <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="Añadir sala" onClick={() => {}}>
+            <IconButton edge="end" aria-label="Añadir sala" onClick={handleClickOpen}>
                 <AddIcon />
             </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
           {AvailableRooms(setRoom,setMatched,username)}
         </List>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">CREAR PARTIDA</DialogTitle>
+          { created ?
+          <div>
+            { correct ?
+              Reset()
+              :
+              <div>
+                <div>
+                  <h1>
+                  Algo salio mal...
+                  </h1>
+                </div>  
+                <DialogActions>
+                <Button edge="end"  variant="outlined" aria-label="Aceptar" onClick={handleClose}>
+                  Aceptar
+                </Button>
+              </DialogActions>
+              </div>
+            }
+          </div>
+          :
+          <div>
+            <DialogContent>
+              <DialogContentText>
+                Introduzca los datos solicidatos.
+              </DialogContentText>
+                  <TextField
+                      label="Nombre de la partida"
+                      onChange={onChangeRoomname}
+                      id="outlined-margin-normal"
+                      placeholder= "Nombre de la partida (opcional)"
+                      className={classes.textField}
+                      margin="normal"
+                      InputLabelProps={{
+                          shrink: true
+                      }}
+                      fullWidth
+                      variant="outlined"
+                      value={roomname}
+                  />
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox checked={checkbox} onChange={handleCheck} name="checkedB" color="primary" />}
+                      label="Partida privada"
+                    />
+                  </FormGroup>
+            </DialogContent>
+            <DialogActions>
+              <Button edge="end"  variant="outlined" aria-label="Cancelar" onClick={handleClose}>
+                Cancelar
+              </Button>
+              <Button edge="end"  variant="outlined" aria-label="Crear" onClick={() => CreateRoom()}>
+                Crear
+              </Button>
+            </DialogActions>
+            </div>
+          }         
+        </Dialog>
       </div>
     );
 }
