@@ -5,18 +5,16 @@ import Usuario from "./Usuario"
 import Button from '@material-ui/core/Button';
 import AuthenticationDataService from "../services/auth.service";
 
-export default function Board(socket) {
+export default function Board(socket,tipo) {
   const user = AuthenticationDataService.getCurrentUser();
-  const [users, setUsers] = useState('');
+  const [users, setUsers] = useState([]);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [quedanCartas, setQuedanCartas] = useState(false);
   const [triunfo,setTriunfo] = useState('NO');
   const [cartas,setCartas] = useState({jugador: "none", partida: "none", c1: "NO", c2: "NO", c3: "NO", c4: "NO", c5: "NO", c6: "NO"});
   const [cartalanzada,setCartalanzada] = useState('NO');
-  const [jugada,setJugada] = useState(['NO','NO','NO'])
-  console.log(triunfo);
-  console.log(quedanCartas);
+  const [jugada,setJugada] = useState(['NO','NO','NO']);
   const baraja = user ? user.data.f_carta : 'baraja1';
   const username = user ? user.data.username : 'anonimo';
 
@@ -26,14 +24,12 @@ export default function Board(socket) {
     });
 
     socket.on("RepartirCartas", ({ repartidas }) => {
-      console.log(repartidas);
       if (repartidas.jugador===username){
         setCartas(repartidas);
       }
     });
 
     socket.on("RepartirTriunfo", ({ triunfoRepartido }) => {
-      console.log(triunfoRepartido);
       setTriunfo(triunfoRepartido);
       setQuedanCartas(true);
     });
@@ -48,11 +44,15 @@ export default function Board(socket) {
       </h1>
      </div>
      <div className={Application.usuario1}>
+    { users.length > 1 ? 
       <Usuario
-        nombre="AARXN17"
+        nombre={users[1].name}
         copas={"300 🏆"}
         image="images/userlogo1.png"
       />
+      :
+      <></>
+    }
      </div>
      <div className={Application.carta1}>
       <Card
@@ -67,30 +67,46 @@ export default function Board(socket) {
       />
      </div>
      <div className={Application.usuario2}>
+      { tipo == 2 && users.length > 2 ? 
       <Usuario
-        nombre="ANGELIK"
+        nombre={users[2].name}
         copas={"216 🏆"}
         image="images/userlogo1.png"
       />
+      :
+      <></>
+      }
      </div>
      <div className={Application.carta2}>
+      { tipo == 2 && users.length > 2 ? 
       <Card
-        src='images/baraja1/NO.png'
-        text='Seis de Oros'
+      src='images/baraja1/NO.png'
+      text='Seis de Oros'
       />
+      :
+      <></>
+      }
      </div>
      <div className={Application.usuario3}>
+     { tipo == 2 && users.length > 3 ? 
       <Usuario
-        nombre="DIEGGG"
-        copas={"251 🏆"}
-        image="images/userlogo1.png"
+      nombre={users[3].name}
+      copas={"251 🏆"}
+      image="images/userlogo1.png"
       />
+      :
+      <></>
+      }
      </div>
      <div className={Application.carta3}>
+     { tipo == 2 && users.length > 3 ? 
       <Card
-        src='images/baraja1/NO.png'
-        text='Cuatro de Oros'
+      src='images/baraja1/NO.png'
+      text='Cuatro de Oros'
       />
+      :
+      <></>
+      }
      </div>
      <div className={Application.mazo1}>
      <Card

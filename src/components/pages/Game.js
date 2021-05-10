@@ -77,7 +77,7 @@ export default function Game() {
   const username = user ? user.data.username : "anonimus"
   const selectRoom = SelectRoom(setRoom,setMatched,gamemode,socket,username);
   const chat=Chat(username,socket);
-  const tapete=Tapete(socket);
+  const tapete=Tapete(socket,gamemode);
 
   return (
     <div className={Application.container}>

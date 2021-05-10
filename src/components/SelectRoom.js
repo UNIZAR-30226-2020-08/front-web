@@ -125,7 +125,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
       })
     }
 
-    function CreateRoom() {
+    function CreateRoom(setRoom,setMatched,username,join) {
         setCreated(true);
         let data = {tipo: (gamemode-1)};
         if (roomname != ""){
@@ -135,6 +135,12 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
         }
         partidaService.create(data)
         .then(response => {
+            if(join){
+              let value = {
+                nombre: response.nombre
+              }
+              handleUnirsePartida(setRoom,setMatched,value,username)
+            }
             setCorrect(true);
         })
         .catch(e => {
@@ -248,8 +254,11 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
               <Button edge="end"  variant="outlined" aria-label="Cancelar" onClick={handleClose}>
                 Cancelar
               </Button>
-              <Button edge="end"  variant="outlined" aria-label="Crear" onClick={() => CreateRoom()}>
+              <Button edge="end"  variant="outlined" aria-label="Crear" onClick={() => CreateRoom(setRoom,setMatched,username,false)}>
                 Crear
+              </Button>
+              <Button edge="end"  variant="outlined" aria-label="Crear" onClick={() => CreateRoom(setRoom,setMatched,username,true)}>
+                Crear y unirse
               </Button>
             </DialogActions>
             </div>
