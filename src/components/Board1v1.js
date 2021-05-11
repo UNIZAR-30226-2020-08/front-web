@@ -109,7 +109,7 @@ export default function Board(socket,roomName) {
         alert(error);
       }
     });
-    setRound(round+1);
+    setRound(prevRound => prevRound+1);
   }
 
   function handleLancarCarta(carta,que){
