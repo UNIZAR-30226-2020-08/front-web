@@ -5,16 +5,13 @@ import Usuario from "./Usuario"
 import Button from '@material-ui/core/Button';
 import AuthenticationDataService from "../services/auth.service";
 
-export default function Board(socket,tipo) {
+export default function Board1(socket) {
   const user = AuthenticationDataService.getCurrentUser();
-  const [myOrden,setMyOrden] = useState(2);
+  const [myOrden,setMyOrden] = useState();
   const [users,setUsers] = useState([]);
   const [user1, setUser1] = useState({});
   const [user2, setUser2] = useState({});
   const [user3, setUser3] = useState({});
-  const [tipoP,setTipoP] = useState(1);
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
   const [quedanCartas, setQuedanCartas] = useState(false);
   const [triunfo,setTriunfo] = useState('NO');
   const [cartas,setCartas] = useState({jugador: "none", partida: "none", c1: "NO", c2: "NO", c3: "NO", c4: "NO", c5: "NO", c6: "NO"});
@@ -22,39 +19,28 @@ export default function Board(socket,tipo) {
   const [jugada,setJugada] = useState(['NO','NO','NO']);
   const baraja = user ? user.data.f_carta : 'baraja1';
   const username = user ? user.data.username : 'anonimo';
+  const tipo=1;
 
   useEffect(() => { 
-    socket.on("roomData", ({ users , tipoPartida }) => {
+    socket.on("roomData", ({ users }) => {
       setUsers(users);
-      setTipoP(parseInt(tipoPartida));
     });
 
-    socket.on("orden", ({ orden }) => {
+    /*socket.on("orden", ( orden ) => {
       setMyOrden(orden);
-    });
+    });*/
 
     socket.on("RepartirCartas", ({ repartidas }) => {
       if (repartidas.jugador===username){
         setCartas(repartidas);
       }else{
-        var tip = tipoP+1;
-        console.log("Tipo "+ tip);
-        console.log("Mi orden "+ myOrden);
-        console.log("El orden repartidas "+ repartidas.orden);
-        var index = (repartidas.orden-myOrden+(tip*2)) % (tip*2);
-        console.log("Indice "+ index);
+        var index = (repartidas.orden-myOrden+4) % 4;
         if(index == 1){
           setUser1(repartidas);
-          console.log("user1");
-          console.log(user1);
         }else if (index == 2){
           setUser2(repartidas);
-          console.log("user2");
-          console.log(user2);
         }else if (index == 3){
           setUser3(repartidas);
-          console.log("user3");
-          console.log(user3);
         }
       }
     });
@@ -74,17 +60,10 @@ export default function Board(socket,tipo) {
       </h1>
      </div>
      <div className={Application.usuario1}>
-    { tipo == 1 && user1.jugador ? 
+    { user2.jugador ?
       <Usuario
-        nombre={user1.jugador}
-        copas={user1.copas + " 🏆"}
-        image={"images/"+user1.f_perfil+".png"}
-      />
-      :
-      tipo == 2 && user3.jugador ?
-      <Usuario
-        nombre={user3.jugador}
-        copas={user3.copas + " 🏆"}
+        nombre={user2.jugador}
+        copas={user2.copas + " 🏆"}
         image={"images/"+user2.f_perfil+".png"}
       />
       :
@@ -92,10 +71,14 @@ export default function Board(socket,tipo) {
     }
      </div>
      <div className={Application.carta1}>
+     { user2.jugador ?
       <Card
         src='images/baraja1/NO.png'
-        text='Carta jugador 1'
+        text='Carta jugador 3'
       />
+      :
+      <></>
+      }
      </div>
      <div className={Application.bazas1}>
       <Card
@@ -104,18 +87,18 @@ export default function Board(socket,tipo) {
       />
      </div>
      <div className={Application.usuario2}>
-      { tipo == 2 && user2.jugador ? 
+      { user1.jugador ? 
       <Usuario
-        nombre={user2.jugador}
-        copas={user2.copas + " 🏆"}
-        image={"images/"+user2.f_perfil+".png"}
+        nombre={user1.jugador}
+        copas={user1.copas + " 🏆"}
+        image={"images/"+user1.f_perfil+".png"}
       />
       :
       <></>
       }
      </div>
      <div className={Application.carta2}>
-      { tipo == 2 && user2.jugador ? 
+      { user1.jugador ? 
       <Card
       src='images/baraja1/NO.png'
       text='Carta jugador 2'
@@ -125,7 +108,7 @@ export default function Board(socket,tipo) {
       }
      </div>
      <div className={Application.usuario3}>
-     { tipo == 2 && user3.jugador ? 
+     { user3.jugador ? 
       <Usuario
         nombre={user3.jugador}
         copas={user3.copas + " 🏆"}
@@ -136,7 +119,7 @@ export default function Board(socket,tipo) {
       }
      </div>
      <div className={Application.carta3}>
-     { tipo == 2 && user3.jugador ? 
+     { user3.jugador ? 
       <Card
       src='images/baraja1/NO.png'
       text='Carta jugador 3'

@@ -5,7 +5,7 @@ import "./Card.css"
 function CardItem(props) {
   return (
     <>
-        <Link className='cards__item__link' >
+        <Link className='cards__item__link' onClick={props.onClick}>
             <img
               className={props.alternative ? 'cards__item__img alternative' : 'cards__item__img'}
               alt={props.text}

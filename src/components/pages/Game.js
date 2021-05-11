@@ -10,7 +10,8 @@ import { fade,makeStyles } from '@material-ui/core/styles';
 import Application from '../application.module.scss'
 import SelectGame from "../SelectGame"
 import SelectRoom from "../SelectRoom"
-import Tapete from "../Board"
+import Tapete1 from "../Board1v1"
+import Tapete2 from "../Board2v2"
 import Customize from "../Customize"
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
@@ -77,7 +78,8 @@ export default function Game() {
   const username = user ? user.data.username : "anonimus"
   const selectRoom = SelectRoom(setRoom,setMatched,gamemode,socket,username);
   const chat=Chat(username,socket);
-  const tapete=Tapete(socket,gamemode);
+  const tapete2=Tapete2(socket,room);
+  const tapete1=Tapete1(socket,room);
 
   return (
     <div className={Application.container}>
@@ -96,14 +98,14 @@ export default function Game() {
             <h1 className={Application.header}>
               Partida individual online
             </h1>
-            {matched ? tapete : selectRoom}
+            {matched ? tapete1 : selectRoom}
           </div>
           : gamemode === 2 ?
           <div className={Application.board}>  
             <h1 className={Application.header}>
               Partida por parejas online
             </h1>
-            {matched ? tapete : selectRoom}
+            {matched ? tapete2 : selectRoom}
           </div>
           : gamemode === 3 ?
           <div className={Application.board}>  
