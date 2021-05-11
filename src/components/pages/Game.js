@@ -21,7 +21,7 @@ import { useHistory } from "react-router-dom";
 import Chat from '../Chat/Chat';
 import io from "socket.io-client";
 
-const ENDPOINT = 'http://localhost:5000/';
+const ENDPOINT = 'http://148.3.47.50:5000/';
 
 const socket = io(ENDPOINT);;
 

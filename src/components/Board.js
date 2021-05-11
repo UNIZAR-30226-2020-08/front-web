@@ -7,7 +7,12 @@ import AuthenticationDataService from "../services/auth.service";
 
 export default function Board(socket,tipo) {
   const user = AuthenticationDataService.getCurrentUser();
-  const [users, setUsers] = useState([]);
+  const [myOrden,setMyOrden] = useState(2);
+  const [users,setUsers] = useState([]);
+  const [user1, setUser1] = useState({});
+  const [user2, setUser2] = useState({});
+  const [user3, setUser3] = useState({});
+  const [tipoP,setTipoP] = useState(1);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [quedanCartas, setQuedanCartas] = useState(false);
@@ -19,13 +24,38 @@ export default function Board(socket,tipo) {
   const username = user ? user.data.username : 'anonimo';
 
   useEffect(() => { 
-    socket.on("roomData", ({ users }) => {
+    socket.on("roomData", ({ users , tipoPartida }) => {
       setUsers(users);
+      setTipoP(parseInt(tipoPartida));
+    });
+
+    socket.on("orden", ({ orden }) => {
+      setMyOrden(orden);
     });
 
     socket.on("RepartirCartas", ({ repartidas }) => {
       if (repartidas.jugador===username){
         setCartas(repartidas);
+      }else{
+        var tip = tipoP+1;
+        console.log("Tipo "+ tip);
+        console.log("Mi orden "+ myOrden);
+        console.log("El orden repartidas "+ repartidas.orden);
+        var index = (repartidas.orden-myOrden+(tip*2)) % (tip*2);
+        console.log("Indice "+ index);
+        if(index == 1){
+          setUser1(repartidas);
+          console.log("user1");
+          console.log(user1);
+        }else if (index == 2){
+          setUser2(repartidas);
+          console.log("user2");
+          console.log(user2);
+        }else if (index == 3){
+          setUser3(repartidas);
+          console.log("user3");
+          console.log(user3);
+        }
       }
     });
 
@@ -44,11 +74,18 @@ export default function Board(socket,tipo) {
       </h1>
      </div>
      <div className={Application.usuario1}>
-    { users.length > 1 ? 
+    { tipo == 1 && user1.jugador ? 
       <Usuario
-        nombre={users[1].name}
-        copas={"300 🏆"}
-        image="images/userlogo1.png"
+        nombre={user1.jugador}
+        copas={user1.copas + " 🏆"}
+        image={"images/"+user1.f_perfil+".png"}
+      />
+      :
+      tipo == 2 && user3.jugador ?
+      <Usuario
+        nombre={user3.jugador}
+        copas={user3.copas + " 🏆"}
+        image={"images/"+user2.f_perfil+".png"}
       />
       :
       <></>
@@ -57,7 +94,7 @@ export default function Board(socket,tipo) {
      <div className={Application.carta1}>
       <Card
         src='images/baraja1/NO.png'
-        text='As de Oros'
+        text='Carta jugador 1'
       />
      </div>
      <div className={Application.bazas1}>
@@ -67,42 +104,42 @@ export default function Board(socket,tipo) {
       />
      </div>
      <div className={Application.usuario2}>
-      { tipo == 2 && users.length > 2 ? 
+      { tipo == 2 && user2.jugador ? 
       <Usuario
-        nombre={users[2].name}
-        copas={"216 🏆"}
-        image="images/userlogo1.png"
+        nombre={user2.jugador}
+        copas={user2.copas + " 🏆"}
+        image={"images/"+user2.f_perfil+".png"}
       />
       :
       <></>
       }
      </div>
      <div className={Application.carta2}>
-      { tipo == 2 && users.length > 2 ? 
+      { tipo == 2 && user2.jugador ? 
       <Card
       src='images/baraja1/NO.png'
-      text='Seis de Oros'
+      text='Carta jugador 2'
       />
       :
       <></>
       }
      </div>
      <div className={Application.usuario3}>
-     { tipo == 2 && users.length > 3 ? 
+     { tipo == 2 && user3.jugador ? 
       <Usuario
-      nombre={users[3].name}
-      copas={"251 🏆"}
-      image="images/userlogo1.png"
+        nombre={user3.jugador}
+        copas={user3.copas + " 🏆"}
+        image={"images/"+user3.f_perfil+".png"}
       />
       :
       <></>
       }
      </div>
      <div className={Application.carta3}>
-     { tipo == 2 && users.length > 3 ? 
+     { tipo == 2 && user3.jugador ? 
       <Card
       src='images/baraja1/NO.png'
-      text='Cuatro de Oros'
+      text='Carta jugador 3'
       />
       :
       <></>

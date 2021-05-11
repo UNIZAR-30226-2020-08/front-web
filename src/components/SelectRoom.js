@@ -118,7 +118,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
       setRoom(value.nombre);
       setMatched(true);
       let rm = value.nombre;
-      socket.emit('join', { name:username, room:rm }, (error) => {
+      socket.emit('join', { name:username, room:rm , tipo: parseInt(gamemode-1)}, (error) => {
         if(error) {
           alert(error);
         }
