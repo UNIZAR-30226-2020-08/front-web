@@ -5,7 +5,6 @@ import Usuario from "./Usuario"
 import Button from '@material-ui/core/Button';
 import AuthenticationDataService from "../services/auth.service";
 import Radio from '@material-ui/core/Radio';
-import useStateWithCallback from 'use-state-with-callback';
 
 export default function Board(socket,roomName) {
   const user = AuthenticationDataService.getCurrentUser();
@@ -15,8 +14,8 @@ export default function Board(socket,roomName) {
   const [quedanCartas, setQuedanCartas] = useState(false);
   const [triunfo,setTriunfo] = useState('NO');
   const [round,setRound] = useState(0);
-  const [turno,setTurno] = useStateWithCallback(false, () => {});
-  const [orde,setOrden] = useStateWithCallback(1, ()=>{});
+  const [turno,setTurno] = useState(false);
+  const [orde,setOrden] = useState(1);
   const [jugado,setJugado] = useState(false);
   const [jugado1,setJugado1] = useState(false);
   const [queJugada, setQueJugada] = useState("");
