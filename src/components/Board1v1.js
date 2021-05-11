@@ -14,10 +14,8 @@ export default function Board(socket,roomName) {
   const [quedanCartas, setQuedanCartas] = useState(false);
   const [triunfo,setTriunfo] = useState('NO');
   const [round,setRound] = useState(0);
-  const [turno,setTurno] = useState(false);
-  const [orde,setOrden] = useState(1);
-  const [jugado,setJugado] = useState(false);
-  const [jugado1,setJugado1] = useState(false);
+  const [turno,setTurno] = useState(0);
+  const [orden,setOrden] = useState(1);
   const [queJugada, setQueJugada] = useState("");
   const [cartas,setCartas] = useState({jugador: "none", partida: "none", c1: "NO", c2: "NO", c3: "NO", c4: "NO", c5: "NO", c6: "NO"});
   const [cartalanzada,setCartalanzada] = useState('NO');
@@ -32,7 +30,6 @@ export default function Board(socket,roomName) {
     });
 
     socket.on("orden", ( orden ) => {
-      setTurno(orden === 1);
       setOrden(orden);
     });
 
@@ -67,61 +64,60 @@ export default function Board(socket,roomName) {
         }
         setCartas(cartasAux);
       }
-      setJugado(false);
-      setJugado1(false);
     });
 
     socket.on("winner", ({ winner }) => {
       if(winner === username){
-        setTurno(true);
+        setTurno(orden-1);
       }else{
-        setTurno(true);
+        setTurno(user1.orden-1);
       }
     });
 
     socket.on("cartaJugada", ({ cartaJugada, jugador }) => {
-      console.log(cartaJugada);
-      console.log(jugador);
-      console.log(user1);
-      console.log(jugador === user1.jugador);
       if (jugador === user1.jugador){
-        console.log(cartaJugada);
-        console.log(jugador);
         setJugada1(cartaJugada);
-        setJugado1(true);
-        if(!jugado){
-          setTurno(true);
+        if(cartalanzada === "NO"){
+          setTurno(orden-1);
+          console.log("El turno era ",turno," y ahora es ",(turno + 1 ) % 2," y yo soy ", orden-1, " y el es ",user1.orden-1);
         }
-      }
-      if (jugado && jugado1){
-        var data = {
-          partida: room,
-          nronda: round
-        }
-        
-        socket.emit('robarCarta',data, (error) => {
-          if(error) {
-            alert(error);
-          }
-        });
-        
-        socket.emit('contarPuntos',data, (error) => {
-          if(error) {
-            alert(error);
-          }
-        });
-
-        setRound(round+1);
       }
     });
-}, [user1,jugada1,quedanCartas,triunfo,round,turno,orde,jugado,jugado1,queJugada,cartas,cartalanzada,]);
+    
+    if (cartalanzada !== "NO" && jugada1 != "NO"){
+      setTimeout(handleRonda,2000);
+    }
+
+}, [user1,jugada1,quedanCartas,triunfo,round,turno,orden,queJugada,cartas,cartalanzada]);
+
+  function handleRonda(){
+    setJugada1("NO");
+    setCartalanzada("NO");
+    var data = {
+      partida: room,
+      nronda: round
+    }
+
+    socket.emit('robarCarta',data, (error) => {
+      if(error) {
+        alert(error);
+      }
+    });
+
+    socket.emit('contarPuntos',data, (error) => {
+      if(error) {
+        alert(error);
+      }
+    });
+    setRound(round+1);
+  }
 
   function handleLancarCarta(carta,que){
-    if(turno){
+    if(turno === orden-1){
       setCartalanzada(carta);
       setQueJugada(que);
-      setTurno(false);
-      setJugado(true);
+      setTurno(turnoPrev => (turnoPrev + 1 ) % 2);
+      console.log("El turno era ",turno," y ahora es ",(turno + 1 ) % 2," y yo soy ", orden-1, " y el es ",user1.orden-1);
       var cartasAux = cartas;
       if(que === "c1"){
         cartasAux.c1 = "NO";
@@ -149,6 +145,8 @@ export default function Board(socket,roomName) {
           alert(error);
         }
       })
+    }else{
+      alert("No es tu turno");
     }
   };
 
@@ -166,6 +164,7 @@ export default function Board(socket,roomName) {
         nombre={user1.jugador}
         copas={user1.copas + " 🏆"}
         image={"images/"+user1.f_perfil+".png"}
+        checked={turno===user1.orden-1}
       />
       :
       <></>
@@ -200,7 +199,7 @@ export default function Board(socket,roomName) {
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton}>CANTAR</Button>
         <Button variant="contained" className={Application.actionButton}>CAMBIAR</Button>
-        <Radio checked={turno}/>
+        <Radio checked={turno===orden-1}/>
       </h1>
      </div>
      <div className={Application.carta00}>

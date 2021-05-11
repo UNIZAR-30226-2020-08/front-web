@@ -1,5 +1,6 @@
 import React from 'react';
 import Application from './application.module.scss'
+import Radio from '@material-ui/core/Radio';
 
 function Usuario(props) {
   return (
@@ -12,7 +13,8 @@ function Usuario(props) {
         </div>
         <div className={Application.copas}>
             <h1>{props.copas}</h1>
-        </div>    
+        </div>
+        <Radio checked={props.checked}/>    
     </div>
   );
 }

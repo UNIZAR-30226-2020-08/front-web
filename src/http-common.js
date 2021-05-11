@@ -1,5 +1,5 @@
-const BACK_IP = "148.3.47.50"; // 148.3.47.50
-const BACK_PORT = "8000"; // 8000
+const BACK_IP = "localhost"; // 148.3.47.50
+const BACK_PORT = "8080"; // 8000
 const BACK_PROTOCOL = "http";
 const BASE_URL = BACK_PROTOCOL+"://"+BACK_IP+":"+BACK_PORT+"/api/";
 module.exports = {
