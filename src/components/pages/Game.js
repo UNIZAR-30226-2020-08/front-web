@@ -20,11 +20,10 @@ import Tournaments from '../Torneos';
 import AuthenticationDataService from "../../services/auth.service";
 import { useHistory } from "react-router-dom";
 import Chat from '../Chat/Chat';
+import http from "../../http-common";
 import io from "socket.io-client";
 
-const ENDPOINT = 'https://las10ultimas-backend-realtime.herokuapp.com/';//'http://148.3.47.50:5000/';
-
-const socket = io(ENDPOINT);;
+const socket = io(http.URL_REALTIME);
 
 const useStyles = makeStyles((theme) => ({
   search: {

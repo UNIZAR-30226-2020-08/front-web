@@ -5,6 +5,7 @@ const BASE_URL = BACK_PROTOCOL+"://"+BACK_IP+":"+BACK_PORT+"/api/";
 module.exports = {
   AUTH_TOKEN: "auTh-Token-sTr726445",
   AUTH_SECRET: "C0ntra5enya-s3creta-t0ken",
+  URL_REALTIME: "https://las10ultimas-backend-realtime.herokuapp.com/",
   URL_AUTH_SIGNIN: BASE_URL + "auth/signin/",
   URL_AUTH_SIGNUP: BASE_URL + "auth/signup/",
   URL_USER_UPDATE: BASE_URL + "usuario/updateUser/",
