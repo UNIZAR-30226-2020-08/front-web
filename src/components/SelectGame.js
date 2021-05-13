@@ -5,19 +5,19 @@ import Typography from '@material-ui/core/Typography';
 
 const images = [
   {
-    url: 'http://localhost:3000/images/tapete1.jpg',
+    url: 'https://las10ultimas.herokuapp.com/images/tapete1.jpg',
     title: 'Solo',
     width: '33%',
     mode_id: 1
   },
   {
-    url: 'http://localhost:3000/images/tapete1.jpg',
+    url: 'https://las10ultimas.herokuapp.com/images/tapete1.jpg',
     title: 'Por parejas',
     width: '34%',
     mode_id: 2
   },
   {
-    url: 'http://localhost:3000/images/tapete1.jpg',
+    url: 'https://las10ultimas.herokuapp.com/images/tapete1.jpg',
     title: 'Contra la máquina',
     width: '33%',
     mode_id: 3
