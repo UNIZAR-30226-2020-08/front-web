@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import Application from "./application.module.scss"
 import Card from "./Card"
 import Usuario from "./Usuario"
@@ -9,6 +10,8 @@ import Radio from "@material-ui/core/Radio";
 export default function Board(socket,roomName) {
   const user = AuthenticationDataService.getCurrentUser();
   
+  const history = useHistory();
+
   const user1 = useRef({});
   const [user1M,setUser1M] = useState({});
   
@@ -189,8 +192,8 @@ export default function Board(socket,roomName) {
     <div className={Application.tapete}>
      <div className={Application.controles1}>
       <h1 className={Application.header}>
-        <Button variant="contained" className={Application.actionButton}>SALIR</Button>
-        <Button variant="contained" className={Application.actionButton}>PAUSAR</Button>
+        <Button variant="contained" className={Application.actionButton} onClick={() => {history.push("/");}}>SALIR</Button>
+        <Button variant="contained" className={Application.actionButton} onClick={() => {alert("Funcionalidad no implementada");}}>PAUSAR</Button>
       </h1>
      </div>
      <div className={Application.usuario1}>
@@ -222,12 +225,14 @@ export default function Board(socket,roomName) {
         src={"images/"+baraja+"/"+triunfoM+".png"}
         text="Palo"
         alternative="1"
+        onClick={() => {alert("No tienes el 7.");}}
       />
      </div>
      <div className={Application.mazo2}>
       <Card
         src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
         text="Tus Bazas"
+        onClick={() => {alert("Quedan "+ (28-round.current*2) + " cartas.");}}
       />
      </div>
      <div className={Application.controles2}>
@@ -288,6 +293,7 @@ export default function Board(socket,roomName) {
      <div className={Application.bazas2}>
       Tus Bazas
       <Card
+        onClick={() => {alert("Funcionalidad no implementada.");}}
         src={"images/"+baraja+"/reverso.png"}
         text="Tus Bazas"
       />
