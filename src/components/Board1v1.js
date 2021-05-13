@@ -75,8 +75,9 @@ export default function Board(socket,roomName) {
     });
 
     socket.on("roba", ({ carta, jugador }) => {
-      //console.log(jugador, " roba ", carta);
+      console.log(jugador, " roba ", carta);
       if(jugador === username){
+        round.current++;
         jugada1.current = "NO";
         setJugada1M(jugada1.current);
         jugada0.current = "NO";
@@ -99,19 +100,27 @@ export default function Board(socket,roomName) {
     });
   
     socket.on("cartaJugada", ({ cartaJugada, jugador }) => {
+      console.log("Carta ",cartaJugada," jugada por ",jugador, ", mi carta es ",jugada0.current);
       if (jugador === user1.current.jugador){
-        //console.log("Carta ",cartaJugada," jugada por ",jugador, ", mi carta es ",jugada0.current);
         jugada1.current = cartaJugada;
         setJugada1M(jugada1.current);
         if(jugada0.current === "NO"){
-          //console.log("NO PIDO ROBAR")
+          console.log("NO PIDO ROBAR")
           turno.current = myOrden.current-1;
           setTurnoM(turno.current);
-          //console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
+          console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
         }else{
-          //console.log("PIDO ROBAR")
+          console.log("PIDO ROBAR")
           setTimeout(handleRonda,2000);
         }
+      }
+    });
+
+    socket.on("cartaCambio", ({ tuya }) => {
+      if(tuya.jugador !== username){
+        triunfo.current = "6" + triunfo.current.charAt(1);
+        setTriunfoM(triunfo.current);
+        alert(tuya.jugador + " ha cambiado el 7");
       }
     });
   }, []);
@@ -140,8 +149,52 @@ export default function Board(socket,roomName) {
         alert(error);
       }
     });
+  }
 
-    round.current++;
+  function handleCambiar7(){
+    var has7 = false;
+    var aux = "6" + triunfo.current.charAt(1);
+    console.log(aux);
+    if(cartas.current.c1 === aux){
+      cartas.current.c1 = triunfo.current;
+      has7=true;
+    }else if(cartas.current.c2 === aux){
+      cartas.current.c2 = triunfo.current;
+      has7=true;
+    }else if(cartas.current.c3 === aux){
+      cartas.current.c3 = triunfo.current;
+      has7=true;
+    }else if(cartas.current.c4 === aux){
+      cartas.current.c4 = triunfo.current;
+      has7=true;
+    }else if(cartas.current.c5 === aux){
+      cartas.current.c5 = triunfo.current;
+      has7=true;
+    }else if(cartas.current.c6 === aux){
+      cartas.current.c6 = triunfo.current;
+      has7=true;
+    }else{
+      alert('Necesitas el 7 de triunfo para poder cambiar');
+    }
+
+    if(has7){
+      triunfo.current = aux;
+      setTriunfoM(triunfo.current);
+      setCartasM(cartas.current);
+      var data = {
+        jugador: username,
+        nombre: roomName.current,
+      }
+      socket.emit("cambiar7",data, (error) => {
+        if(error) {
+          alert(error);
+        }
+      });
+    }
+  };
+
+  function handleCantar(){
+    
   }
 
   function handleLancarCarta(carta){
@@ -225,7 +278,7 @@ export default function Board(socket,roomName) {
         src={"images/"+baraja+"/"+triunfoM+".png"}
         text="Palo"
         alternative="1"
-        onClick={() => {alert("No tienes el 7.");}}
+        onClick={() => {handleCambiar7()}}
       />
      </div>
      <div className={Application.mazo2}>
@@ -238,7 +291,6 @@ export default function Board(socket,roomName) {
      <div className={Application.controles2}>
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton}>CANTAR</Button>
-        <Button variant="contained" className={Application.actionButton}>CAMBIAR</Button>
         <Radio checked={turnoM===myOrdenM-1}/>
       </h1>
      </div>
