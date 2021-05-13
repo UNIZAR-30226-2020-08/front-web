@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
+function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
     const classes = useStyles();
     const [loaded,setLoaded] = React.useState(false);
     //const [loading,setLoading] = React.useState(false);
@@ -116,6 +116,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username) {
 
     const handleUnirsePartida = (setRoom,setMatched,value,username) => {
       setRoom(value.nombre);
+      roomName.current = value.nombre;
       setMatched(true);
       let rm = value.nombre;
       socket.emit('join', { name:username, room:rm , tipo: parseInt(gamemode-1)}, (error) => {
