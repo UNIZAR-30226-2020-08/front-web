@@ -37,6 +37,13 @@ export default function Board(socket,roomName) {
   const [turnoM,setTurnoM] = useState(0);
 
   const round = useRef(0);
+  const [roundM,setRoundM] = useState(0);
+
+  const baza = useRef(1);
+  const [bazaM,setBazaM] = useState(1);
+
+  const [tienenBaza,setTienenBaza] = useState(false);
+  const [tienesBaza,setTienesBaza] = useState(false);
 
   const baraja = user ? user.data.f_carta : "baraja1";
   const username = user ? user.data.username : "anonimo";
@@ -68,9 +75,15 @@ export default function Board(socket,roomName) {
       if(winner === username){
         turno.current = myOrden.current-1;
         setTurnoM(turno.current);
+        baza.current = myOrden.current-1;
+        setBazaM(baza.current);
+        setTienesBaza(true);
       }else{
         turno.current = user1.current.orden-1;
         setTurnoM(turno.current);
+        baza.current = user1.current.orden-1;
+        setBazaM(baza.current);
+        setTienenBaza(true);
       }
     });
 
@@ -78,6 +91,7 @@ export default function Board(socket,roomName) {
       console.log(jugador, " roba ", carta);
       if(jugador === username){
         round.current++;
+        setRoundM(round.current);
         jugada1.current = "NO";
         setJugada1M(jugada1.current);
         jugada0.current = "NO";
@@ -108,7 +122,7 @@ export default function Board(socket,roomName) {
           console.log("NO PIDO ROBAR")
           turno.current = myOrden.current-1;
           setTurnoM(turno.current);
-          console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
+          //console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
         }else{
           console.log("PIDO ROBAR")
           setTimeout(handleRonda,2000);
@@ -122,6 +136,34 @@ export default function Board(socket,roomName) {
         setTriunfoM(triunfo.current);
         alert(tuya.jugador + " ha cambiado el 7");
       }
+    });
+
+    socket.on("Resultado", ({ tuya }) => {
+      if(tuya.jugador !== username){
+        triunfo.current = "6" + triunfo.current.charAt(1);
+        setTriunfoM(triunfo.current);
+        alert(tuya.jugador + " ha cambiado el 7");
+      }
+    });
+
+    socket.on("Resultado", ({ puntos_e0, puntos_e1 }) => {
+      var label_e0 = " malas";
+      if(puntos_e0/50 >= 1){
+        label_e0 = " buenas";
+      }
+      var label_e1 = " malas";
+      if(puntos_e0/50 >= 1){
+        label_e1 = " buenas";
+      }
+      if(myOrden.current === 1){
+        alert( "Tienes " + puntos_e0%50 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + puntos_e1 + label_e1);
+      }else{
+        alert( "Tienes " + puntos_e1%50 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + puntos_e0 + label_e0);
+      }
+    });
+
+    socket.on("Vueltas", ({ mensaje }) => {
+      
     });
   }, []);
 
@@ -138,11 +180,19 @@ export default function Board(socket,roomName) {
 
     console.log(data)
 
-    socket.emit("robarCarta",data, (error) => {
-      if(error) {
-        alert(error);
-      }
-    });
+    if(round.current < 14){
+      socket.emit("robarCarta",data, (error) => {
+        if(error) {
+          alert(error);
+        }
+      });
+    }else if(round.current === 19){
+      socket.emit("finalizarPartida",data, (error) => {
+        if(error) {
+          alert(error);
+        }
+      });
+    }
 
     socket.emit("contarPuntos",data, (error) => {
       if(error) {
@@ -152,44 +202,48 @@ export default function Board(socket,roomName) {
   }
 
   function handleCambiar7(){
-    var has7 = false;
-    var aux = "6" + triunfo.current.charAt(1);
-    console.log(aux);
-    if(cartas.current.c1 === aux){
-      cartas.current.c1 = triunfo.current;
-      has7=true;
-    }else if(cartas.current.c2 === aux){
-      cartas.current.c2 = triunfo.current;
-      has7=true;
-    }else if(cartas.current.c3 === aux){
-      cartas.current.c3 = triunfo.current;
-      has7=true;
-    }else if(cartas.current.c4 === aux){
-      cartas.current.c4 = triunfo.current;
-      has7=true;
-    }else if(cartas.current.c5 === aux){
-      cartas.current.c5 = triunfo.current;
-      has7=true;
-    }else if(cartas.current.c6 === aux){
-      cartas.current.c6 = triunfo.current;
-      has7=true;
-    }else{
-      alert('Necesitas el 7 de triunfo para poder cambiar');
-    }
-
-    if(has7){
-      triunfo.current = aux;
-      setTriunfoM(triunfo.current);
-      setCartasM(cartas.current);
-      var data = {
-        jugador: username,
-        nombre: roomName.current,
+    if(baza.current === myOrden.current-1){
+      var has7 = false;
+      var aux = "6" + triunfo.current.charAt(1);
+      console.log(aux);
+      if(cartas.current.c1 === aux){
+        cartas.current.c1 = triunfo.current;
+        has7=true;
+      }else if(cartas.current.c2 === aux){
+        cartas.current.c2 = triunfo.current;
+        has7=true;
+      }else if(cartas.current.c3 === aux){
+        cartas.current.c3 = triunfo.current;
+        has7=true;
+      }else if(cartas.current.c4 === aux){
+        cartas.current.c4 = triunfo.current;
+        has7=true;
+      }else if(cartas.current.c5 === aux){
+        cartas.current.c5 = triunfo.current;
+        has7=true;
+      }else if(cartas.current.c6 === aux){
+        cartas.current.c6 = triunfo.current;
+        has7=true;
+      }else{
+        alert('Necesitas el 7 de triunfo para poder cambiar');
       }
-      socket.emit("cambiar7",data, (error) => {
-        if(error) {
-          alert(error);
+
+      if(has7){
+        triunfo.current = aux;
+        setTriunfoM(triunfo.current);
+        setCartasM(cartas.current);
+        var data = {
+          jugador: username,
+          nombre: roomName.current,
         }
-      });
+        socket.emit("cambiar7",data, (error) => {
+          if(error) {
+            alert(error);
+          }
+        });
+      }
+    }else{
+      alert('Necesitas tener baza para poder cambiar');
     }
   };
 
@@ -268,25 +322,37 @@ export default function Board(socket,roomName) {
       />
      </div>
      <div className={Application.bazas1}>
+      { tienenBaza ?
       <Card
         src={"images/"+baraja+"/reverso.png"}
-        text="Tus Bazas"
+        text="Sus Bazas"
       />
+      :
+      <></>
+      }
      </div>
      <div className={Application.mazo1}>
-     <Card
+     { roundM < 14 ?
+      <Card
         src={"images/"+baraja+"/"+triunfoM+".png"}
         text="Palo"
         alternative="1"
         onClick={() => {handleCambiar7()}}
       />
+      :
+      <></>
+     }
      </div>
      <div className={Application.mazo2}>
+     { roundM < 14 ?
       <Card
         src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
-        text="Tus Bazas"
+        text="Baraja"
         onClick={() => {alert("Quedan "+ (28-round.current*2) + " cartas.");}}
       />
+      :
+      <></>
+     }
      </div>
      <div className={Application.controles2}>
       <h1 className={Application.header}>
@@ -343,12 +409,15 @@ export default function Board(socket,roomName) {
       />
      </div>
      <div className={Application.bazas2}>
-      Tus Bazas
+      { tienesBaza ?
       <Card
         onClick={() => {alert("Funcionalidad no implementada.");}}
         src={"images/"+baraja+"/reverso.png"}
         text="Tus Bazas"
       />
+      :
+      <></>
+      }
      </div>
     </div>
   );
