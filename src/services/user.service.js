@@ -11,6 +11,10 @@ class UserService {
     return axios.get(http.URL_USER_FIND + data.username, data);
   }
 
+  delete(data) {
+    return axios.delete(http.URL_USER_DELETE + data.username, data); 
+  }
+
   getCurrentUser() {
     return JSON.parse(localStorage.getItem('user'));
   }

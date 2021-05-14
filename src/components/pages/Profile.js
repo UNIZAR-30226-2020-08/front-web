@@ -44,6 +44,12 @@ import Typography from '@material-ui/core/Typography';
 
 import UserService from "../../services/user.service";
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 const useStyles = makeStyles((theme) => ({
     root: {
       width: 'fit-content',
@@ -77,6 +83,12 @@ const useStyles = makeStyles((theme) => ({
       borderColor: 'white',
     },
     cambiarperfil: {
+      margin: theme.spacing(3, 0, 2),
+      backgroundColor: "green",
+      color: "white",
+      borderRadius: 8,
+    },
+    borrarcuenta: {
       margin: theme.spacing(3, 0, 2),
       backgroundColor: "green",
       color: "white",
@@ -165,10 +177,7 @@ const useStyles = makeStyles((theme) => ({
     const [open1,setOpen1] = React.useState(false);
     const [open2,setOpen2] = React.useState(false);
     const [mail, setMail] = React.useState("");
-    const [copas, setCopas] = React.useState("");
-    const [partidas, setPartidas] = React.useState("");
-    const [tapete, setTapete] = React.useState("");
-    const [baraja, setBaraja] = React.useState("");
+    const [open3, setOpen3] = React.useState(false);
 
 
     const viewMail = () => { 
@@ -256,6 +265,28 @@ const useStyles = makeStyles((theme) => ({
     const handleClose = () => {
       setOpen1(false);
       setOpen2(false);
+    };
+
+    const handleClickOpen3 = () => {
+      setOpen3(true);
+    };
+  
+    const handleClose3 = () => {
+      setOpen3(false);
+    };
+
+    const handleClose3Eliminar = () => {
+      var data = {
+        username: user.data.username,
+      };
+      UserService.delete(data)
+              .then(response => {
+              })
+              .catch(e => {
+                console.log(e);
+              });
+      setOpen3(false);
+      AuthenticationDataService.logout();
     };
 
   
@@ -365,6 +396,7 @@ const useStyles = makeStyles((theme) => ({
                               Editar Perfil
                           </Button>
                           </Link>
+                          <Link>
                           <Button
                               type="ultimasPartidas"
                               fullWidth
@@ -374,6 +406,42 @@ const useStyles = makeStyles((theme) => ({
                           >
                               Últimas Partidas
                           </Button>
+                          </Link>
+                          <div>
+                          <Link>
+                          <Button
+                              type="borrarcuenta"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              className={classes.borrarcuenta}
+                              onClick={handleClickOpen3}
+                          >
+                              Borrar Cuenta
+                          </Button>
+                          </Link>
+                            <Dialog
+                              open={open3}
+                              onClose3={handleClose3}
+                              aria-labelledby="alert-dialog-title"
+                              aria-describedby="alert-dialog-description"
+                            >
+                              <DialogTitle id="alert-dialog-title">{"¿Esta seguro de que desea borrar su cuenta?"}</DialogTitle>
+                              <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                  Esta acción es irreversible y no podrá recuperar su cuenta una vez ejecutada.
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions>
+                                <Button onClick={handleClose3} color="primary">
+                                  Volver
+                                </Button>
+                                <Button onClick={handleClose3Eliminar} color="primary" autoFocus>
+                                  Borrar
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
+                          </div>                                                                         
                           </form>
                       </div>
                   </CardContent>
