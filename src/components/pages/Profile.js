@@ -386,7 +386,7 @@ const useStyles = makeStyles((theme) => ({
                                   />
                                   <CardContent>
                                     <Typography gutterBottom variant="h5" component="h2">
-                                      Tapete 1
+                                     {user.data.f_tapete}
                                     </Typography>
                                   
                                   </CardContent>
@@ -403,7 +403,7 @@ const useStyles = makeStyles((theme) => ({
                                   />
                                   <CardContent>
                                     <Typography gutterBottom variant="h5" component="h2">
-                                      Cartas 1
+                                     {user.data.f_carta}
                                     </Typography>
                                   
                                   </CardContent>
