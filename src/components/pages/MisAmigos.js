@@ -135,80 +135,9 @@ const useStyles = makeStyles((theme) => ({
           <Container component="main" maxWidth="xs" className={classes.container}>
           <div className={classes.top}>
             <h1 className={Application.header}>
-                Crear Torneo
+                Amigos
             </h1>
           </div>
-              <CssBaseline />
-                  <Card className={classes.root}>
-                      <CardContent>
-                      <img src="images/LOGO.png" alt="logo las10ultimas" className={Application.icon}/>                                           
-                        <div className={classes.paper}>
-                          <form className={classes.form} noValidate>
-                            <Grid container spacing={2}>
-                              <Grid item xs={12} >
-                               <TextField
-                                  autoComplete="fname"
-                                  name="firstName"
-                                  variant="outlined"
-                                  fullWidth
-                                  id="firstName"
-                                  label="Nombre"
-                                  autoFocus
-                              />
-                            </Grid>
-                            <FormControl variant="outlined" className={classes.formControl}>
-                                <InputLabel htmlFor="outlined-age-native-simple">Modalidad</InputLabel>
-                                <Select
-                                native
-                                value={state.age}
-                                onChange={handleChange}
-                                label="Modalidad"
-                                inputProps={{
-                                    name: 'Modalidad',
-                                    id: 'outlined-age-native-simple',
-                                }}
-                                >
-                                <option value={10}>Individual</option>                                
-                                <option value={20}>Parejas</option>
-                                </Select>
-                            </FormControl>
-                            <Grid item xs={12}>
-                              <TextField
-                                  autoComplete="code"
-                                  name="code"
-                                  variant="outlined"
-                                  fullWidth
-                                  id="code"
-                                  label="Código"
-                                  autoFocus
-                              />
-                            </Grid>
-                            <Grid item xs={12}>
-                              <TextField
-                                  variant="outlined"
-                                  fullWidth
-                                  name="password"
-                                  label="Contraseña"
-                                  type="password"
-                                  id="password"
-                                  autoComplete="current-password"
-                              />
-                            </Grid>
-                          </Grid>
-                          
-                          <Button
-                              type="ultimasPartidas"
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              className={classes.ultimasPartidas}
-                          >
-                              Crear
-                          </Button>
-                          </form>
-                      </div>
-                  </CardContent>
-              </Card>
           </Container>
         }
           <div className={Application.chat}>

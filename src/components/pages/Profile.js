@@ -222,6 +222,8 @@ const useStyles = makeStyles((theme) => ({
         .catch(e => {
           console.log(e);
         });
+        user.data.f_tapete='tapete1';
+        AuthenticationDataService.updateCurrentUser(user);
       }
 
       const handleTapete2 = () => {  
@@ -235,6 +237,8 @@ const useStyles = makeStyles((theme) => ({
           .catch(e => {
             console.log(e);
           });
+          user.data.f_tapete='tapete2';
+          AuthenticationDataService.updateCurrentUser(user);
         }
 
         const handleBaraja1 = () => {  
@@ -248,6 +252,9 @@ const useStyles = makeStyles((theme) => ({
             .catch(e => {
               console.log(e);
             });
+            user.data.f_carta='baraja1';
+            AuthenticationDataService.updateCurrentUser(user);
+
           }
     
           const handleBaraja2 = () => {  
@@ -261,6 +268,8 @@ const useStyles = makeStyles((theme) => ({
               .catch(e => {
                 console.log(e);
               });
+              user.data.f_carta='baraja2';
+              AuthenticationDataService.updateCurrentUser(user);
             }
     
 

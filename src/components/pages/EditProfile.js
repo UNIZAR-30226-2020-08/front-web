@@ -21,6 +21,7 @@ import Friends from '../Amigos'
 import Tournaments from '../Torneos'
 import { useHistory } from "react-router-dom";
 import UserService from "../../services/user.service";
+import AuthenticationDataService from "../../services/auth.service";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -114,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
   export default function EditProfile() {
     const classes = useStyles();
     const history = useHistory();
-    const user = UserService.getCurrentUser();
+    const user = AuthenticationDataService.getCurrentUser();
 
     const [mail, setMail] = React.useState("");
     const [errorMail, setErrorMail] = React.useState(false);
@@ -195,6 +196,8 @@ const useStyles = makeStyles((theme) => ({
         .catch(e => {
           console.log(e);
         });
+        user.data.email=mail;
+        AuthenticationDataService.updateCurrentUser(user);
       }
     }
 
