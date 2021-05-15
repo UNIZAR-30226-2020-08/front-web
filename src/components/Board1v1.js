@@ -230,13 +230,13 @@ export default function Board(socket,roomName) {
 
     console.log(data)
 
-    if(round.current < 15){
+    if(round.current < 14){
       socket.emit("robarCarta",data, (error) => {
         if(error) {
           alert(error);
         }
       });
-    }else if(round.current === 20){
+    }else if(round.current === 19){
       socket.emit("finalizarPartida",data, (error) => {
         if(error) {
           alert(error);
