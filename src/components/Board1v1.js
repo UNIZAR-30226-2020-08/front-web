@@ -167,9 +167,9 @@ export default function Board(socket,roomName) {
         label_e1 = " buenas";
       }
       if(myOrden.current === 1){
-        alert( "Tienes " + puntos_e0%50 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + puntos_e1 + label_e1);
+        alert( "Tienes " + puntos_e0-50 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + puntos_e1-50 + label_e1);
       }else{
-        alert( "Tienes " + puntos_e1%50 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + puntos_e0 + label_e0);
+        alert( "Tienes " + puntos_e1-50 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + puntos_e0-50 + label_e0);
       }
     });
 
