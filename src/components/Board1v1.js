@@ -100,7 +100,7 @@ export default function Board(socket,roomName) {
         setTienenBaza(true);
       }
       round.current++;
-      setRoundM(round.current);
+      setRoundM(round.current%20);
       jugada1.current = "NO";
       setJugada1M(jugada1.current);
       jugada0.current = "NO";
@@ -404,7 +404,7 @@ export default function Board(socket,roomName) {
       }
      </div>
      <div className={Application.mazo1}>
-     { roundM%20 < 14 ?
+     { roundM < 14 ?
       <Card
         src={"images/"+baraja+"/"+triunfoM+".png"}
         text="Palo"
@@ -416,7 +416,7 @@ export default function Board(socket,roomName) {
      }
      </div>
      <div className={Application.mazo2}>
-     { roundM%20 < 14 ?
+     { roundM < 14 ?
       <Card
         src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
         text="Baraja"
