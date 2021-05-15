@@ -85,17 +85,17 @@ export default function Board(socket,roomName) {
         setBazaM(baza.current);
         setTienenBaza(true);
       }
+      round.current++;
+      setRoundM(round.current);
+      jugada1.current = "NO";
+      setJugada1M(jugada1.current);
+      jugada0.current = "NO";
+      setJugada0M(jugada0.current);
     });
 
     socket.on("roba", ({ carta, jugador }) => {
       console.log(jugador, " roba ", carta);
       if(jugador === username){
-        round.current++;
-        setRoundM(round.current);
-        jugada1.current = "NO";
-        setJugada1M(jugada1.current);
-        jugada0.current = "NO";
-        setJugada0M(jugada0.current);
         if(cartas.current.c1 === "NO"){
           cartas.current.c1 = carta;
         }else if(cartas.current.c2 === "NO"){
@@ -162,6 +162,37 @@ export default function Board(socket,roomName) {
       }
     });
 
+    socket.on("cante", (dataCante) => {
+      var palo;
+      var sujeto = "Has"
+      var paloT = triunfo.current.charAt(1).toLowerCase();
+      var i;
+      for (i of dataCante){
+        palo = i.palo.charAt(0).toLowerCase();
+        console.log(i);
+        if(i.usuario !== username){
+          sujeto = i.usuario + " ha";
+        }
+        console.log("El palo es " + paloT + " y el del cante es " + palo);
+        if(palo === paloT){
+          alert(sujeto + " cantado las cuarenta");
+        }else{
+          if(palo === 'o'){
+            alert(sujeto + " cantado las veinte en oros")
+          }
+          else if(palo === 'c'){
+            alert(sujeto + " cantado las veinte en copas")
+          }
+          else if(palo === 'e'){
+            alert(sujeto + " cantado las veinte en espadas")
+          }
+          else{
+            alert(sujeto + " cantado las veinte en bastos")
+          }
+        }
+      }
+    });
+
     socket.on("Vueltas", ({ mensaje }) => {
       
     });
@@ -180,13 +211,13 @@ export default function Board(socket,roomName) {
 
     console.log(data)
 
-    if(round.current < 14){
+    if(round.current < 15){
       socket.emit("robarCarta",data, (error) => {
         if(error) {
           alert(error);
         }
       });
-    }else if(round.current === 19){
+    }else if(round.current === 20){
       socket.emit("finalizarPartida",data, (error) => {
         if(error) {
           alert(error);
@@ -248,7 +279,19 @@ export default function Board(socket,roomName) {
   };
 
   function handleCantar(){
-    
+    if(baza.current === myOrden.current-1){
+      var data = {
+        jugador: username,
+        nombre: roomName.current,
+      }
+      socket.emit("cantar",data, (error) => {
+        if(error) {
+          alert(error);
+        }
+      });
+    }else{
+      alert('Necesitas tener baza para poder cambiar');
+    }
   }
 
   function handleLancarCarta(carta){
@@ -356,7 +399,7 @@ export default function Board(socket,roomName) {
      </div>
      <div className={Application.controles2}>
       <h1 className={Application.header}>
-        <Button variant="contained" className={Application.actionButton}>CANTAR</Button>
+        <Button variant="contained" className={Application.actionButton} onClick={()=>{handleCantar()}}>CANTAR</Button>
         <Radio checked={turnoM===myOrdenM-1}/>
       </h1>
      </div>
