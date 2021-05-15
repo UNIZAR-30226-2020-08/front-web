@@ -33,7 +33,7 @@ class AuthenticationDataService {
   }
 
   updateCurrentUser(user){
-    localStorage.setItem('user', user);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 }
 
