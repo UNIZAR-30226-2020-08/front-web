@@ -50,6 +50,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+
+import Divider from '@material-ui/core/Divider';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const useStyles = makeStyles((theme) => ({
     root: {
       width: 'fit-content',
@@ -165,7 +177,14 @@ const useStyles = makeStyles((theme) => ({
     },
     media2: {
       height: 140,
-    }
+    },
+    appBar: {
+      position: 'relative',
+    },
+    title: {
+      marginLeft: theme.spacing(2),
+      flex: 1,
+    },
   }));
 
   export default function Profile() {
@@ -179,6 +198,8 @@ const useStyles = makeStyles((theme) => ({
     const [mail, setMail] = React.useState("");
     const [open3, setOpen3] = React.useState(false);
 
+    const [open4, setOpen4] = React.useState(false);
+
 
     const viewMail = () => { 
       var data = {
@@ -188,19 +209,7 @@ const useStyles = makeStyles((theme) => ({
       setMail();
     }
 
-    const handleBaraja = () => {  
-       var data = {
-         username: user.data.username,
-         f_carta: mail,
-       };
-       UserService.update(data)
-         .then(response => {
-         })
-         .catch(e => {
-           console.log(e);
-         });
-    }
-     
+    
 
      const handleTapete1 = () => {  
       var data = {
@@ -287,6 +296,14 @@ const useStyles = makeStyles((theme) => ({
               });
       setOpen3(false);
       AuthenticationDataService.logout();
+    };
+
+    const handleClickOpen4 = () => {
+      setOpen4(true);
+    };
+  
+    const handleClose4 = () => {
+      setOpen4(false);
     };
 
   
@@ -385,7 +402,7 @@ const useStyles = makeStyles((theme) => ({
                               </Card>
                               </Grid>
                               </Grid>
-                          <Link to="/EditProfile">
+                          <Link to="/EditProfile" className='nav-links'>
                           <Button
                               type="customizar"
                               fullWidth
@@ -396,19 +413,43 @@ const useStyles = makeStyles((theme) => ({
                               Editar Perfil
                           </Button>
                           </Link>
-                          <Link>
+                          <div>
+                          <Link className='nav-links'>
                           <Button
                               type="ultimasPartidas"
                               fullWidth
                               variant="contained"
                               color="primary"
                               className={classes.ultimasPartidas}
+                              onClick={handleClickOpen4}
                           >
                               Últimas Partidas
                           </Button>
                           </Link>
+                          <Dialog fullScreen open={open4} onClose={handleClose4} TransitionComponent={Transition}>
+                            <AppBar className={classes.appBar}>
+                              <Toolbar >
+                                <IconButton edge="start" color="inherit" onClick={handleClose4} aria-label="close">
+                                  <CloseIcon />
+                                </IconButton>
+                                <Typography variant="h6" className={classes.title}>
+                                  Últimas Partidas
+                                </Typography>
+                              </Toolbar>
+                            </AppBar>
+                            <List>
+                              <ListItem button>
+                                <ListItemText primary="Partida 135" secondary="Victoria" />
+                              </ListItem>
+                              <Divider />
+                              <ListItem button>
+                                <ListItemText primary="Partida 134" secondary="Derrota" />
+                              </ListItem>
+                            </List>
+                          </Dialog>
+                          </div>
                           <div>
-                          <Link>
+                          <Link  className='nav-links'>
                           <Button
                               type="borrarcuenta"
                               fullWidth
@@ -418,8 +459,8 @@ const useStyles = makeStyles((theme) => ({
                               onClick={handleClickOpen3}
                           >
                               Borrar Cuenta
-                          </Button>
-                          </Link>
+                          </Button>  
+                          </Link>                      
                             <Dialog
                               open={open3}
                               onClose3={handleClose3}
