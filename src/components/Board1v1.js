@@ -157,14 +157,6 @@ export default function Board(socket,roomName) {
       }
     });
 
-    socket.on("Resultado", ({ tuya }) => {
-      if(tuya.jugador !== username){
-        triunfo.current = "6" + triunfo.current.charAt(1);
-        setTriunfoM(triunfo.current);
-        alert(tuya.jugador + " ha cambiado el 7");
-      }
-    });
-
     socket.on("Resultado", ({ puntos_e0, puntos_e1 }) => {
       var label_e0 = " malas";
       if(puntos_e0/50 >= 1){
