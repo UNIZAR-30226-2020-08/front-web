@@ -31,6 +31,10 @@ class AuthenticationDataService {
   getCurrentUser() {
     return JSON.parse(localStorage.getItem('user'));
   }
+
+  updateCurrentUser(user){
+    localStorage.setItem('user', user);
+  }
 }
 
 export default new AuthenticationDataService();
