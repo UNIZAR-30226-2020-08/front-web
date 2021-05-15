@@ -14,10 +14,6 @@ class UserService {
   delete(data) {
     return axios.delete(http.URL_USER_DELETE + data.username, data); 
   }
-
-  getCurrentUser() {
-    return JSON.parse(localStorage.getItem('user'));
-  }
 }
 
 export default new UserService();
