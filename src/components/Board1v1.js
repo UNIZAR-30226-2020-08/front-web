@@ -16,8 +16,22 @@ export default function Board(socket,roomName) {
   const [user1M,setUser1M] = useState({});
   
   const cartas = useRef({jugador: "none", partida: "none", c1: "NO", c2: "NO", c3: "NO", c4: "NO", c5: "NO", c6: "NO"});
-  const [cartasM,setCartasM] = useState({jugador: "none", partida: "none", c1: "NO", c2: "NO", c3: "NO", c4: "NO", c5: "NO", c6: "NO"});
-  
+  const [cartasMc1,setCartasMc1] = useState("NO");
+  const [cartasMc2,setCartasMc2] = useState("NO");
+  const [cartasMc3,setCartasMc3] = useState("NO");
+  const [cartasMc4,setCartasMc4] = useState("NO");
+  const [cartasMc5,setCartasMc5] = useState("NO");
+  const [cartasMc6,setCartasMc6] = useState("NO");
+
+  function setCartasM(cartas2set){
+    setCartasMc1(cartas2set.c1);
+    setCartasMc2(cartas2set.c2);
+    setCartasMc3(cartas2set.c3);
+    setCartasMc4(cartas2set.c4);
+    setCartasMc5(cartas2set.c5);
+    setCartasMc6(cartas2set.c6);
+  }
+
   const myOrden = useRef(1);
   const [myOrdenM,setMyOrdenM] = useState(1);
   
@@ -98,18 +112,23 @@ export default function Board(socket,roomName) {
       if(jugador === username){
         if(cartas.current.c1 === "NO"){
           cartas.current.c1 = carta;
+          setCartasMc1(carta);
         }else if(cartas.current.c2 === "NO"){
           cartas.current.c2 = carta;
+          setCartasMc2(carta);
         }else if(cartas.current.c3 === "NO"){
           cartas.current.c3 = carta;
+          setCartasMc3(carta);
         }else if(cartas.current.c4 === "NO"){
           cartas.current.c4 = carta;
+          setCartasMc4(carta);
         }else if(cartas.current.c5 === "NO"){
           cartas.current.c5 = carta;
+          setCartasMc5(carta);
         }else if(cartas.current.c6 === "NO"){
           cartas.current.c6 = carta;
+          setCartasMc6(carta);
         }
-        setCartasM(cartas.current);
       }
     });
   
@@ -239,21 +258,27 @@ export default function Board(socket,roomName) {
       console.log(aux);
       if(cartas.current.c1 === aux){
         cartas.current.c1 = triunfo.current;
+        setCartasMc1(triunfo.current);
         has7=true;
       }else if(cartas.current.c2 === aux){
         cartas.current.c2 = triunfo.current;
+        setCartasMc2(triunfo.current);
         has7=true;
       }else if(cartas.current.c3 === aux){
         cartas.current.c3 = triunfo.current;
+        setCartasMc3(triunfo.current);
         has7=true;
       }else if(cartas.current.c4 === aux){
         cartas.current.c4 = triunfo.current;
+        setCartasMc4(triunfo.current);
         has7=true;
       }else if(cartas.current.c5 === aux){
         cartas.current.c5 = triunfo.current;
+        setCartasMc5(triunfo.current);
         has7=true;
       }else if(cartas.current.c6 === aux){
         cartas.current.c6 = triunfo.current;
+        setCartasMc6(triunfo.current);
         has7=true;
       }else{
         alert('Necesitas el 7 de triunfo para poder cambiar');
@@ -262,7 +287,6 @@ export default function Board(socket,roomName) {
       if(has7){
         triunfo.current = aux;
         setTriunfoM(triunfo.current);
-        setCartasM(cartas.current);
         var data = {
           jugador: username,
           nombre: roomName.current,
@@ -304,18 +328,23 @@ export default function Board(socket,roomName) {
         //console.log("El turno era ",turno," y ahora es ",(turno + 1 ) % 2," y yo soy ", orden-1, " y el es ",user1.orden-1);
         if(cartas.current.c1 === carta){
           cartas.current.c1 = "NO";
+          setCartasMc1("NO");
         }else if(cartas.current.c2 === carta){
           cartas.current.c2 = "NO";
+          setCartasMc2("NO");
         }else if(cartas.current.c3 === carta){
           cartas.current.c3 = "NO";
+          setCartasMc3("NO");
         }else if(cartas.current.c4 === carta){
           cartas.current.c4 = "NO";
+          setCartasMc4("NO");
         }else if(cartas.current.c5 === carta){
           cartas.current.c5 = "NO";
+          setCartasMc5("NO");
         }else if(cartas.current.c6 === carta){
           cartas.current.c6 = "NO";
+          setCartasMc6("NO");
         }
-        setCartasM(cartas.current);
 
         var data = {
           jugador: username,
@@ -411,44 +440,44 @@ export default function Board(socket,roomName) {
      </div>
      <div className={Application.carta01}>
       <Card
-        onClick={() => handleLancarCarta(cartasM.c1,"c1")}
-        src={"images/"+baraja+"/"+cartasM.c1+".png"}
-        text={cartasM.c1}
+        onClick={() => handleLancarCarta(cartasMc1,"c1")}
+        src={"images/"+baraja+"/"+cartasMc1+".png"}
+        text={cartasMc1}
       />
      </div>
      <div className={Application.carta02}>
       <Card
-        onClick={() => handleLancarCarta(cartasM.c2,"c2")}
-        src={"images/"+baraja+"/"+cartasM.c2+".png"}
-        text={cartasM.c2}
+        onClick={() => handleLancarCarta(cartasMc2,"c2")}
+        src={"images/"+baraja+"/"+cartasMc2+".png"}
+        text={cartasMc2}
       />
      </div>
      <div className={Application.carta03}>
       <Card
-        onClick={() => handleLancarCarta(cartasM.c3,"c3")}
-        src={"images/"+baraja+"/"+cartasM.c3+".png"}
-        text={cartasM.c3}
+        onClick={() => handleLancarCarta(cartasMc3,"c3")}
+        src={"images/"+baraja+"/"+cartasMc3+".png"}
+        text={cartasMc3}
       />
      </div>
      <div className={Application.carta04}>
       <Card
-        onClick={() => handleLancarCarta(cartasM.c4,"c4")}
-        src={"images/"+baraja+"/"+cartasM.c4+".png"}
-        text={cartasM.c4}
+        onClick={() => handleLancarCarta(cartasMc4,"c4")}
+        src={"images/"+baraja+"/"+cartasMc4+".png"}
+        text={cartasMc4}
       />
      </div>
      <div className={Application.carta05}>
       <Card
-        onClick={() => handleLancarCarta(cartasM.c5,"c5")}
-        src={"images/"+baraja+"/"+cartasM.c5+".png"}
-        text={cartasM.c5}
+        onClick={() => handleLancarCarta(cartasMc5,"c5")}
+        src={"images/"+baraja+"/"+cartasMc5+".png"}
+        text={cartasMc5}
       />
      </div>
      <div className={Application.carta06}>
       <Card
-        onClick={() => handleLancarCarta(cartasM.c6,"c6")}
-        src={"images/"+baraja+"/"+cartasM.c6+".png"}
-        text={cartasM.c6}
+        onClick={() => handleLancarCarta(cartasMc6,"c6")}
+        src={"images/"+baraja+"/"+cartasMc6+".png"}
+        text={cartasMc6}
       />
      </div>
      <div className={Application.bazas2}>
