@@ -230,13 +230,13 @@ export default function Board(socket,roomName) {
 
     console.log(data)
 
-    if(round.current < 14){
+    if(round.current%20 < 14){
       socket.emit("robarCarta",data, (error) => {
         if(error) {
           alert(error);
         }
       });
-    }else if(round.current === 19){
+    }else if(round.current%20 === 19){
       socket.emit("finalizarPartida",data, (error) => {
         if(error) {
           alert(error);
@@ -404,7 +404,7 @@ export default function Board(socket,roomName) {
       }
      </div>
      <div className={Application.mazo1}>
-     { roundM < 14 ?
+     { roundM%20 < 14 ?
       <Card
         src={"images/"+baraja+"/"+triunfoM+".png"}
         text="Palo"
@@ -416,7 +416,7 @@ export default function Board(socket,roomName) {
      }
      </div>
      <div className={Application.mazo2}>
-     { roundM < 14 ?
+     { roundM%20 < 14 ?
       <Card
         src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
         text="Baraja"
