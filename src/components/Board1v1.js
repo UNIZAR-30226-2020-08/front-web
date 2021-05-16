@@ -168,7 +168,7 @@ export default function Board(socket,roomName) {
       setPuntose0M(puntos_e0);
       puntose1.current = puntos_e1;
       setPuntose1M(puntos_e1);
-      if(round.current/20 >= 1){
+      if(round.current/20 > 1){
         if(puntos_e0 > 100 || puntos_e1 > 100){
           var data = {
             partida: roomName.current,
@@ -249,18 +249,25 @@ export default function Board(socket,roomName) {
 
   function tieneEnMano(palo){
     if(cartas.current.c1.charAt(1) === palo){
+      console.log("TIENE " , palo);
       return true;
     }else if(cartas.current.c2.charAt(1) === palo){
+      console.log("TIENE " , palo);
       return true;
     }else if(cartas.current.c3.charAt(1) === palo){
+      console.log("TIENE " , palo);
       return true;
     }else if(cartas.current.c4.charAt(1) === palo){
+      console.log("TIENE " , palo);
       return true;
     }else if(cartas.current.c5.charAt(1) === palo){
+      console.log("TIENE " , palo);
       return true;
     }else if(cartas.current.c6.charAt(1) === palo){
+      console.log("TIENE " , palo);
       return true;
     }
+    console.log("NO TIENE " , palo);
   }
 
   function mata(carta1, carta2){
@@ -444,7 +451,6 @@ export default function Board(socket,roomName) {
             cartaValida = false;
           }
         }
-        console.log(cartaValida);
         if (cartaValida){
           jugada0.current = carta;
           setJugada0M(jugada0.current);
