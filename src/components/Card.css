@@ -8,7 +8,6 @@
   position: absolute;
   max-height: 80%;
   max-width: 80%;
-  object-fit: cover;
   left: 0;
   transition: all 0.2s linear;
 }

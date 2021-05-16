@@ -164,7 +164,7 @@ export default function Game() {
         </div>
       </div>
       :
-      <div className={Application.chat}>
+      <div className={Application.chat2}>
         {chat}
       </div>
       }

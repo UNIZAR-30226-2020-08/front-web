@@ -59,6 +59,12 @@ export default function Board(socket,roomName) {
   const [tienenBaza,setTienenBaza] = useState(false);
   const [tienesBaza,setTienesBaza] = useState(false);
 
+  const puntose0 = useRef(0);
+  const [puntose0M,setPuntose0M] = useState(0);
+
+  const puntose1 = useRef(0);
+  const [puntose1M,setPuntose1M] = useState(0);
+
   const baraja = user ? user.data.f_carta : "baraja1";
   const username = user ? user.data.username : "anonimo";
 
@@ -157,6 +163,26 @@ export default function Board(socket,roomName) {
       }
     });
 
+    socket.on("puntos", ({ puntos_e0, puntos_e1 }) => {
+      puntose0.current = puntos_e0;
+      setPuntose0M(puntos_e0);
+      puntose1.current = puntos_e1;
+      setPuntose1M(puntos_e1);
+      if(round.current/20 >= 1){
+        if(puntos_e0 > 100 || puntos_e1 > 100){
+          var data = {
+            partida: roomName.current,
+            nronda: round.current
+          }
+          socket.emit("finalizarPartida",data, (error) => {
+            if(error) {
+              alert(error);
+            }
+          });
+        }
+      }
+    });
+
     socket.on("Resultado", ({ puntos_e0, puntos_e1 }) => {
       var label_e0 = " malas";
       if(puntos_e0/50 >= 1){
@@ -204,10 +230,98 @@ export default function Board(socket,roomName) {
       }
     });
 
-    socket.on("Vueltas", ({ mensaje }) => {
-      
+    socket.on("Vueltas", ({ mensaje, puntos_e0,puntos_e1 }) => {
+      var label_e0 = " malas";
+      if(puntos_e0/50 >= 1){
+        label_e0 = " buenas";
+      }
+      var label_e1 = " malas";
+      if(puntos_e0/50 >= 1){
+        label_e1 = " buenas";
+      }
+      if(myOrden.current === 1){
+        alert( "Tienes " + puntos_e0-50 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + puntos_e1-50 + label_e1 + "\nPARTIDA DE VUELTAS!");
+      }else{
+        alert( "Tienes " + puntos_e1-50 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + puntos_e0-50 + label_e0 + "\nPARTIDA DE VUELTAS!");
+      }
     });
   }, []);
+
+  function tieneEnMano(palo){
+    if(cartas.current.c1.charAt(1) === palo){
+      return true;
+    }else if(cartas.current.c2.charAt(1) === palo){
+      return true;
+    }else if(cartas.current.c3.charAt(1) === palo){
+      return true;
+    }else if(cartas.current.c4.charAt(1) === palo){
+      return true;
+    }else if(cartas.current.c5.charAt(1) === palo){
+      return true;
+    }else if(cartas.current.c6.charAt(1) === palo){
+      return true;
+    }
+  }
+
+  function mata(carta1, carta2){
+    var palo1 = carta1.charAt(1);
+    var valor1 = carta1.charAt(0);
+    var palo2 = carta2.charAt(1);
+    var valor2 = carta2.charAt(0);
+    var palotriunfo = triunfo.current.charAt(1);
+    if(palo1 === palo2){
+      if(valor2 == 0 || 
+        (valor2 == 2 && valor1 != 0) || 
+        (valor2 == 9 && valor1 != 0 && valor1 != 2) ||
+        (valor2 == 7 && valor1 != 0 && valor1 != 2 && valor1 != 9) ||
+        (valor2 == 8 && valor1 != 0 && valor1 != 2 && valor1 != 9 && valor2 != 7) ||
+        (valor2 == 6 && (valor1 == 1 || valor1 == 3 || valor1 == 4 || valor1 == 5)) ||
+        (valor2 == 5 && (valor1 == 1 || valor1 == 3 || valor1 == 4)) ||
+        (valor2 == 4 && (valor1 == 1 || valor1 == 3 )) ||
+        (valor2 == 3 && valor1 == 1)
+      ){
+        return true;
+      }else{
+        return false;
+      }
+    }else if(palo1 !== palo2 && palo1 === palotriunfo){
+      return false;
+    }else if(palo1 !== palo2 && palo2 === palotriunfo){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  function puedeMatar(carta,palo){
+    console.log("Puedo matar esta carta ",carta," con este palo ",palo);
+    if(cartas.current.c1.charAt(1) === palo){
+      if(mata(carta,cartas.current.c1)){
+        return true;
+      }
+    }if(cartas.current.c2.charAt(1) === palo){
+      if(mata(carta,cartas.current.c2)){
+        return true;
+      }
+    }if(cartas.current.c3.charAt(1) === palo){
+      if(mata(carta,cartas.current.c3)){
+        return true;
+      }
+    }if(cartas.current.c4.charAt(1) === palo){
+      if(mata(carta,cartas.current.c4)){
+        return true;
+      }
+    }if(cartas.current.c5.charAt(1) === palo){
+      if(mata(carta,cartas.current.c5)){
+        return true;
+      }
+    }if(cartas.current.c6.charAt(1) === palo){
+      if(mata(carta,cartas.current.c6)){
+        return true;
+      }
+    }
+    return false;
+  }
 
   function handleRonda(){
     jugada1.current = "NO";
@@ -313,46 +427,63 @@ export default function Board(socket,roomName) {
   function handleLancarCarta(carta){
     if(carta !== "NO"){
       if(turno.current === myOrden.current-1){
-        jugada0.current = carta;
-        setJugada0M(jugada0.current);
-        turno.current = ( turno.current + 1 ) % 2;
-        setTurnoM(turno.current);
-        //console.log("El turno era ",turno," y ahora es ",(turno + 1 ) % 2," y yo soy ", orden-1, " y el es ",user1.orden-1);
-        if(cartas.current.c1 === carta){
-          cartas.current.c1 = "NO";
-          setCartasMc1("NO");
-        }else if(cartas.current.c2 === carta){
-          cartas.current.c2 = "NO";
-          setCartasMc2("NO");
-        }else if(cartas.current.c3 === carta){
-          cartas.current.c3 = "NO";
-          setCartasMc3("NO");
-        }else if(cartas.current.c4 === carta){
-          cartas.current.c4 = "NO";
-          setCartasMc4("NO");
-        }else if(cartas.current.c5 === carta){
-          cartas.current.c5 = "NO";
-          setCartasMc5("NO");
-        }else if(cartas.current.c6 === carta){
-          cartas.current.c6 = "NO";
-          setCartasMc6("NO");
-        }
-
-        var data = {
-          jugador: username,
-          partida: roomName.current,
-          nronda: round.current,
-          carta: carta
-        }
-
-        console.log(data);
-
-        socket.emit("lanzarCarta",data, (error) => {
-          if(error) {
-            alert(error);
+        var cartaValida = true;
+        if(round.current%20 >= 14 && jugada1.current !== "NO"){
+          var palo0 = carta.charAt(1);
+          var palo1 = jugada1.current.charAt(1);
+          var palotriunfo = triunfo.current.charAt(1);
+          if(palo0 === palo1){
+            if(!mata(jugada1.current,carta) && puedeMatar(jugada1.current,palo1)){
+              cartaValida = false;
+            }
+          }else if(palo0 === palotriunfo){
+            if(tieneEnMano(palo1)){
+              cartaValida = false;
+            }
+          }else if(tieneEnMano(palo1) || tieneEnMano(palotriunfo)){
+            cartaValida = false;
           }
-        })
-
+        }
+        console.log(cartaValida);
+        if (cartaValida){
+          jugada0.current = carta;
+          setJugada0M(jugada0.current);
+          turno.current = ( turno.current + 1 ) % 2;
+          setTurnoM(turno.current);
+          //console.log("El turno era ",turno," y ahora es ",(turno + 1 ) % 2," y yo soy ", orden-1, " y el es ",user1.orden-1);
+          if(cartas.current.c1 === carta){
+            cartas.current.c1 = "NO";
+            setCartasMc1("NO");
+          }else if(cartas.current.c2 === carta){
+            cartas.current.c2 = "NO";
+            setCartasMc2("NO");
+          }else if(cartas.current.c3 === carta){
+            cartas.current.c3 = "NO";
+            setCartasMc3("NO");
+          }else if(cartas.current.c4 === carta){
+            cartas.current.c4 = "NO";
+            setCartasMc4("NO");
+          }else if(cartas.current.c5 === carta){
+            cartas.current.c5 = "NO";
+            setCartasMc5("NO");
+          }else if(cartas.current.c6 === carta){
+            cartas.current.c6 = "NO";
+            setCartasMc6("NO");
+          }
+          var data = {
+            jugador: username,
+            partida: roomName.current,
+            nronda: round.current,
+            carta: carta
+          }
+          socket.emit("lanzarCarta",data, (error) => {
+            if(error) {
+              alert(error);
+            }
+          })
+        }else{
+          alert("No puedes tirar esa carta");
+        }
       }else{
         alert("No es tu turno");
       }
