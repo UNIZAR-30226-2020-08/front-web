@@ -14,8 +14,6 @@ import Container from '@material-ui/core/Container';
 import Application from "../application.module.scss"
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
 import Friends from '../Amigos'
 import Tournaments from '../Torneos'
 import { Link } from 'react-router-dom';
@@ -503,39 +501,13 @@ const useStyles = makeStyles((theme) => ({
           <h1 className={Application.header}>
             Amigos
           </h1>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Buscar usuario"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <Friends/>
+          <Friends></Friends>
         </div>
         <div className={Application.torneos}>
           <h1 className={Application.header}>
             Torneos
           </h1>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Buscar torneo"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <Tournaments/>
+          <Tournaments></Tournaments>
         </div>
         <Modal
         aria-labelledby="transition-modal-title"

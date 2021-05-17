@@ -11,6 +11,9 @@ module.exports = {
   URL_USER_UPDATE: BASE_URL + "usuario/updateUser/",
   URL_USER_FIND: BASE_URL + "usuario/findUser/",
   URL_USER_DELETE: BASE_URL + "usuario/dropUser/",
+  URL_AMIGO_FINDALL: BASE_URL + "amigo/findAll/",
+  URL_AMIGO_ACCEPT: BASE_URL + "amigo/acceptFriend/",
+  URL_AMIGO_LISTSOLICITUDES: BASE_URL + "amigo/listRequest/",
   URL_PARTIDA_GETALL: BASE_URL + "partida/findAllGames/",
   URL_PARTIDA_CREATE: BASE_URL + "partida/"
 };
