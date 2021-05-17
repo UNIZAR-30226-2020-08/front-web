@@ -112,7 +112,7 @@ export default function Game() {
             <h1 className={Application.header}>
               Partida contra la IA
             </h1>
-            
+            {/*tapeteIA*/}
           </div>
           :
           <div className={Application.board}>  

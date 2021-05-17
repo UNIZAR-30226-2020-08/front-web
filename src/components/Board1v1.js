@@ -65,6 +65,9 @@ export default function Board(socket,roomName) {
   const puntose1 = useRef(0);
   const [puntose1M,setPuntose1M] = useState(0);
 
+  const selectedCard = useRef("");
+  const [selectedCardM,setSelectedCardM] = useState("");
+
   const baraja = user ? user.data.f_carta : "baraja1";
   const username = user ? user.data.username : "anonimo";
 
@@ -507,6 +510,90 @@ export default function Board(socket,roomName) {
     }
   };
 
+  function handleMoveCarta(carta){
+    var carta2mov;
+    var carta2mov2;
+    if(cartas.current.c1 === selectedCard.current){
+      carta2mov = "c1"
+    }else if(cartas.current.c2 === selectedCard.current){
+      carta2mov = "c2"
+    }else if(cartas.current.c3 === selectedCard.current){
+      carta2mov = "c3"
+    }else if(cartas.current.c4 === selectedCard.current){
+      carta2mov = "c4"
+    }else if(cartas.current.c5 === selectedCard.current){
+      carta2mov = "c5"
+    }else if(cartas.current.c6 === selectedCard.current){
+      carta2mov = "c6"
+    }
+    if(cartas.current.c1 === carta){
+      carta2mov2 = "c1"
+    }else if(cartas.current.c2 === carta){
+      carta2mov2 = "c2"
+    }else if(cartas.current.c3 === carta){
+      carta2mov2 = "c3"
+    }else if(cartas.current.c4 === carta){
+      carta2mov2 = "c4"
+    }else if(cartas.current.c5 === carta){
+      carta2mov2 = "c5"
+    }else if(cartas.current.c6 === carta){
+      carta2mov2 = "c6"
+    }
+    if(carta2mov === "c1"){
+      cartas.current.c1 = carta;
+      setCartasMc1(carta);
+    }else if(carta2mov === "c2"){
+      cartas.current.c2 = carta;
+      setCartasMc2(carta);
+    }else if(carta2mov === "c3"){
+      cartas.current.c3 = carta;
+      setCartasMc3(carta);
+    }else if(carta2mov === "c4"){
+      cartas.current.c4 = carta;
+      setCartasMc4(carta);
+    }else if(carta2mov === "c5"){
+      cartas.current.c5 = carta;
+      setCartasMc5(carta);
+    }else if(carta2mov === "c6"){
+      cartas.current.c6 = carta;
+      setCartasMc6(carta);
+    }
+    if(carta2mov2 === "c1"){
+      cartas.current.c1 = selectedCard.current;
+      setCartasMc1(selectedCard.current);
+    }else if(carta2mov2 === "c2"){
+      cartas.current.c2 = selectedCard.current;
+      setCartasMc2(selectedCard.current);
+    }else if(carta2mov2 === "c3"){
+      cartas.current.c3 = selectedCard.current;
+      setCartasMc3(selectedCard.current);
+    }else if(carta2mov2 === "c4"){
+      cartas.current.c4 = selectedCard.current;
+      setCartasMc4(selectedCard.current);
+    }else if(carta2mov2 === "c5"){
+      cartas.current.c5 = selectedCard.current;
+      setCartasMc5(selectedCard.current);
+    }else if(carta2mov2 === "c6"){
+      cartas.current.c6 = selectedCard.current;
+      setCartasMc6(selectedCard.current);
+    }
+  }
+
+  function handleClickCarta(carta){
+    if(selectedCard.current === carta){
+      handleLancarCarta(carta);
+      selectedCard.current = "";
+      setSelectedCardM("");
+    }else if(selectedCard.current === ""){
+      selectedCard.current = carta;
+      setSelectedCardM(carta);
+    }else{
+      handleMoveCarta(carta);
+      selectedCard.current = "";
+      setSelectedCardM("");
+    }
+  }
+
   return (
     <div className={Application.tapete}>
      <div className={Application.controles1}>
@@ -580,44 +667,50 @@ export default function Board(socket,roomName) {
      </div>
      <div className={Application.carta01}>
       <Card
-        onClick={() => handleLancarCarta(cartasMc1,"c1")}
+        onClick={() => handleClickCarta(cartasMc1)}
         src={"images/"+baraja+"/"+cartasMc1+".png"}
         text={cartasMc1}
+        selected={selectedCardM===cartasMc1}
       />
      </div>
      <div className={Application.carta02}>
       <Card
-        onClick={() => handleLancarCarta(cartasMc2,"c2")}
+        onClick={() => handleClickCarta(cartasMc2)}
         src={"images/"+baraja+"/"+cartasMc2+".png"}
         text={cartasMc2}
+        selected={selectedCardM===cartasMc2}
       />
      </div>
      <div className={Application.carta03}>
       <Card
-        onClick={() => handleLancarCarta(cartasMc3,"c3")}
+        onClick={() => handleClickCarta(cartasMc3)}
         src={"images/"+baraja+"/"+cartasMc3+".png"}
         text={cartasMc3}
+        selected={selectedCardM===cartasMc3}
       />
      </div>
      <div className={Application.carta04}>
       <Card
-        onClick={() => handleLancarCarta(cartasMc4,"c4")}
+        onClick={() => handleClickCarta(cartasMc4)}
         src={"images/"+baraja+"/"+cartasMc4+".png"}
         text={cartasMc4}
+        selected={selectedCardM===cartasMc4}
       />
      </div>
      <div className={Application.carta05}>
       <Card
-        onClick={() => handleLancarCarta(cartasMc5,"c5")}
+        onClick={() => handleClickCarta(cartasMc5)}
         src={"images/"+baraja+"/"+cartasMc5+".png"}
         text={cartasMc5}
+        selected={selectedCardM===cartasMc5}
       />
      </div>
      <div className={Application.carta06}>
       <Card
-        onClick={() => handleLancarCarta(cartasMc6,"c6")}
+        onClick={() => handleClickCarta(cartasMc6)}
         src={"images/"+baraja+"/"+cartasMc6+".png"}
         text={cartasMc6}
+        selected={selectedCardM===cartasMc6}
       />
      </div>
      <div className={Application.bazas2}>
