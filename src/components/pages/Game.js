@@ -128,7 +128,7 @@ export default function Game() {
           <h1 className={Application.header}>
             Amigos
           </h1>
-          <Friends/>
+          {<Friends/>}
         </div>
         <div className={Application.torneos}>
           <h1 className={Application.header}>

@@ -68,21 +68,21 @@ const exampleTournaments = [
     root: {
       width: "100%",
       marginTop: "6px",
-      height: "32vh",
+      height: "25vh",
       margin: "auto",
       overflow: "auto"
     },
     root2: {
       width: "100%",
       marginTop: "6px",
-      height: "32vh",
+      height: "25vh",
       margin: "auto",
       overflow: "auto"
     },
     lista: {
       width: "100%",
       marginTop: "6px",
-      height: "32vh",
+      height: "25vh",
       margin: "auto",
       overflow: "auto"
     },
@@ -124,6 +124,10 @@ const exampleTournaments = [
       alignItems: 'center',
       justifyContent: 'center',
     },
+    bar: {
+      maxWidth: '100%',
+      width: '50vh',
+    }
   }));
 
 function TabPanel(props) {
@@ -187,7 +191,7 @@ function Tournaments() {
 
     return (
       <div className={Application.selectTournament}>
-          <AppBar position="static" color="default">
+          <AppBar position="static" color="transparent" className={classes.bar}>
           <Tabs
             value={value}
             onChange={handleChange}

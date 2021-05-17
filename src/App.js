@@ -7,6 +7,7 @@
 
 import React from 'react';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './components/pages/Home';
 import Game from './components/pages/Game';
 import SignUp from './components/pages/SignUp';
@@ -28,6 +29,7 @@ function App() {
           <Route path='/editprofile' exact component={EditProfile} />
           <Route path='/createtournament' exact component={CreateTournament} />
         </Switch>
+        <Footer />
       </Router>
   );
 }

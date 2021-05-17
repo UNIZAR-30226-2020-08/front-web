@@ -34,23 +34,15 @@ import AuthenticationDataService from "../services/auth.service";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
-    marginTop: "6px",
-    height: "32vh",
-    margin: "auto",
-    overflow: "auto"
-  },
-  root2: {
-    width: "100%",
-    marginTop: "6px",
-    height: "32vh",
-    margin: "auto",
-    overflow: "auto"
+    flexGrow: 1,
+    height: "100%",
+    width: '100%',
   },
   lista: {
     width: "100%",
     marginTop: "6px",
-    height: "32vh",
+    maxHeight: "100%",
+    height: "100%",
     margin: "auto",
     overflow: "auto"
   },
@@ -97,6 +89,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  bar: {
+    maxWidth: '100%',
+    width: '50vh',
+  }
 }));
 
 function TabPanel(props) {
@@ -250,25 +246,24 @@ function Friends() {
 
 
     return (
-     <div className={Application.selectFriends}>
-      <AppBar position="static" color="default" className={classes.pestana2}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          variant="scrollable"
-          scrollButtons="on"
-          indicatorColor="primary"
-          textColor="primary"
-          aria-label="scrollable force tabs example"
-          className={classes.pestana}
-          
-        >
-          <Tab label="Amigos" icon={<PhoneIcon />} {...a11yProps(0)} />
-          <Tab label="Solicitudes" icon={<FavoriteIcon />} {...a11yProps(1)} />
-          {//<Tab label="Ranking" icon={<PersonPinIcon />} {...a11yProps(2)} />
-}
-        </Tabs>
-    </AppBar>
+     <div className={classes.root}>
+       <AppBar position="static" color="transparent" className={classes.bar}>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        variant="scrollable"
+        scrollButtons="auto"
+        indicatorColor="primary"
+        textColor="primary"
+        aria-label="scrollable force tabs example"
+        className={classes.pestana}
+        
+      >
+        <Tab label="Amigos" icon={<PhoneIcon />} {...a11yProps(0)} />
+        {<Tab label="Solicitudes" icon={<FavoriteIcon />} {...a11yProps(1)} />}
+        {<Tab label="Ranking" icon={<PersonPinIcon />} {...a11yProps(2)} />}
+      </Tabs>
+      </AppBar>
       <TabPanel value={value} index={0}>
         <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -296,7 +291,7 @@ function Friends() {
         <List className={classes.lista}>
             {AvailableFriends()}
           </List>
-            </TabPanel>
+      </TabPanel>
   </div>
     );
 }
