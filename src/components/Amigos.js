@@ -143,7 +143,6 @@ function a11yProps(index) {
 function Friends() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    const [value2, setValue2] = React.useState(0);
     const [amigs,setAmigs] = React.useState([]);
     const [solicitudes,setSolicitudes] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
@@ -156,12 +155,10 @@ function Friends() {
       setValue(newValue);
     };
 
-    const handleAceptar = () => {
-      
-      
-        var data = {
+    const handleAceptar = (amigo) => {   
+      var data = {
           username: user.data.username,
-          amigoname: "juanw",
+          amigoname: amigo,
         };
         AmigoService.aceptar(data)
           .then(response => {
@@ -235,7 +232,7 @@ function Friends() {
             primary={value.usuario}
             />
             <ListItemSecondaryAction>
-            <Button edge="end"  variant="outlined" aria-label="Aceptar">
+            <Button edge="end"  variant="outlined" onClick={() => {handleAceptar(value.usuario);}}>
                 Aceptar
             </Button>
             </ListItemSecondaryAction>
