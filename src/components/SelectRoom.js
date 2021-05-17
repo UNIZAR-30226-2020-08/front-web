@@ -93,7 +93,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
     //const [fail,setFail] = React.useState(false);
     const [rooms,setRooms] = React.useState([]);
     const [open, setOpen] = React.useState(false);
-    const [correct, setCorrect] = React.useState(false);
+    const [correct, setCorrect] = React.useState(true);
     const [created, setCreated] = React.useState(false);
     const [checkbox, setCheck] = React.useState(false);
     const [roomname, setRoomname] = React.useState("");
@@ -154,7 +154,6 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
       setLoaded(false);
       setOpen(false);
       setCreated(false);
-      setCorrect(false);
     }
 
     function AvailableRooms(setRoom,setMatched,username) {

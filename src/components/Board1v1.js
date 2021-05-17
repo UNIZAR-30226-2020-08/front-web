@@ -287,15 +287,20 @@ export default function Board(socket,roomName) {
         (valor2 == 4 && (valor1 == 1 || valor1 == 3 )) ||
         (valor2 == 3 && valor1 == 1)
       ){
+        console.log("MATA");
         return true;
       }else{
+        console.log("NO MATA");
         return false;
       }
     }else if(palo1 !== palo2 && palo1 === palotriunfo){
+      console.log("NO MATA");
       return false;
     }else if(palo1 !== palo2 && palo2 === palotriunfo){
+      console.log("MATA");
       return true;
     }else{
+      console.log("NO MATA");
       return false;
     }
   }
@@ -440,14 +445,20 @@ export default function Board(socket,roomName) {
           var palo1 = jugada1.current.charAt(1);
           var palotriunfo = triunfo.current.charAt(1);
           if(palo0 === palo1){
+            console.log("tira palos iguales");
             if(!mata(jugada1.current,carta) && puedeMatar(jugada1.current,palo1)){
+              console.log("no mata o puede matar");
               cartaValida = false;
+              
             }
           }else if(palo0 === palotriunfo){
+            console.log("tira triunfo");
             if(tieneEnMano(palo1)){
+              console.log("tiene ", palo1 ," en mano");
               cartaValida = false;
             }
           }else if(tieneEnMano(palo1) || tieneEnMano(palotriunfo)){
+            console.log("tiene ", palo1 ," en mano o tiene triunfo");
             cartaValida = false;
           }
         }
