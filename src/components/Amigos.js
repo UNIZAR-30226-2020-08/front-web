@@ -149,7 +149,7 @@ function Friends() {
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
     const [bien,setBien] = React.useState(false);
-    const user = AuthenticationDataService.getCurrentUser();
+    const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
 
 
     const handleChange = (event, newValue) => {
