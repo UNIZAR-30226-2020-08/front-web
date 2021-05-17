@@ -29,6 +29,17 @@ import TorneoService from "../services/torneo.service";
 import AuthenticationDataService from "../services/auth.service";
 
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
+import { Bracket, RoundProps } from 'react-brackets';
+
+
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "100%",
@@ -92,7 +103,17 @@ import AuthenticationDataService from "../services/auth.service";
     bar: {
       maxWidth: '100%',
       width: '50vh',
-    }
+    },
+    root5: {
+      margin: 0,
+      padding: theme.spacing(2),
+    },
+    closeButton5: {
+      position: 'absolute',
+      right: theme.spacing(1),
+      top: theme.spacing(1),
+      color: theme.palette.grey[500],
+    },
   }));
 
 function TabPanel(props) {
@@ -128,25 +149,78 @@ function a11yProps(index) {
   };
 }
 
+const DialogTitle = withStyles(useStyles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
 function Tournaments() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [torneos,setTorneos] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
     const user = AuthenticationDataService.getCurrentUser();
+    const [open5, setOpen5] = React.useState(false);
+
+    const rounds: RoundProps[] = [
+      {
+        title: 'Primera Ronda',
+        seeds: [
+          {
+            id: 1,
+            date: new Date().toDateString(),
+            teams: [{ name: 'Team A' }, { name: 'Team B' }],
+          },
+          {
+            id: 2,
+            date: new Date().toDateString(),
+            teams: [{ name: 'Team C' }, { name: 'Team D' }],
+          },
+        ],
+      },
+      {
+        title: 'Segunda Ronda',
+        seeds: [
+          {
+            id: 3,
+            date: new Date().toDateString(),
+            teams: [{ name: 'Team A' }, { name: 'Team C' }],
+          },
+        ],
+      },
+    ];
+    
+    
+
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
 
+    const handleClickOpen5 = () => {
+      setOpen5(true);
+    };
+    const handleClose5 = () => {
+      setOpen5(false);
+    };
+
+
     
-    function AvailableTournaments(tipo,part) {
+    function AvailableTournaments(tip,part) {
       var data = {
         username: user.data.username,
-        tipo: tipo,
+        tipo: tip,
         npart: part,
       };
-
       if (!loaded){
         setLoaded(true);
         TorneoService.findAll(data).then(response => {
@@ -187,8 +261,11 @@ function Tournaments() {
             textColor="primary"
             aria-label="scrollable force tabs example"
           >
-            <Tab label="Disponibles" icon={<PhoneIcon />} {...a11yProps(0)} />
-            <Tab label="Jugados" icon={<FavoriteIcon />} {...a11yProps(1)} />
+            <Tab label="Individuales 8 equipos" icon={<PhoneIcon />} {...a11yProps(0)} />
+            <Tab label="Por Parejas 8 equipos" icon={<FavoriteIcon />} {...a11yProps(1)} />
+            <Tab label="Individuales 16 equipos" icon={<PhoneIcon />} {...a11yProps(2)}  />
+            <Tab label="Por Parejas 16 equipos" icon={<FavoriteIcon />} {...a11yProps(3)} />
+            <Tab label="En juego" icon={<FavoriteIcon />} {...a11yProps(4)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
@@ -197,7 +274,7 @@ function Tournaments() {
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Buscar usuario"
+                placeholder="Buscar torneo"
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
@@ -206,11 +283,76 @@ function Tournaments() {
               />
             </div>
           <List className={classes.lista}>
-          {AvailableTournaments(0,8)}
+          {value === 0? AvailableTournaments(0,8): <></>}
           </List>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+      <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Buscar torneo"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </div>
+          <List className={classes.lista}>
+          {value === 1? AvailableTournaments(0,16): <></>}
+          </List>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+      <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Buscar torneo"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </div>
+          <List className={classes.lista}>
+          {value === 2? AvailableTournaments(1,8): <></>}
+          </List>
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+      <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Buscar torneo"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </div>
+          <List className={classes.lista}>
+          {value === 3? AvailableTournaments(1,16): <></>}
+          </List>
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+          <Button onClick={handleClickOpen5}>
+                Ver bracket
+          </Button>
+          <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose5}>
+              Bracket
+            </DialogTitle>
+            <div>
+            <Bracket rounds={rounds} />
+            </div>
+        
+      </Dialog>
       </TabPanel>
       </div>
     );
