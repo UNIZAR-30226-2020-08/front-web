@@ -25,44 +25,9 @@ import ThumbUp from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-const exampleTournaments = [
-    {
-      name: 'Torneo 1',
-      participants: '32'
-    },
-    {
-      name: 'Torneo 3',
-      participants: '35'
-    },
-    {
-      name: 'Torneo 5',
-      participants: '5'
-    },
-    {
-      name: 'Torneo 7',
-      participants: '8'
-    },
-    {
-      name: 'Torneo 8',
-      participants: '108'
-    },
-    {
-      name: 'Torneo 10',
-      participants: '23'
-    },
-    {
-      name: 'Torneo 11',
-      participants: '46'
-    },
-    {
-      name: 'Torneo 14',
-      participants: '86'
-    },
-    {
-      name: 'Torneo 18',
-      participants: '2'
-    }
-  ]
+import TorneoService from "../services/torneo.service";
+import AuthenticationDataService from "../services/auth.service";
+
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -166,18 +131,39 @@ function a11yProps(index) {
 function Tournaments() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [torneos,setTorneos] = React.useState([]);
+    const [loaded,setLoaded] = React.useState(false);
+    const user = AuthenticationDataService.getCurrentUser();
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
 
-    function AvailableTournaments() {
-        return exampleTournaments.map((value) => {
-          return(
-            <ListItem key={value.name} className="listItem">
+    
+    function AvailableTournaments(tipo,part) {
+      var data = {
+        username: user.data.username,
+        tipo: tipo,
+        npart: part,
+      };
+
+      if (!loaded){
+        setLoaded(true);
+        TorneoService.findAll(data).then(response => {
+          console.log(response.data)
+          setTorneos(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+
+      return torneos.map((value) => {
+        return(
+          <ListItem key={value.nombre} className="listItem">
                 <ListItemText
-                primary={value.name}
-                secondary={value.participants+" participantes"}
+                primary={value.nombre}
+                secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
                 <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {}}>
@@ -185,9 +171,9 @@ function Tournaments() {
                 </Button>
                 </ListItemSecondaryAction>
             </ListItem>
-          )
-        })
-    }  
+        )
+      })
+    }
 
     return (
       <div className={Application.selectTournament}>
@@ -220,7 +206,7 @@ function Tournaments() {
               />
             </div>
           <List className={classes.lista}>
-          {AvailableTournaments()}
+          {AvailableTournaments(0,8)}
           </List>
       </TabPanel>
       <TabPanel value={value} index={1}>
