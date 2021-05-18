@@ -80,7 +80,7 @@ export default function Game() {
   const tapet = user ? "https://las10ultimas.herokuapp.com/images/"+user.data.f_tapete+".jpg" : "https://las10ultimas.herokuapp.com/images/tapete2.jpg";
   const selectRoom = SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName);
   const chat=Chat(username,socket);
-  const tapete2=Tapete2(socket,roomName);
+  //const tapete2=Tapete2(socket,roomName);
   const tapete1=Tapete1(socket,roomName);
 
   /*if(!loaded){
@@ -89,7 +89,7 @@ export default function Game() {
   }*/
 
   return (
-    <div className={Application.container} style={{backgroundImage: `url(${tapet})`}}>
+    <div className={Application.container}>
         { ! user ?
           history.push("/")
         : gamemode === 0 ?
@@ -101,21 +101,37 @@ export default function Game() {
             {selectGame}
           </div>
           : gamemode === 1 ?
-          <div className={Application.board}>  
-            <h1 className={Application.header}>
-              Partida individual online
-            </h1>
-            {matched ? tapete1 : selectRoom}
-          </div>
+            matched ? 
+            <div className={Application.board} style={{backgroundImage: `url(${tapet})`}}>  
+              <h1 className={Application.header}>
+                Partida individual online
+              </h1>
+              {tapete1}
+            </div>
+            : 
+            <div className={Application.board}>  
+              <h1 className={Application.header}>
+                Partida individual online
+              </h1>
+              {selectRoom}
+            </div>
           : gamemode === 2 ?
-          <div className={Application.board}>  
-            <h1 className={Application.header}>
-              Partida por parejas online
-            </h1>
-            {matched ? tapete2 : selectRoom}
-          </div>
+            matched ? 
+            <div className={Application.board} style={{backgroundImage: `url(${tapet})`}}>  
+              <h1 className={Application.header}>
+                Partida por parejas online
+              </h1>
+              {/*tapete2*/}
+            </div>
+            :
+            <div className={Application.board}>  
+              <h1 className={Application.header}>
+                Partida por parejas online
+              </h1>
+              {selectRoom}
+            </div>
           : gamemode === 3 ?
-          <div className={Application.board}>  
+          <div className={Application.board} style={{backgroundImage: `url(${tapet})`}}>  
             <h1 className={Application.header}>
               Partida contra la IA
             </h1>
