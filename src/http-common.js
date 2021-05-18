@@ -13,6 +13,7 @@ module.exports = {
   URL_USER_DELETE: BASE_URL + "usuario/dropUser/",
   URL_AMIGO_FINDALL: BASE_URL + "amigo/findAll/",
   URL_AMIGO_ACCEPT: BASE_URL + "amigo/acceptFriend/",
+  URL_AMIGO_DELETE: BASE_URL + "amigo/dropFriend/",
   URL_AMIGO_LISTSOLICITUDES: BASE_URL + "amigo/listRequest/",
   URL_TORNEO_FINDALL: BASE_URL + "torneo/findAllTournament/",
   URL_FONDOCARTA_FIND: BASE_URL + "fondo_carta/findAllCardsBack",

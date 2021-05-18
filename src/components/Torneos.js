@@ -166,8 +166,10 @@ const DialogTitle = withStyles(useStyles)((props) => {
 function Tournaments() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [value2, setValue2] = React.useState(0);
     const [torneos,setTorneos] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
+    const [nombreTorneo,setnombreTorneo] = React.useState("");
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [open5, setOpen5] = React.useState(false);
 
@@ -198,16 +200,31 @@ function Tournaments() {
         ],
       },
     ];
+
+    const ElBrack = () => {
+      //....
+      return (
+        <Bracket
+          rounds={rounds}
+          renderTitleComponent={(title: React.ReactNode, roundIndex: number) => {
+            return <div style={{ textAlign: 'center', color: 'red' }}>{title}</div>;
+          }}
+        />
+      );
+    };
     
     
 
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
+      setLoaded(false);
     };
 
-    const handleClickOpen5 = () => {
+    const handleClickOpen5 = (namee) => {
+      setnombreTorneo(namee);
       setOpen5(true);
+      
     };
     const handleClose5 = () => {
       setOpen5(false);
@@ -240,15 +257,15 @@ function Tournaments() {
                 secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5()}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre)}}>
                     Unirse
                 </Button>
                   <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose5}>
-                      Torneo {value.nombre}
+                      Torneo {nombreTorneo}
                     </DialogTitle>
                     <div>
-                      <Bracket rounds={rounds} />
+                    {ElBrack()}
                     </div>
                     <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
                       Jugar

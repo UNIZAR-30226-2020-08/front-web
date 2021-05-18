@@ -167,6 +167,19 @@ function Friends() {
             console.log(e);
           });
       }
+
+      const handleEliminar = (amigo) => {   
+        var data = {
+            username: user.data.username,
+            amigoname: amigo,
+          };
+          AmigoService.delete(data)
+            .then(response => {
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        }
     
 
     function AvailableFriends() {
@@ -193,6 +206,9 @@ function Friends() {
           secondary={value.copas+"🏆"}
           />
           <ListItemSecondaryAction>
+          <Button edge="end"  variant="outlined" aria-label="Unirse" margin-right="5vh" onClick={() => {handleEliminar(value.username)}}>
+              Eliminar
+          </Button>
           <Button edge="end"  variant="outlined" aria-label="Unirse">
               Invitar
           </Button>
