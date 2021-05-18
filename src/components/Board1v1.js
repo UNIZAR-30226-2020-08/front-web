@@ -195,6 +195,7 @@ export default function Board(socket,roomName) {
       if(puntos_e0/50 >= 1){
         label_e1 = " buenas";
       }
+      console.log(puntos_e0, " a ", puntos_e1);
       if(myOrden.current === 1){
         alert( "Tienes " + puntos_e0-50 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + puntos_e1-50 + label_e1);
       }else{
@@ -233,7 +234,7 @@ export default function Board(socket,roomName) {
       }
     });
 
-    socket.on("Vueltas", ({ mensaje, puntos_e0,puntos_e1 }) => {
+    socket.on("Vueltas", ({ mensaje, puntos_e0, puntos_e1 }) => {
       var label_e0 = " malas";
       if(puntos_e0/50 >= 1){
         label_e0 = " buenas";
@@ -242,6 +243,7 @@ export default function Board(socket,roomName) {
       if(puntos_e0/50 >= 1){
         label_e1 = " buenas";
       }
+      console.log(puntos_e0, " a ", puntos_e1);
       if(myOrden.current === 1){
         alert( "Tienes " + puntos_e0-50 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + puntos_e1-50 + label_e1 + "\nPARTIDA DE VUELTAS!");
       }else{
@@ -251,26 +253,19 @@ export default function Board(socket,roomName) {
   }, []);
 
   function tieneEnMano(palo){
-    if(cartas.current.c1.charAt(1) === palo){
-      console.log("TIENE " , palo);
+    if(cartas.current.c1.charAt(1) === palo  && cartas.current.c1 !== "NO"){
       return true;
-    }else if(cartas.current.c2.charAt(1) === palo){
-      console.log("TIENE " , palo);
+    }else if(cartas.current.c2.charAt(1) === palo && cartas.current.c2 !== "NO"){
       return true;
-    }else if(cartas.current.c3.charAt(1) === palo){
-      console.log("TIENE " , palo);
+    }else if(cartas.current.c3.charAt(1) === palo && cartas.current.c3 !== "NO"){
       return true;
-    }else if(cartas.current.c4.charAt(1) === palo){
-      console.log("TIENE " , palo);
+    }else if(cartas.current.c4.charAt(1) === palo && cartas.current.c4 !== "NO"){
       return true;
-    }else if(cartas.current.c5.charAt(1) === palo){
-      console.log("TIENE " , palo);
+    }else if(cartas.current.c5.charAt(1) === palo && cartas.current.c5 !== "NO"){
       return true;
-    }else if(cartas.current.c6.charAt(1) === palo){
-      console.log("TIENE " , palo);
+    }else if(cartas.current.c6.charAt(1) === palo && cartas.current.c6 !== "NO"){
       return true;
     }
-    console.log("NO TIENE " , palo);
   }
 
   function mata(carta1, carta2){
@@ -279,7 +274,7 @@ export default function Board(socket,roomName) {
     var palo2 = carta2.charAt(1);
     var valor2 = carta2.charAt(0);
     var palotriunfo = triunfo.current.charAt(1);
-    if(palo1 === palo2){
+    if(palo1 === palo2 && carta2 !== "NO"){
       if(valor2 == 0 || 
         (valor2 == 2 && valor1 != 0) || 
         (valor2 == 9 && valor1 != 0 && valor1 != 2) ||
@@ -290,47 +285,41 @@ export default function Board(socket,roomName) {
         (valor2 == 4 && (valor1 == 1 || valor1 == 3 )) ||
         (valor2 == 3 && valor1 == 1)
       ){
-        console.log("MATA");
         return true;
       }else{
-        console.log("NO MATA");
         return false;
       }
-    }else if(palo1 !== palo2 && palo1 === palotriunfo){
-      console.log("NO MATA");
+    }else if(palo1 !== palo2 && palo1 === palotriunfo && carta2 !== "NO"){
       return false;
-    }else if(palo1 !== palo2 && palo2 === palotriunfo){
-      console.log("MATA");
+    }else if(palo1 !== palo2 && palo2 === palotriunfo && carta2 !== "NO"){
       return true;
     }else{
-      console.log("NO MATA");
       return false;
     }
   }
 
   function puedeMatar(carta,palo){
-    console.log("Puedo matar esta carta ",carta," con este palo ",palo);
-    if(cartas.current.c1.charAt(1) === palo){
+    if(cartas.current.c1.charAt(1) === palo && cartas.current.c1 !== "NO"){
       if(mata(carta,cartas.current.c1)){
         return true;
       }
-    }if(cartas.current.c2.charAt(1) === palo){
+    }if(cartas.current.c2.charAt(1) === palo && cartas.current.c2 !== "NO"){
       if(mata(carta,cartas.current.c2)){
         return true;
       }
-    }if(cartas.current.c3.charAt(1) === palo){
+    }if(cartas.current.c3.charAt(1) === palo && cartas.current.c3 !== "NO"){
       if(mata(carta,cartas.current.c3)){
         return true;
       }
-    }if(cartas.current.c4.charAt(1) === palo){
+    }if(cartas.current.c4.charAt(1) === palo && cartas.current.c4 !== "NO"){
       if(mata(carta,cartas.current.c4)){
         return true;
       }
-    }if(cartas.current.c5.charAt(1) === palo){
+    }if(cartas.current.c5.charAt(1) === palo && cartas.current.c5 !== "NO"){
       if(mata(carta,cartas.current.c5)){
         return true;
       }
-    }if(cartas.current.c6.charAt(1) === palo){
+    }if(cartas.current.c6.charAt(1) === palo && cartas.current.c6 !== "NO"){
       if(mata(carta,cartas.current.c6)){
         return true;
       }
@@ -448,20 +437,14 @@ export default function Board(socket,roomName) {
           var palo1 = jugada1.current.charAt(1);
           var palotriunfo = triunfo.current.charAt(1);
           if(palo0 === palo1){
-            console.log("tira palos iguales");
             if(!mata(jugada1.current,carta) && puedeMatar(jugada1.current,palo1)){
-              console.log("no mata o puede matar");
               cartaValida = false;
-              
             }
           }else if(palo0 === palotriunfo){
-            console.log("tira triunfo");
             if(tieneEnMano(palo1)){
-              console.log("tiene ", palo1 ," en mano");
               cartaValida = false;
             }
           }else if(tieneEnMano(palo1) || tieneEnMano(palotriunfo)){
-            console.log("tiene ", palo1 ," en mano o tiene triunfo");
             cartaValida = false;
           }
         }
@@ -470,7 +453,6 @@ export default function Board(socket,roomName) {
           setJugada0M(jugada0.current);
           turno.current = ( turno.current + 1 ) % 2;
           setTurnoM(turno.current);
-          //console.log("El turno era ",turno," y ahora es ",(turno + 1 ) % 2," y yo soy ", orden-1, " y el es ",user1.orden-1);
           if(cartas.current.c1 === carta){
             cartas.current.c1 = "NO";
             setCartasMc1("NO");
