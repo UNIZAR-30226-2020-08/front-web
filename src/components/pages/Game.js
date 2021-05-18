@@ -73,16 +73,23 @@ export default function Game() {
   const [room,setRoom] = React.useState("none");
   const roomName = React.useRef("none")
   const [matched,setMatched] = React.useState(false);
+  //const [loaded,setLoaded] = React.useState(false);
   const selectGame = SelectGame(setGamemode);
   const user = AuthenticationDataService.getCurrentUser();
   const username = user ? user.data.username : "anonimus"
+  const tapet = user ? "https://las10ultimas.herokuapp.com/images/"+user.data.f_tapete+".jpg" : "https://las10ultimas.herokuapp.com/images/tapete2.jpg";
   const selectRoom = SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName);
   const chat=Chat(username,socket);
   const tapete2=Tapete2(socket,roomName);
   const tapete1=Tapete1(socket,roomName);
 
+  /*if(!loaded){
+    //scroll.scrollToTop();
+    setLoaded(true);
+  }*/
+
   return (
-    <div className={Application.container}>
+    <div className={Application.container} style={{backgroundImage: `url(${tapet})`}}>
         { ! user ?
           history.push("/")
         : gamemode === 0 ?
