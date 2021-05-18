@@ -168,7 +168,7 @@ function Tournaments() {
     const [value, setValue] = React.useState(0);
     const [torneos,setTorneos] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
-    const user = AuthenticationDataService.getCurrentUser();
+    const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [open5, setOpen5] = React.useState(false);
 
     const rounds: RoundProps[] = [
@@ -240,9 +240,20 @@ function Tournaments() {
                 secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5()}}>
                     Unirse
                 </Button>
+                  <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5}>
+                    <DialogTitle id="customized-dialog-title" onClose={handleClose5}>
+                      Torneo {value.nombre}
+                    </DialogTitle>
+                    <div>
+                      <Bracket rounds={rounds} />
+                    </div>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
+                      Jugar
+                    </Button>
+                  </Dialog>
                 </ListItemSecondaryAction>
             </ListItem>
         )
@@ -265,7 +276,6 @@ function Tournaments() {
             <Tab label="Por Parejas 8 equipos" icon={<FavoriteIcon />} {...a11yProps(1)} />
             <Tab label="Individuales 16 equipos" icon={<PhoneIcon />} {...a11yProps(2)}  />
             <Tab label="Por Parejas 16 equipos" icon={<FavoriteIcon />} {...a11yProps(3)} />
-            <Tab label="En juego" icon={<FavoriteIcon />} {...a11yProps(4)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
@@ -339,20 +349,6 @@ function Tournaments() {
           <List className={classes.lista}>
           {value === 3? AvailableTournaments(1,16): <></>}
           </List>
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-          <Button onClick={handleClickOpen5}>
-                Ver bracket
-          </Button>
-          <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5}>
-            <DialogTitle id="customized-dialog-title" onClose={handleClose5}>
-              Bracket
-            </DialogTitle>
-            <div>
-            <Bracket rounds={rounds} />
-            </div>
-        
-      </Dialog>
       </TabPanel>
       </div>
     );

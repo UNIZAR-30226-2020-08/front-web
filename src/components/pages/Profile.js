@@ -56,6 +56,10 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 
+import FondoCartaService from "../../services/fondo_carta.service";
+import FondoTapeteService from "../../services/fondo_tapete.service";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -195,24 +199,103 @@ const useStyles = makeStyles((theme) => ({
     const [open2,setOpen2] = React.useState(false);
     const [mail, setMail] = React.useState("");
     const [open3, setOpen3] = React.useState(false);
+    const [cartas,setCartas] = React.useState([]);
+    const [tapetes,setTapetes] = React.useState([]);
+    const [loaded,setLoaded] = React.useState(false);
+    const [loaded2,setLoaded2] = React.useState(false);
 
     const [open4, setOpen4] = React.useState(false);
 
 
-    const viewMail = () => { 
+    function AvailableBarajas() {
+      
       var data = {
-        username: user.data.username,
       };
-      UserService.find(data);
-      setMail();
+
+      if (!loaded){
+        console.log("Lleegaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        setLoaded(true);
+        FondoCartaService.findAll(data).then(response => {
+          console.log(response.data)
+          setCartas(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+    
+      return cartas.map((value) => {
+        return(
+          
+          <Grid item xs={12} sm={6}>
+          <Card button onClick={() => {handleBaraja1(value.f_carta);handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_carta+"/0O.png"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_carta}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> 
+          </Grid>
+          
+      
+        )
+      })
+    }
+    function AvailableTapetes() {
+      
+      var data = {
+      };
+
+      if (!loaded2){
+        console.log("Lleegaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        setLoaded2(true);
+        FondoTapeteService.findAll(data).then(response => {
+          console.log(response.data)
+          setTapetes(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+
+      return tapetes.map((value) => {
+        return(
+          
+          <Grid item xs={12} sm={6}>
+          <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_tapete+".jpg"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_tapete}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> 
+          </Grid>
+          
+      
+        )
+      })
     }
 
     
 
-     const handleTapete1 = () => {  
+     const handleTapete1 = (tapetee) => {  
       var data = {
         username: user.data.username,
-        f_tapete: 'tapete1',
+        f_tapete: tapetee,
       };
       UserService.update(data)
         .then(response => {
@@ -220,29 +303,14 @@ const useStyles = makeStyles((theme) => ({
         .catch(e => {
           console.log(e);
         });
-        user.data.f_tapete='tapete1';
+        user.data.f_tapete=tapetee;
         AuthenticationDataService.updateCurrentUser(user);
       }
 
-      const handleTapete2 = () => {  
-        var data = {
-          username: user.data.username,
-          f_tapete: 't_default',
-        };
-        UserService.update(data)
-          .then(response => {
-          })
-          .catch(e => {
-            console.log(e);
-          });
-          user.data.f_tapete='tapete2';
-          AuthenticationDataService.updateCurrentUser(user);
-        }
-
-        const handleBaraja1 = () => {  
+        const handleBaraja1 = (cartaa) => {  
           var data = {
             username: user.data.username,
-            f_carta: 'baraja1',
+            f_carta: cartaa,
           };
           UserService.update(data)
             .then(response => {
@@ -250,25 +318,11 @@ const useStyles = makeStyles((theme) => ({
             .catch(e => {
               console.log(e);
             });
-            user.data.f_carta='baraja1';
+            user.data.f_carta=cartaa;
             AuthenticationDataService.updateCurrentUser(user);
 
           }
     
-          const handleBaraja2 = () => {  
-            var data = {
-              username: user.data.username,
-              f_carta: 'baraja2',
-            };
-            UserService.update(data)
-              .then(response => {
-              })
-              .catch(e => {
-                console.log(e);
-              });
-              user.data.f_carta='baraja2';
-              AuthenticationDataService.updateCurrentUser(user);
-            }
     
 
     const handleOpen1 = () => {
@@ -526,38 +580,7 @@ const useStyles = makeStyles((theme) => ({
             <h2 id="transition-modal-title">Tapetes disponibles</h2>          
             <div id="transition-modal-description">
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-              <Card button onClick={handleTapete1} className={classes.media1}>
-                    <CardActionArea>
-                      <CardMedia
-                        className={classes.media2}
-                        image="images/tapete1.jpg"
-                        title="tapete1"
-                      />
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Tapete 1
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>                              
-                  </Card>                            
-                  </Grid>
-                  <Grid item xs={12} sm={6}>                             
-                  <Card button onClick={handleTapete2} className={classes.media1}>
-                    <CardActionArea>
-                      <CardMedia
-                        className={classes.media2}
-                        image="images/tapete2.jpg"
-                        title="tapete2"
-                      />
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Tapete 2
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    </Card>
-                  </Grid>
+              {AvailableTapetes()}
                   </Grid>
             </div>
           </div>
@@ -581,40 +604,8 @@ const useStyles = makeStyles((theme) => ({
             <h2 id="transition-modal-title">Cartas disponibles</h2>          
             <div id="transition-modal-description">
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-              <Card button onClick={handleBaraja1} className={classes.media1}>
-                    <CardActionArea>
-                      <CardMedia
-                        className={classes.media2}
-                        image="images/baraja1/1B.png"
-                        title="ascopas"
-                      />
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Cartas 1
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>                                
-                  </Card>                            
-                  </Grid>
-                  <Grid item xs={12} sm={6}>                             
-                  <Card button onClick={handleBaraja2} className={classes.media1}>
-                    <CardActionArea>
-                      <CardMedia
-                        className={classes.media2}
-                        image="images/baraja1/1C.png"
-                        title="asoros"
-                      />
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Cartas 2
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                      
-                    </Card>
-                  </Grid>
-                  </Grid>
+              {AvailableBarajas()}
+              </Grid>
             </div>
           </div>
         </Fade>
