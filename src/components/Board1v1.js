@@ -6,6 +6,9 @@ import Usuario from "./Usuario"
 import Button from "@material-ui/core/Button";
 import AuthenticationDataService from "../services/auth.service";
 import Radio from "@material-ui/core/Radio";
+import Dialog from '@material-ui/core/Dialog';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function Board(socket,roomName) {
   const user = AuthenticationDataService.getCurrentUser();
@@ -67,6 +70,10 @@ export default function Board(socket,roomName) {
 
   const selectedCard = useRef("");
   const [selectedCardM,setSelectedCardM] = useState("");
+
+  const [finished,setFinished] = useState(false);
+
+  const [resultado,setResultado] = useState("");
 
   const baraja = user ? user.data.f_carta : "baraja1";
   const username = user ? user.data.username : "anonimo";
@@ -188,19 +195,34 @@ export default function Board(socket,roomName) {
 
     socket.on("Resultado", ({ puntos_e0, puntos_e1 }) => {
       var label_e0 = " malas";
+      var pts_e0 = puntos_e0;
       if(puntos_e0/50 >= 1){
         label_e0 = " buenas";
+        pts_e0 = pts_e0 - 50;
       }
       var label_e1 = " malas";
+      var pts_e1 = puntos_e1;
       if(puntos_e0/50 >= 1){
         label_e1 = " buenas";
+        pts_e1 = pts_e1 - 50;
       }
-      console.log(puntos_e0, " a ", puntos_e1);
+      var mensaje = "HAS PERDIDO"
       if(myOrden.current === 1){
-        alert( "Tienes " + puntos_e0-50 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + puntos_e1-50 + label_e1);
+        if(puntos_e0 > puntos_e1){
+          mensaje = "HAS GANADO"
+        }
       }else{
-        alert( "Tienes " + puntos_e1-50 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + puntos_e0-50 + label_e0);
+        if(puntos_e0 < puntos_e1){
+          mensaje = "HAS GANADO"
+        }
+      }      
+      console.log(puntos_e0 + " a " +puntos_e1)
+      if(myOrden.current === 1){
+        setResultado( "Tienes " + pts_e0 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + pts_e1 + label_e1 + "\n" + mensaje);
+      }else{
+        setResultado( "Tienes " + pts_e1 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + pts_e0 + label_e0 + "\n" + mensaje);
       }
+      setFinished(true);
     });
 
     socket.on("cante", (dataCante) => {
@@ -236,18 +258,22 @@ export default function Board(socket,roomName) {
 
     socket.on("Vueltas", ({ mensaje, puntos_e0, puntos_e1 }) => {
       var label_e0 = " malas";
+      var pts_e0 = puntos_e0;
       if(puntos_e0/50 >= 1){
         label_e0 = " buenas";
+        pts_e0 = pts_e0 - 50;
       }
       var label_e1 = " malas";
+      var pts_e1 = puntos_e1;
       if(puntos_e0/50 >= 1){
         label_e1 = " buenas";
+        pts_e1 = pts_e1 - 50;
       }
-      console.log(puntos_e0, " a ", puntos_e1);
+      console.log(puntos_e0 + " a " +puntos_e1)
       if(myOrden.current === 1){
-        alert( "Tienes " + puntos_e0-50 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + puntos_e1-50 + label_e1 + "\nPARTIDA DE VUELTAS!");
+        alert( "Tienes " + pts_e0 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + pts_e1 + label_e1 + "\nPARTIDA DE VUELTAS!");
       }else{
-        alert( "Tienes " + puntos_e1-50 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + puntos_e0-50 + label_e0 + "\nPARTIDA DE VUELTAS!");
+        alert( "Tienes " + pts_e1 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + pts_e0 + label_e0 + "\nPARTIDA DE VUELTAS!");
       }
     });
   }, []);
@@ -492,78 +518,95 @@ export default function Board(socket,roomName) {
     }
   };
 
-  function handleMoveCarta(carta){
-    var carta2mov;
-    var carta2mov2;
-    if(cartas.current.c1 === selectedCard.current){
-      carta2mov = "c1"
-    }else if(cartas.current.c2 === selectedCard.current){
-      carta2mov = "c2"
-    }else if(cartas.current.c3 === selectedCard.current){
-      carta2mov = "c3"
-    }else if(cartas.current.c4 === selectedCard.current){
-      carta2mov = "c4"
-    }else if(cartas.current.c5 === selectedCard.current){
-      carta2mov = "c5"
-    }else if(cartas.current.c6 === selectedCard.current){
-      carta2mov = "c6"
+  function handleMoveCarta(carta){  
+    var carta2mov = "NO";
+    var carta2mov2 = "NO";
+    if("c1" === selectedCard.current){
+      carta2mov = cartas.current.c1;
+    }else if("c2" === selectedCard.current){
+      carta2mov = cartas.current.c2;
+    }else if("c3" === selectedCard.current){
+      carta2mov = cartas.current.c3;
+    }else if("c4" === selectedCard.current){
+      carta2mov = cartas.current.c4;
+    }else if("c5" === selectedCard.current){
+      carta2mov = cartas.current.c5;
+    }else if("c6" === selectedCard.current){
+      carta2mov = cartas.current.c6;
     }
-    if(cartas.current.c1 === carta){
-      carta2mov2 = "c1"
-    }else if(cartas.current.c2 === carta){
-      carta2mov2 = "c2"
-    }else if(cartas.current.c3 === carta){
-      carta2mov2 = "c3"
-    }else if(cartas.current.c4 === carta){
-      carta2mov2 = "c4"
-    }else if(cartas.current.c5 === carta){
-      carta2mov2 = "c5"
-    }else if(cartas.current.c6 === carta){
-      carta2mov2 = "c6"
+  
+    if("c1" === carta){
+      carta2mov2 = cartas.current.c1;
+    }else if("c2" === carta){
+      carta2mov2 = cartas.current.c2;
+    }else if("c3" === carta){
+      carta2mov2 = cartas.current.c3;
+    }else if("c4" === carta){
+      carta2mov2 = cartas.current.c4;
+    }else if("c5" === carta){
+      carta2mov2 = cartas.current.c5;
+    }else if("c6" === carta){
+      carta2mov2 = cartas.current.c6;
     }
-    if(carta2mov === "c1"){
-      cartas.current.c1 = carta;
-      setCartasMc1(carta);
-    }else if(carta2mov === "c2"){
-      cartas.current.c2 = carta;
-      setCartasMc2(carta);
-    }else if(carta2mov === "c3"){
-      cartas.current.c3 = carta;
-      setCartasMc3(carta);
-    }else if(carta2mov === "c4"){
-      cartas.current.c4 = carta;
-      setCartasMc4(carta);
-    }else if(carta2mov === "c5"){
-      cartas.current.c5 = carta;
-      setCartasMc5(carta);
-    }else if(carta2mov === "c6"){
-      cartas.current.c6 = carta;
-      setCartasMc6(carta);
+
+    if("c1" === carta){
+      cartas.current.c1 = carta2mov;
+      setCartasMc1(carta2mov);
+    }else if("c2" === carta){
+      cartas.current.c2 = carta2mov;
+      setCartasMc2(carta2mov);
+    }else if("c3" === carta){
+      cartas.current.c3 = carta2mov;
+      setCartasMc3(carta2mov);
+    }else if("c4" === carta){
+      cartas.current.c4 = carta2mov;
+      setCartasMc4(carta2mov);
+    }else if("c5" === carta){
+      cartas.current.c5 = carta2mov;
+      setCartasMc5(carta2mov);
+    }else if("c6" === carta){
+      cartas.current.c6 = carta2mov;
+      setCartasMc6(carta2mov);
     }
-    if(carta2mov2 === "c1"){
-      cartas.current.c1 = selectedCard.current;
-      setCartasMc1(selectedCard.current);
-    }else if(carta2mov2 === "c2"){
-      cartas.current.c2 = selectedCard.current;
-      setCartasMc2(selectedCard.current);
-    }else if(carta2mov2 === "c3"){
-      cartas.current.c3 = selectedCard.current;
-      setCartasMc3(selectedCard.current);
-    }else if(carta2mov2 === "c4"){
-      cartas.current.c4 = selectedCard.current;
-      setCartasMc4(selectedCard.current);
-    }else if(carta2mov2 === "c5"){
-      cartas.current.c5 = selectedCard.current;
-      setCartasMc5(selectedCard.current);
-    }else if(carta2mov2 === "c6"){
-      cartas.current.c6 = selectedCard.current;
-      setCartasMc6(selectedCard.current);
+
+    if("c1" === selectedCard.current){
+      cartas.current.c1 = carta2mov2;
+      setCartasMc1(carta2mov2);
+    }else if("c2" === selectedCard.current){
+      cartas.current.c2 = carta2mov2;
+      setCartasMc2(carta2mov2);
+    }else if("c3" === selectedCard.current){
+      cartas.current.c3 = carta2mov2;
+      setCartasMc3(carta2mov2);
+    }else if("c4" === selectedCard.current){
+      cartas.current.c4 = carta2mov2;
+      setCartasMc4(carta2mov2);
+    }else if("c5" === selectedCard.current){
+      cartas.current.c5 = carta2mov2;
+      setCartasMc5(carta2mov2);
+    }else if("c6" === selectedCard.current){
+      cartas.current.c6 = carta2mov2;
+      setCartasMc6(carta2mov2);
     }
   }
 
   function handleClickCarta(carta){
     if(selectedCard.current === carta){
-      handleLancarCarta(carta);
+      var carta2mov = "NO";
+      if("c1" === selectedCard.current){
+        carta2mov = cartas.current.c1;
+      }else if("c2" === selectedCard.current){
+        carta2mov = cartas.current.c2;
+      }else if("c3" === selectedCard.current){
+        carta2mov = cartas.current.c3;
+      }else if("c4" === selectedCard.current){
+        carta2mov = cartas.current.c4;
+      }else if("c5" === selectedCard.current){
+        carta2mov = cartas.current.c5;
+      }else if("c6" === selectedCard.current){
+        carta2mov = cartas.current.c6;
+      }
+      handleLancarCarta(carta2mov);
       selectedCard.current = "";
       setSelectedCardM("");
     }else if(selectedCard.current === ""){
@@ -580,7 +623,7 @@ export default function Board(socket,roomName) {
     <div className={Application.tapete}>
      <div className={Application.controles1}>
       <h1 className={Application.header}>
-        <Button variant="contained" className={Application.actionButton} onClick={() => {history.push("/");}}>SALIR</Button>
+        <Button variant="contained" className={Application.actionButton} onClick={() => {window.location.reload();}}>SALIR</Button>
         <Button variant="contained" className={Application.actionButton} onClick={() => {alert("Funcionalidad no implementada");}}>PAUSAR</Button>
       </h1>
      </div>
@@ -649,7 +692,7 @@ export default function Board(socket,roomName) {
      </div>
      <div className={Application.carta01}>
       <Card
-        onClick={() => handleClickCarta(cartasMc1)}
+        onClick={() => handleClickCarta("c1")}
         src={"images/"+baraja+"/"+cartasMc1+".png"}
         text={cartasMc1}
         selected={selectedCardM===cartasMc1}
@@ -657,7 +700,7 @@ export default function Board(socket,roomName) {
      </div>
      <div className={Application.carta02}>
       <Card
-        onClick={() => handleClickCarta(cartasMc2)}
+        onClick={() => handleClickCarta("c2")}
         src={"images/"+baraja+"/"+cartasMc2+".png"}
         text={cartasMc2}
         selected={selectedCardM===cartasMc2}
@@ -665,7 +708,7 @@ export default function Board(socket,roomName) {
      </div>
      <div className={Application.carta03}>
       <Card
-        onClick={() => handleClickCarta(cartasMc3)}
+        onClick={() => handleClickCarta("c3")}
         src={"images/"+baraja+"/"+cartasMc3+".png"}
         text={cartasMc3}
         selected={selectedCardM===cartasMc3}
@@ -673,7 +716,7 @@ export default function Board(socket,roomName) {
      </div>
      <div className={Application.carta04}>
       <Card
-        onClick={() => handleClickCarta(cartasMc4)}
+        onClick={() => handleClickCarta("c4")}
         src={"images/"+baraja+"/"+cartasMc4+".png"}
         text={cartasMc4}
         selected={selectedCardM===cartasMc4}
@@ -681,7 +724,7 @@ export default function Board(socket,roomName) {
      </div>
      <div className={Application.carta05}>
       <Card
-        onClick={() => handleClickCarta(cartasMc5)}
+        onClick={() => handleClickCarta("c5")}
         src={"images/"+baraja+"/"+cartasMc5+".png"}
         text={cartasMc5}
         selected={selectedCardM===cartasMc5}
@@ -689,7 +732,7 @@ export default function Board(socket,roomName) {
      </div>
      <div className={Application.carta06}>
       <Card
-        onClick={() => handleClickCarta(cartasMc6)}
+        onClick={() => handleClickCarta("c6")}
         src={"images/"+baraja+"/"+cartasMc6+".png"}
         text={cartasMc6}
         selected={selectedCardM===cartasMc6}
@@ -706,6 +749,15 @@ export default function Board(socket,roomName) {
       <></>
       }
      </div>
+     <Dialog open={finished} handleClose={()=>window.location.reload()} aria-labelledby="form-dialog-title">
+     <DialogTitle id="form-dialog-title">RESULTADO</DialogTitle>
+     <DialogContentText>
+      {resultado}
+    </DialogContentText>
+     <Button edge="end"  variant="outlined" aria-label="Aceptar" onClick={() => window.location.reload()}>
+      Aceptar
+     </Button>
+     </Dialog>
     </div>
   );
 }
