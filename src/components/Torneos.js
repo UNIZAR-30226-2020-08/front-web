@@ -178,7 +178,7 @@ function Tournaments() {
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [open5, setOpen5] = React.useState(false);
 
-    const rounds: RoundProps[] = [
+    const rounds = [
       {
         title: 'Primera Ronda',
         seeds: [
@@ -211,7 +211,7 @@ function Tournaments() {
       return (
         <Bracket
           rounds={rounds}
-          renderTitleComponent={(title: React.ReactNode, roundIndex: number) => {
+          renderTitleComponent={(title, roundIndex) => {
             return <div style={{ textAlign: 'center', color: 'red' }}>{title}</div>;
           }}
         />
