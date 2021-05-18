@@ -30,6 +30,10 @@ import Box from '@material-ui/core/Box';
 import AmigoService from "../services/amigo.service";
 import AuthenticationDataService from "../services/auth.service";
 
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import ContactsIcon from '@material-ui/icons/Contacts';
+import LocalBarIcon from '@material-ui/icons/LocalBar';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -143,17 +147,26 @@ function a11yProps(index) {
 function Friends() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [rank, setRank] = React.useState(0);
     const [amigs,setAmigs] = React.useState([]);
     const [solicitudes,setSolicitudes] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
     const [bien,setBien] = React.useState(false);
+    const [input,setInput] = React.useState("");
+    
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
 
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
+      setRank(newValue);
     };
+
+    const onChangeInput = (e) => {
+      setInput(e.target.value);
+      console.log(e.target.value);
+    }
 
     const handleAceptar = (amigo) => {   
       var data = {
@@ -206,12 +219,19 @@ function Friends() {
           secondary={value.copas+"🏆"}
           />
           <ListItemSecondaryAction>
-          <Button edge="end"  variant="outlined" aria-label="Unirse" margin-right="5vh" onClick={() => {handleEliminar(value.username)}}>
-              Eliminar
-          </Button>
-          <Button edge="end"  variant="outlined" aria-label="Unirse">
-              Invitar
-          </Button>
+          {rank === 0? 
+           <Button edge="end"  variant="outlined" aria-label="Unirse" margin-right="5vh" onClick={() => {handleEliminar(value.username)}}>
+           Eliminar
+            </Button>
+            : <></>}
+          {rank === 0? 
+           <Button edge="end"  variant="outlined" aria-label="Unirse">
+           Invitar
+            </Button>
+            : <></>}
+            
+          
+         
           </ListItemSecondaryAction>
       </ListItem>
         )
@@ -272,9 +292,9 @@ function Friends() {
         className={classes.pestana}
         
       >
-        <Tab label="Amigos" icon={<PhoneIcon />} {...a11yProps(0)} />
-        {<Tab label="Solicitudes" icon={<FavoriteIcon />} {...a11yProps(1)} />}
-        {<Tab label="Ranking" icon={<PersonPinIcon />} {...a11yProps(2)} />}
+        <Tab label="Amigos" icon={<ContactsIcon />} {...a11yProps(0)} />
+        {<Tab label="Solicitudes" icon={<PersonAddIcon />} {...a11yProps(1)} />}
+        {<Tab label="Ranking" icon={<LocalBarIcon />} {...a11yProps(2)} />}
       </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -289,8 +309,13 @@ function Friends() {
                   input: classes.inputInput,
                 }}
                 inputProps={{ 'aria-label': 'search' }}
+                onChange={onChangeInput}
               />
-              </div>
+          </div>
+          <Button edge="end"  variant="outlined" onClick={() => {}}>
+                Buscar
+            </Button>
+          
         <List className={classes.lista}>
           {AvailableFriends()}
         </List>

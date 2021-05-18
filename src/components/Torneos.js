@@ -39,6 +39,11 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import { Bracket, RoundProps } from 'react-brackets';
 
+import GroupIcon from '@material-ui/icons/Group';
+
+import PersonIcon from '@material-ui/icons/Person';
+
+
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -289,10 +294,10 @@ function Tournaments() {
             textColor="primary"
             aria-label="scrollable force tabs example"
           >
-            <Tab label="Individuales 8 equipos" icon={<PhoneIcon />} {...a11yProps(0)} />
-            <Tab label="Por Parejas 8 equipos" icon={<FavoriteIcon />} {...a11yProps(1)} />
-            <Tab label="Individuales 16 equipos" icon={<PhoneIcon />} {...a11yProps(2)}  />
-            <Tab label="Por Parejas 16 equipos" icon={<FavoriteIcon />} {...a11yProps(3)} />
+            <Tab label="Individuales 8 equipos" icon={<PersonIcon />} {...a11yProps(0)} />
+            <Tab label="Por Parejas 8 equipos" icon={<GroupIcon />} {...a11yProps(1)} />
+            <Tab label="Individuales 16 equipos" icon={<PersonIcon />} {...a11yProps(2)}  />
+            <Tab label="Por Parejas 16 equipos" icon={<GroupIcon />} {...a11yProps(3)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
@@ -328,7 +333,7 @@ function Tournaments() {
               />
             </div>
           <List className={classes.lista}>
-          {value === 1? AvailableTournaments(0,16): <></>}
+          {value === 1? AvailableTournaments(1,8): <></>}
           </List>
       </TabPanel>
       <TabPanel value={value} index={2}>
@@ -346,7 +351,7 @@ function Tournaments() {
               />
             </div>
           <List className={classes.lista}>
-          {value === 2? AvailableTournaments(1,8): <></>}
+          {value === 2? AvailableTournaments(0,16): <></>}
           </List>
       </TabPanel>
       <TabPanel value={value} index={3}>
