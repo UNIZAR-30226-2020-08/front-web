@@ -260,12 +260,11 @@ function Friends() {
         });
     }
 
-      return busc.map((value) => {
         return(
-          <ListItem key={value} className="listItem">
+          <ListItem key={busc.username} className="listItem">
           <ListItemText
-          primary={value.username}
-          secondary={value.copas+"🏆"}
+          primary={busc.username}
+          secondary={busc.copas+"🏆"}
           />
           <ListItemSecondaryAction>
            <Button edge="end"  variant="outlined" aria-label="Solicitar">
@@ -274,7 +273,7 @@ function Friends() {
           </ListItemSecondaryAction>
       </ListItem>
         )
-      })
+    
     }
 
     function AvailableSolicitudes() {
@@ -351,12 +350,12 @@ function Friends() {
                 onChange={onChangeInput}
               />
           </div>
-          <Button edge="end"  variant="outlined" onClick={() => {AvailableFriends2();setBusqueda(true);}}>
+          <Button edge="end"  variant="outlined" onClick={() => {AvailableFriends2();setBusqueda(true);setLoaded3(false);}}>
                 Buscar
             </Button>
           
         <List className={classes.lista}>
-        { busc===true ? AvailableFriends2() :  AvailableFriends() }
+        { busqueda ? AvailableFriends2() :  AvailableFriends() }
         </List>
       </TabPanel>
       <TabPanel value={value} index={1}>
