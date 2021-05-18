@@ -41,6 +41,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
 import UserService from "../../services/user.service";
+import PartidaService from "../../services/partida.service";
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -201,8 +202,10 @@ const useStyles = makeStyles((theme) => ({
     const [open3, setOpen3] = React.useState(false);
     const [cartas,setCartas] = React.useState([]);
     const [tapetes,setTapetes] = React.useState([]);
+    const [partidas,setPartidas] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
+    const [loaded3,setLoaded3] = React.useState(false);
 
     const [open4, setOpen4] = React.useState(false);
 
@@ -286,6 +289,32 @@ const useStyles = makeStyles((theme) => ({
           </Grid>
           
       
+        )
+      })
+    }
+
+    function AvailableHistorial() {
+      
+      var data = {
+        username: user.data.username,
+      };
+
+      if (!loaded3){
+        setLoaded3(true);
+        PartidaService.historial(data).then(response => {
+          console.log(response.data)
+          setPartidas(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+
+      return partidas.map((value) => {
+        return(         
+          <ListItem button>
+            <ListItemText primary= {value.partida} secondary={value.estado} />
+          </ListItem> 
         )
       })
     }
@@ -499,13 +528,7 @@ const useStyles = makeStyles((theme) => ({
                               </Toolbar>
                             </AppBar>
                             <List>
-                              <ListItem button>
-                                <ListItemText primary="Partida 135" secondary="Victoria" />
-                              </ListItem>
-                              <Divider />
-                              <ListItem button>
-                                <ListItemText primary="Partida 134" secondary="Derrota" />
-                              </ListItem>
+                              {AvailableHistorial()}
                             </List>
                           </Dialog>
                           </div>

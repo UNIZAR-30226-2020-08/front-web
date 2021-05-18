@@ -19,6 +19,7 @@ module.exports = {
   URL_FONDOCARTA_FIND: BASE_URL + "fondo_carta/findAllCardsBack",
   URL_FONDOTAPETE_FIND: BASE_URL + "fondo_tapete/findAllRugsCard",
   URL_PARTIDA_GETALL: BASE_URL + "partida/findAllGames/",
+  URL_PARTIDA_HISTORIAL: BASE_URL + "partida/listarHistorial/",
   URL_PARTIDA_CREATE: BASE_URL + "partida/"
 };
 

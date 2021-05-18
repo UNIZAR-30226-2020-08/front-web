@@ -29,10 +29,12 @@ import Box from '@material-ui/core/Box';
 
 import AmigoService from "../services/amigo.service";
 import AuthenticationDataService from "../services/auth.service";
+import UserService from "../services/user.service";
 
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import LocalBarIcon from '@material-ui/icons/LocalBar';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 
 
 
@@ -148,10 +150,13 @@ function Friends() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [rank, setRank] = React.useState(0);
+    const [busqueda, setBusqueda] = React.useState(false);
     const [amigs,setAmigs] = React.useState([]);
+    const [busc,setBusc] = React.useState([]);
     const [solicitudes,setSolicitudes] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
+    const [loaded3,setLoaded3] = React.useState(false);
     const [bien,setBien] = React.useState(false);
     const [input,setInput] = React.useState("");
     
@@ -161,6 +166,7 @@ function Friends() {
     const handleChange = (event, newValue) => {
       setValue(newValue);
       setRank(newValue);
+      setBusqueda(false);
     };
 
     const onChangeInput = (e) => {
@@ -238,6 +244,39 @@ function Friends() {
       })
     }
 
+    function AvailableFriends2() {
+      var data = {
+        username: input,
+      };
+
+      if (!loaded3){
+        setLoaded3(true);
+        UserService.find(data).then(response => {
+          console.log(response.data)
+          setBusc(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+
+      return busc.map((value) => {
+        return(
+          <ListItem key={value} className="listItem">
+          <ListItemText
+          primary={value.username}
+          secondary={value.copas+"🏆"}
+          />
+          <ListItemSecondaryAction>
+           <Button edge="end"  variant="outlined" aria-label="Solicitar">
+           Solicitar
+            </Button>
+          </ListItemSecondaryAction>
+      </ListItem>
+        )
+      })
+    }
+
     function AvailableSolicitudes() {
       var data = {
         username: user.data.username,
@@ -294,7 +333,7 @@ function Friends() {
       >
         <Tab label="Amigos" icon={<ContactsIcon />} {...a11yProps(0)} />
         {<Tab label="Solicitudes" icon={<PersonAddIcon />} {...a11yProps(1)} />}
-        {<Tab label="Ranking" icon={<LocalBarIcon />} {...a11yProps(2)} />}
+        {<Tab label="Ranking" icon={<EmojiEventsIcon />} {...a11yProps(2)} />}
       </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -312,12 +351,12 @@ function Friends() {
                 onChange={onChangeInput}
               />
           </div>
-          <Button edge="end"  variant="outlined" onClick={() => {}}>
+          <Button edge="end"  variant="outlined" onClick={() => {AvailableFriends2();setBusqueda(true);}}>
                 Buscar
             </Button>
           
         <List className={classes.lista}>
-          {AvailableFriends()}
+        { busc===true ? AvailableFriends2() :  AvailableFriends() }
         </List>
       </TabPanel>
       <TabPanel value={value} index={1}>

@@ -18,6 +18,10 @@ class PartidaService {
         return response.data;
       });
   }
+
+  historial(data) {
+    return axios.get(http.URL_PARTIDA_HISTORIAL + data.username, data);
+}
 }
 
 export default new PartidaService();
