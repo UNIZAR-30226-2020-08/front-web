@@ -65,10 +65,10 @@ export default function Board(socket,roomName) {
   const [tienesBaza,setTienesBaza] = useState(false);
 
   const puntose0 = useRef(0);
-  const [puntose0M,setPuntose0M] = useState(0);
-
   const puntose1 = useRef(0);
-  const [puntose1M,setPuntose1M] = useState(0);
+
+  const [misPuntos,setMisPuntos] = useState("0 malas");
+  const [susPuntos,setSusPuntos] = useState("0 malas");
 
   const selectedCard = useRef("");
   const [selectedCardM,setSelectedCardM] = useState("");
@@ -249,9 +249,27 @@ export default function Board(socket,roomName) {
 
     socket.on("puntos", ({ puntos_e0, puntos_e1 }) => {
       puntose0.current = puntos_e0;
-      setPuntose0M(puntos_e0);
       puntose1.current = puntos_e1;
-      setPuntose1M(puntos_e1);
+      var label_e0 = " malas";
+      var pts_e0 = puntos_e0;
+      if(puntos_e0/50 >= 1){
+        label_e0 = " buenas";
+        pts_e0 = pts_e0 - 50;
+      }
+      var label_e1 = " malas";
+      var pts_e1 = puntos_e1;
+      if(puntos_e1/50 >= 1){
+        label_e1 = " buenas";
+        pts_e1 = pts_e1 - 50;
+      }
+
+      if(myOrden.current === 1){
+        setMisPuntos(pts_e0 + label_e0);
+        setSusPuntos(pts_e1 + label_e1);
+      }else{
+        setMisPuntos(pts_e1 + label_e1);
+        setSusPuntos(pts_e0 + label_e0);
+      }  
       if(round.current/20 > 1){
         if(puntos_e0 > 100 || puntos_e1 > 100){
           var data = {
@@ -782,6 +800,15 @@ export default function Board(socket,roomName) {
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton} onClick={()=>{handleCantar()}}>CANTAR</Button>
         <Radio checked={turnoM===myOrdenM-1}/>
+        { roundM / 20 >= 1 ?
+        <div className={Application.cuenta}>
+          <h1 className={Application.cuentaH}>Mi equipo: {misPuntos}</h1>
+          <h1 className={Application.cuentaH}>Rival: {susPuntos}</h1>
+        </div>
+        :
+        <div className={Application.cuenta}>
+        </div>
+        }
       </h1>
      </div>
      <div className={Application.carta00}>

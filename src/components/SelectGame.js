@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonBases(setGamemode,socket,username) {
+export default function ButtonBases(setGamemode,socket,username,setMatched,roomName) {
   const classes = useStyles();
 
   return (
@@ -123,6 +123,8 @@ export default function ButtonBases(setGamemode,socket,username) {
                       alert(error);
                     }
                   })
+                  roomName.current = response.nombre;
+                  setMatched(true);
               })
               .catch(e => {
                 console.log(e);

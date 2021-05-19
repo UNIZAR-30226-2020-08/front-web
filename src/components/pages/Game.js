@@ -78,12 +78,12 @@ export default function Game() {
   const user = AuthenticationDataService.getCurrentUser();
   const username = user ? user.data.username : "anonimus"
   const tapet = user ? "https://las10ultimas.herokuapp.com/images/"+user.data.f_tapete+".jpg" : "https://las10ultimas.herokuapp.com/images/tapete2.jpg";
-  const selectGame = SelectGame(setGamemode,socket,username);
+  const selectGame = SelectGame(setGamemode,socket,username,setMatched,roomName);
   const selectRoom = SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName);
   const chat=Chat(username,socket);
   //const tapete2=Tapete2(socket,roomName);
-  const tapete1=Tapete1(socket,roomName);
-  //const tapeteIA=TapeteIA(socket,roomName);
+  //const tapete1=Tapete1(socket,roomName);
+  const tapeteIA=TapeteIA(socket,roomName);
 
   /*if(!loaded){
     //scroll.scrollToTop();
@@ -108,7 +108,7 @@ export default function Game() {
               <h1 className={Application.header}>
                 Partida individual online
               </h1>
-              {tapete1}
+              {/*tapete1*/}
             </div>
             : 
             <div className={Application.board}>  
@@ -137,7 +137,7 @@ export default function Game() {
             <h1 className={Application.header}>
               Partida contra la IA
             </h1>
-            {/*tapeteIA*/}
+            {tapeteIA}
           </div>
           :
           <div className={Application.board}>  
