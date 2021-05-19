@@ -411,7 +411,7 @@ function Friends() {
         {<Tab label="Solicitudes" icon={<PersonAddIcon />} {...a11yProps(1)} />}
         {<Tab label="Ranking Amigos" icon={<EmojiEventsIcon />} {...a11yProps(2)} />}
         {<Tab label="Ranking Global" icon={<EmojiEventsIcon />} {...a11yProps(3)} />}
-        {<Tab label="Invitaciones" icon={<SendIcon />} {...a11yProps(3)} />}
+        {<Tab label="Invitaciones" icon={<SendIcon />} {...a11yProps(4)} />}
         
       </Tabs>
       </AppBar>
@@ -453,7 +453,7 @@ function Friends() {
             {AvailableGlobal()}
           </List>
       </TabPanel>
-      <TabPanel value={value} index={3}>
+      <TabPanel value={value} index={4}>
         <List className={classes.lista2}>
             {AvailableInvitaciones()}
           </List>
