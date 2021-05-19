@@ -21,6 +21,8 @@ import Box from '@material-ui/core/Box';
 import TorneoService from "../services/torneo.service";
 import AuthenticationDataService from "../services/auth.service";
 
+import ParticipantesTorneoService from "../services/participantes_torneo.service";
+
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -168,6 +170,7 @@ function Tournaments() {
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
     const [loaded3,setLoaded3] = React.useState(false);
+    const [loaded4,setLoaded4] = React.useState(false);
     const [nombreTorneo,setnombreTorneo] = React.useState("");
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [open5, setOpen5] = React.useState(false);
@@ -445,6 +448,27 @@ function Tournaments() {
     
     };
 
+    function UnirseTorneo(torneoDisp) {
+      var data = {
+        torneo: torneoDisp,
+        jugador: user.data.username,
+      };
+
+      if (!loaded4){
+        setLoaded4(true);
+        ParticipantesTorneoService.create(data).then(response => {
+          console.log(response);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+        return(  
+          <></>    
+        )
+    
+    };
+
 
     
     function AvailableTournaments(tip,part) {
@@ -474,7 +498,7 @@ function Tournaments() {
                 secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre);MatchMakingTorneos(value.nombre,inicial)}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre);MatchMakingTorneos(value.nombre,inicial); UnirseTorneo(value.nombre);}}>
                     Unirse
                 </Button>
                   <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5} style={{ maxWidth: "100%" }}>

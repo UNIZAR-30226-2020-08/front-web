@@ -26,6 +26,7 @@ module.exports = {
   URL_PARTIDA_GETALL: BASE_URL + "partida/findAllGames/",
   URL_PARTIDA_GETALL_PAUSED: BASE_URL + "partida/listarPausadas/",
   URL_PARTIDA_HISTORIAL: BASE_URL + "partida/listarHistorial/",
-  URL_PARTIDA_CREATE: BASE_URL + "partida/"
+  URL_PARTIDA_CREATE: BASE_URL + "partida/",
+  URL_PARTICIPANTESTORNEO_CREATE: BASE_URL + "participantes_torneo/",
 };
 
