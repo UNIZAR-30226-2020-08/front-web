@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import { fade, makeStyles } from '@material-ui/core/styles';
 import Application from "./application.module.scss";
 
+
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
@@ -163,15 +164,18 @@ function Tournaments() {
     const [value, setValue] = React.useState(0);
     const [value2, setValue2] = React.useState(0);
     const [torneos,setTorneos] = React.useState([]);
-    const [torneosB,setTorneosB] = React.useState([]);
+    const [torneosB,setTorneosB] = React.useState({nombre:""});
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
+    const [loaded3,setLoaded3] = React.useState(false);
     const [nombreTorneo,setnombreTorneo] = React.useState("");
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [open5, setOpen5] = React.useState(false);
     const [input,setInput] = React.useState("");
     const [largo, setLargo] = React.useState(false);
+    const [inicial, setInicial] = React.useState(1);
 
+    const [equipos,setEquipos] = React.useState([]);
     const [equipo1,setnombreEquipo1] = React.useState("");
     const [equipo2,setnombreEquipo2] = React.useState("");
     const [equipo3,setnombreEquipo3] = React.useState("");
@@ -346,10 +350,15 @@ function Tournaments() {
   
 
     const ElBrack = () => {
-      //....
+      if (largo){
       return (
         <Bracket rounds={rounds2}/>
-      );
+      );}
+      else{
+        return (
+          <Bracket rounds={rounds}/>
+        );
+      }
     };
 
     
@@ -364,6 +373,13 @@ function Tournaments() {
     const handleChange = (event, newValue) => {
       setValue(newValue);
       setLoaded(false);
+      if(newValue === 0 || newValue === 1){
+        setLargo(false);
+        setInicial(1);
+      }else{
+        setLargo(true);
+        setInicial(0);
+      }
     };
 
     const handleClickOpen5 = (namee) => {
@@ -377,7 +393,7 @@ function Tournaments() {
 
     function AvailableBTorneos() {
       var data = {
-        nombre:input,
+        torneo:input,
       };
 
       if (!loaded2){
@@ -390,8 +406,8 @@ function Tournaments() {
           console.log(e);
         });
     }
-
-        return(
+      if (torneosB.nombre !== ""){
+        return(       
           <ListItem key={torneosB.nombre} className="listItem">
           <ListItemText
           primary={torneosB.nombre}
@@ -402,7 +418,29 @@ function Tournaments() {
            Unirse
             </Button>
           </ListItemSecondaryAction>
-      </ListItem>
+      </ListItem> 
+        )}
+    
+    };
+
+    function MatchMakingTorneos(torneoo,rondaa) {
+      var data = {
+        torneo: torneoo,
+        ronda: rondaa,
+      };
+
+      if (!loaded3){
+        setLoaded3(true);
+        TorneoService.matchRound(data).then(response => {
+          console.log(response);
+          setEquipos(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+        return(  
+          <h1>Hola</h1>      
         )
     
     };
@@ -426,6 +464,8 @@ function Tournaments() {
         });
     }
 
+    
+
       return torneos.map((value) => {
         return(
           <ListItem key={value.nombre} className="listItem">
@@ -434,7 +474,7 @@ function Tournaments() {
                 secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre)}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre);MatchMakingTorneos(value.nombre,inicial)}}>
                     Unirse
                 </Button>
                   <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5} style={{ maxWidth: "100%" }}>

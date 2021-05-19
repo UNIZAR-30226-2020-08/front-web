@@ -12,6 +12,7 @@ import Application from "./application.module.scss";
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Fade from '@material-ui/core/Fade';
+import IconButton from '@material-ui/core/IconButton';
 
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
@@ -256,8 +257,9 @@ function Friends() {
             </Button>
             : <></>}
           {rank === 0? 
-           <DeleteIcon onClick={() => {handleEliminar(value.username)}} style={{ marginLeft: '30px' }}>
-            </DeleteIcon>
+           <IconButton  onClick={() => {handleEliminar(value.username)}} style={{ marginLeft: '30px' }}>
+             <DeleteIcon />
+            </IconButton>
             : <></>}
           </ListItemSecondaryAction>
       </ListItem>
