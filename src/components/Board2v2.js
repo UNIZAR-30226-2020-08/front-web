@@ -10,7 +10,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default function Board(socket,roomName) {
+export default function Board(socket,roomName,tipo) {
   const user = AuthenticationDataService.getCurrentUser();
   
   const history = useHistory();
@@ -91,6 +91,7 @@ export default function Board(socket,roomName) {
   const username = user ? user.data.username : "anonimo";
 
   useEffect(() => { 
+    if(tipo.current===2){ 
     socket.on("orden", ( orden ) => {
       myOrden.current = orden;
       setMyOrdenM(myOrden.current);
@@ -314,7 +315,8 @@ export default function Board(socket,roomName) {
         alert( "Tienes " + pts_e1 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + pts_e0 + label_e0 + "\nPARTIDA DE VUELTAS!");
       }
     });
-  }, []);
+    }
+  }, [tipo.current]);
 
   function tieneEnMano(palo){
     if(cartas.current.c1.charAt(1) === palo  && cartas.current.c1 !== "NO"){

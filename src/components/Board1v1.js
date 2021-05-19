@@ -12,7 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import "./Timer.css";
 
-export default function Board(socket,roomName) {
+export default function Board(socket,roomName,tipo) {
   const user = AuthenticationDataService.getCurrentUser();
 
   const history = useHistory();
@@ -118,6 +118,7 @@ export default function Board(socket,roomName) {
   const [timer,setTimer] = useState(<div></div>);
 
   useEffect(() => { 
+    if(tipo.current===1){ 
     socket.on("orden", ( orden ) => {
       myOrden.current = orden;
       setMyOrdenM(myOrden.current);
@@ -376,8 +377,8 @@ export default function Board(socket,roomName) {
         AuthenticationDataService.updateCurrentUser(user);
       }
     });
-
-  }, []);
+    }
+  }, [tipo.current]);
 
   function tieneEnMano(palo){
     if(cartas.current.c1.charAt(1) === palo  && cartas.current.c1 !== "NO"){
