@@ -14,10 +14,16 @@ class AmigoService {
   aceptar(data) {
     return axios.put(http.URL_AMIGO_ACCEPT + data.username + "/" + data.amigoname, data);
   }
+
+  create(data) {
+    return axios.post(http.URL_AMIGO_CREATE, data); 
+  }
   
   delete(data) {
     return axios.delete(http.URL_AMIGO_DELETE + data.username + "/" + data.amigoname, data);
   }
+
+  
 
 }
 

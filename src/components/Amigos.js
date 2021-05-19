@@ -174,6 +174,19 @@ function Friends() {
       console.log(e.target.value);
     }
 
+    const handleSolicitar = (amigoo) => {   
+      var data = {
+          usuario: user.data.username,
+          amigo: amigoo,
+        };
+        AmigoService.create(data)
+          .then(response => {
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      }
+    
     const handleAceptar = (amigo) => {   
       var data = {
           username: user.data.username,
@@ -267,7 +280,7 @@ function Friends() {
           secondary={busc.copas+"🏆"}
           />
           <ListItemSecondaryAction>
-           <Button edge="end"  variant="outlined" aria-label="Solicitar">
+           <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {handleSolicitar(busc.username);}}>
            Solicitar
             </Button>
           </ListItemSecondaryAction>
