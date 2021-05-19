@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
+import partidaService from '../services/partida.service';
 
 const images = [
   {
@@ -97,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonBases(setGamemode) {
+export default function ButtonBases(setGamemode,socket,username) {
   const classes = useStyles();
 
   return (
@@ -113,6 +114,21 @@ export default function ButtonBases(setGamemode) {
           }}
           onClick={()=>{
             setGamemode(image.mode_id);
+            if(image.mode_id === 3){
+              let data = {tipo: 0};
+              partidaService.create(data)
+              .then(response => {
+                  socket.emit('joinPartidaIA', { name:username, room:response.nombre , tipo: parseInt(0)}, (error) => {
+                    if(error) {
+                      alert(error);
+                    }
+                  })
+              })
+              .catch(e => {
+                console.log(e);
+              });
+              
+            }
           }}
         >
           <span

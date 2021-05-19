@@ -12,6 +12,7 @@ import SelectGame from "../SelectGame"
 import SelectRoom from "../SelectRoom"
 import Tapete1 from "../Board1v1"
 import Tapete2 from "../Board2v2"
+import TapeteIA from "../BoardIA"
 import Customize from "../Customize"
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
@@ -74,14 +75,15 @@ export default function Game() {
   const roomName = React.useRef("none")
   const [matched,setMatched] = React.useState(false);
   //const [loaded,setLoaded] = React.useState(false);
-  const selectGame = SelectGame(setGamemode);
   const user = AuthenticationDataService.getCurrentUser();
   const username = user ? user.data.username : "anonimus"
   const tapet = user ? "https://las10ultimas.herokuapp.com/images/"+user.data.f_tapete+".jpg" : "https://las10ultimas.herokuapp.com/images/tapete2.jpg";
+  const selectGame = SelectGame(setGamemode,socket,username);
   const selectRoom = SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName);
   const chat=Chat(username,socket);
   //const tapete2=Tapete2(socket,roomName);
   const tapete1=Tapete1(socket,roomName);
+  //const tapeteIA=TapeteIA(socket,roomName);
 
   /*if(!loaded){
     //scroll.scrollToTop();
