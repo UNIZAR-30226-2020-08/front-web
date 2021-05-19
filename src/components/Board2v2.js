@@ -92,6 +92,10 @@ export default function Board(socket,roomName,tipo) {
 
   const [resultado,setResultado] = useState("");
 
+  const cartaSalida = useRef("NO");
+
+  const cartaMata = useRef("NO");
+
   const baraja = user ? user.data.f_carta : "baraja1";
 
   const username = user ? user.data.username : "anonimo";
@@ -131,6 +135,384 @@ export default function Board(socket,roomName,tipo) {
   }
 
   const [timer,setTimer] = useState(<div></div>);
+
+  function tieneEnMano(palo){
+    if(cartas.current.c1.charAt(1) === palo  && cartas.current.c1 !== "NO"){
+      return true;
+    }else if(cartas.current.c2.charAt(1) === palo && cartas.current.c2 !== "NO"){
+      return true;
+    }else if(cartas.current.c3.charAt(1) === palo && cartas.current.c3 !== "NO"){
+      return true;
+    }else if(cartas.current.c4.charAt(1) === palo && cartas.current.c4 !== "NO"){
+      return true;
+    }else if(cartas.current.c5.charAt(1) === palo && cartas.current.c5 !== "NO"){
+      return true;
+    }else if(cartas.current.c6.charAt(1) === palo && cartas.current.c6 !== "NO"){
+      return true;
+    }
+  }
+
+  function mata(carta1, carta2){
+    var palo1 = carta1.charAt(1);
+    var valor1 = carta1.charAt(0);
+    var palo2 = carta2.charAt(1);
+    var valor2 = carta2.charAt(0);
+    var palotriunfo = triunfo.current.charAt(1);
+    if(palo1 === palo2 && carta2 !== "NO"){
+      if(valor2 == 0 || 
+        (valor2 == 2 && valor1 != 0) || 
+        (valor2 == 9 && valor1 != 0 && valor1 != 2) ||
+        (valor2 == 7 && valor1 != 0 && valor1 != 2 && valor1 != 9) ||
+        (valor2 == 8 && valor1 != 0 && valor1 != 2 && valor1 != 9 && valor2 != 7) ||
+        (valor2 == 6 && (valor1 == 1 || valor1 == 3 || valor1 == 4 || valor1 == 5)) ||
+        (valor2 == 5 && (valor1 == 1 || valor1 == 3 || valor1 == 4)) ||
+        (valor2 == 4 && (valor1 == 1 || valor1 == 3 )) ||
+        (valor2 == 3 && valor1 == 1)
+      ){
+        return true;
+      }else{
+        return false;
+      }
+    }else if(palo1 !== palo2 && palo1 === palotriunfo && carta2 !== "NO"){
+      return false;
+    }else if(palo1 !== palo2 && palo2 === palotriunfo && carta2 !== "NO"){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  function puedeMatar(carta,palo){
+    if(cartas.current.c1.charAt(1) === palo && cartas.current.c1 !== "NO"){
+      if(mata(carta,cartas.current.c1)){
+        return true;
+      }
+    }if(cartas.current.c2.charAt(1) === palo && cartas.current.c2 !== "NO"){
+      if(mata(carta,cartas.current.c2)){
+        return true;
+      }
+    }if(cartas.current.c3.charAt(1) === palo && cartas.current.c3 !== "NO"){
+      if(mata(carta,cartas.current.c3)){
+        return true;
+      }
+    }if(cartas.current.c4.charAt(1) === palo && cartas.current.c4 !== "NO"){
+      if(mata(carta,cartas.current.c4)){
+        return true;
+      }
+    }if(cartas.current.c5.charAt(1) === palo && cartas.current.c5 !== "NO"){
+      if(mata(carta,cartas.current.c5)){
+        return true;
+      }
+    }if(cartas.current.c6.charAt(1) === palo && cartas.current.c6 !== "NO"){
+      if(mata(carta,cartas.current.c6)){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function handleRonda(){
+    jugada0.current = "NO";
+    setJugada0M(jugada0.current);
+    jugada1.current = "NO";
+    setJugada1M(jugada1.current);
+    jugada2.current = "NO";
+    setJugada2M(jugada2.current);
+    jugada3.current = "NO";
+    setJugada3M(jugada3.current);
+    
+    var data = {
+      partida: roomName.current,
+      nronda: round.current
+    }
+
+    console.log(data)
+
+    socket.emit("contarPuntos",data, (error) => {
+      if(error) {
+        alert(error);
+      }
+    });
+
+    if(round.current%10 < 4){
+      socket.emit("robarCarta",data, (error) => {
+        if(error) {
+          alert(error);
+        }
+      });
+    }else if(round.current%10 === 9){
+      socket.emit("finalizarPartida",data, (error) => {
+        if(error) {
+          alert(error);
+        }
+      });
+    }
+  }
+
+  function handleCambiar7(){
+    if(baza.current%2 === (myOrden.current-1)%2){
+      var has7 = false;
+      var aux = "6" + triunfo.current.charAt(1);
+      console.log(aux);
+      if(cartas.current.c1 === aux){
+        cartas.current.c1 = triunfo.current;
+        setCartasMc1(triunfo.current);
+        has7=true;
+      }else if(cartas.current.c2 === aux){
+        cartas.current.c2 = triunfo.current;
+        setCartasMc2(triunfo.current);
+        has7=true;
+      }else if(cartas.current.c3 === aux){
+        cartas.current.c3 = triunfo.current;
+        setCartasMc3(triunfo.current);
+        has7=true;
+      }else if(cartas.current.c4 === aux){
+        cartas.current.c4 = triunfo.current;
+        setCartasMc4(triunfo.current);
+        has7=true;
+      }else if(cartas.current.c5 === aux){
+        cartas.current.c5 = triunfo.current;
+        setCartasMc5(triunfo.current);
+        has7=true;
+      }else if(cartas.current.c6 === aux){
+        cartas.current.c6 = triunfo.current;
+        setCartasMc6(triunfo.current);
+        has7=true;
+      }else{
+        alert('Necesitas el 7 de triunfo para poder cambiar');
+      }
+
+      if(has7){
+        triunfo.current = aux;
+        setTriunfoM(triunfo.current);
+        var data = {
+          jugador: username,
+          nombre: roomName.current,
+        }
+        socket.emit("cambiar7",data, (error) => {
+          if(error) {
+            alert(error);
+          }
+        });
+      }
+    }else{
+      alert('Necesitas tener baza para poder cambiar');
+    }
+  };
+
+  function handleCantar(){
+    if(baza.current%2 === (myOrden.current-1)%2){
+      var data = {
+        jugador: username,
+        nombre: roomName.current,
+      }
+      socket.emit("cantar",data, (error) => {
+        if(error) {
+          alert(error);
+        }
+      });
+    }else{
+      alert('Necesitas tener baza para poder cambiar');
+    }
+  }
+
+  function handleLancarCarta(carta,madeByUser){
+    if(carta !== "NO"){
+      if(turno.current === myOrden.current-1){
+        var cartaValida = true;
+        if(round.current%10 >= 4 && cartaSalida.current !== "NO"){
+          var palo0 = carta.charAt(1);
+          var paloSalida = cartaSalida.current.charAt(1);
+          var paloMata = cartaMata.current.charAt(1);
+          var palotriunfo = triunfo.current.charAt(1);
+          if(palo0 === paloSalida){
+            if(paloMata === paloSalida){
+              if(!mata(cartaMata.current,carta) && puedeMatar(cartaMata.current,paloSalida)){
+                cartaValida = false;
+              }
+            }
+          }else if(palo0 === palotriunfo){
+            if(tieneEnMano(paloSalida)){
+              cartaValida = false;
+            }
+            if(paloMata === palotriunfo){
+              if(!mata(cartaMata.current,carta) && puedeMatar(cartaMata.current,palotriunfo)){
+                cartaValida = false;
+              }
+            }
+          }else if(tieneEnMano(paloSalida) || puedeMatar(cartaMata.current,palotriunfo)){
+            cartaValida = false;
+          }
+        }
+        if (cartaValida){
+          jugada0.current = carta;
+          setJugada0M(jugada0.current);
+          turno.current = ( turno.current + 1 ) % 4;
+          setTurnoM(turno.current);
+          if(cartas.current.c1 === carta){
+            cartas.current.c1 = "NO";
+            setCartasMc1("NO");
+          }else if(cartas.current.c2 === carta){
+            cartas.current.c2 = "NO";
+            setCartasMc2("NO");
+          }else if(cartas.current.c3 === carta){
+            cartas.current.c3 = "NO";
+            setCartasMc3("NO");
+          }else if(cartas.current.c4 === carta){
+            cartas.current.c4 = "NO";
+            setCartasMc4("NO");
+          }else if(cartas.current.c5 === carta){
+            cartas.current.c5 = "NO";
+            setCartasMc5("NO");
+          }else if(cartas.current.c6 === carta){
+            cartas.current.c6 = "NO";
+            setCartasMc6("NO");
+          }
+          var data = {
+            jugador: username,
+            partida: roomName.current,
+            nronda: round.current,
+            carta: carta
+          }
+          socket.emit("lanzarCarta",data, (error) => {
+            if(error) {
+              if(madeByUser){
+                alert(error);  
+              }
+              return false;
+            }
+          })
+        }else{
+          if(madeByUser){
+            alert("No puedes tirar esa carta");
+          }
+          return false;
+        }
+      }else{
+        if(madeByUser){
+          alert("No es tu turno");
+        }
+        return false;
+      }
+      return true;
+    }else{
+      return false;
+    }
+  };
+
+  function handleMoveCarta(carta){  
+    var carta2mov = "NO";
+    var carta2mov2 = "NO";
+    if("c1" === selectedCard.current){
+      carta2mov = cartas.current.c1;
+    }else if("c2" === selectedCard.current){
+      carta2mov = cartas.current.c2;
+    }else if("c3" === selectedCard.current){
+      carta2mov = cartas.current.c3;
+    }else if("c4" === selectedCard.current){
+      carta2mov = cartas.current.c4;
+    }else if("c5" === selectedCard.current){
+      carta2mov = cartas.current.c5;
+    }else if("c6" === selectedCard.current){
+      carta2mov = cartas.current.c6;
+    }
+  
+    if("c1" === carta){
+      carta2mov2 = cartas.current.c1;
+    }else if("c2" === carta){
+      carta2mov2 = cartas.current.c2;
+    }else if("c3" === carta){
+      carta2mov2 = cartas.current.c3;
+    }else if("c4" === carta){
+      carta2mov2 = cartas.current.c4;
+    }else if("c5" === carta){
+      carta2mov2 = cartas.current.c5;
+    }else if("c6" === carta){
+      carta2mov2 = cartas.current.c6;
+    }
+
+    if("c1" === carta){
+      cartas.current.c1 = carta2mov;
+      setCartasMc1(carta2mov);
+    }else if("c2" === carta){
+      cartas.current.c2 = carta2mov;
+      setCartasMc2(carta2mov);
+    }else if("c3" === carta){
+      cartas.current.c3 = carta2mov;
+      setCartasMc3(carta2mov);
+    }else if("c4" === carta){
+      cartas.current.c4 = carta2mov;
+      setCartasMc4(carta2mov);
+    }else if("c5" === carta){
+      cartas.current.c5 = carta2mov;
+      setCartasMc5(carta2mov);
+    }else if("c6" === carta){
+      cartas.current.c6 = carta2mov;
+      setCartasMc6(carta2mov);
+    }
+
+    if("c1" === selectedCard.current){
+      cartas.current.c1 = carta2mov2;
+      setCartasMc1(carta2mov2);
+    }else if("c2" === selectedCard.current){
+      cartas.current.c2 = carta2mov2;
+      setCartasMc2(carta2mov2);
+    }else if("c3" === selectedCard.current){
+      cartas.current.c3 = carta2mov2;
+      setCartasMc3(carta2mov2);
+    }else if("c4" === selectedCard.current){
+      cartas.current.c4 = carta2mov2;
+      setCartasMc4(carta2mov2);
+    }else if("c5" === selectedCard.current){
+      cartas.current.c5 = carta2mov2;
+      setCartasMc5(carta2mov2);
+    }else if("c6" === selectedCard.current){
+      cartas.current.c6 = carta2mov2;
+      setCartasMc6(carta2mov2);
+    }
+  }
+
+  function handleClickCarta(carta){
+    if(selectedCard.current === carta){
+      var carta2mov = "NO";
+      if("c1" === selectedCard.current){
+        carta2mov = cartas.current.c1;
+      }else if("c2" === selectedCard.current){
+        carta2mov = cartas.current.c2;
+      }else if("c3" === selectedCard.current){
+        carta2mov = cartas.current.c3;
+      }else if("c4" === selectedCard.current){
+        carta2mov = cartas.current.c4;
+      }else if("c5" === selectedCard.current){
+        carta2mov = cartas.current.c5;
+      }else if("c6" === selectedCard.current){
+        carta2mov = cartas.current.c6;
+      }
+      handleLancarCarta(carta2mov,true);
+      selectedCard.current = "";
+      setSelectedCardM("");
+    }else if(selectedCard.current === ""){
+      selectedCard.current = carta;
+      setSelectedCardM(carta);
+    }else{
+      handleMoveCarta(carta);
+      selectedCard.current = "";
+      setSelectedCardM("");
+    }
+  }
+
+  function handlePause(){
+    var data = {
+      usuario: username,
+      partida: roomName.current,
+      tipo: 0,
+    }
+    socket.emit("pausar",data, (error) => {
+      if(error) {
+        alert(error);  
+      }
+    })
+  }
 
   useEffect(() => { 
     if(tipo.current===2){ 
@@ -318,6 +700,8 @@ export default function Board(socket,roomName,tipo) {
         setBazaM(baza.current);
         setTienenBaza(true);
       }
+      cartaSalida.current = "NO";
+      cartaMata.current = "NO";
       round.current++;
       setRoundM(round.current);
       jugada0.current = "NO";
@@ -357,6 +741,17 @@ export default function Board(socket,roomName,tipo) {
   
     socket.on("cartaJugada", ({ cartaJugada, jugador }) => {
       console.log("Carta ",cartaJugada," jugada por ",jugador);
+      if(cartaSalida.current === "NO"){
+        cartaSalida.current = cartaJugada;
+        cartaMata.current = cartaJugada;
+      }
+      if(cartaSalida.current[1] === cartaMata.current[1]){
+        if(mata(cartaMata.current,cartaJugada)){
+          cartaMata.current = cartaJugada;
+        }
+      }else if(cartaSalida.current[1] === triunfo.current[1]){
+        cartaMata.current = cartaJugada;
+      }
       if (jugador === user1.current.jugador){
         console.log("Asignada al jugador 1 ", user1.current.jugador)
         jugada1.current = cartaJugada;
@@ -540,375 +935,6 @@ export default function Board(socket,roomName,tipo) {
     });
   }}, [tipo.current]);
 
-  function tieneEnMano(palo){
-    if(cartas.current.c1.charAt(1) === palo  && cartas.current.c1 !== "NO"){
-      return true;
-    }else if(cartas.current.c2.charAt(1) === palo && cartas.current.c2 !== "NO"){
-      return true;
-    }else if(cartas.current.c3.charAt(1) === palo && cartas.current.c3 !== "NO"){
-      return true;
-    }else if(cartas.current.c4.charAt(1) === palo && cartas.current.c4 !== "NO"){
-      return true;
-    }else if(cartas.current.c5.charAt(1) === palo && cartas.current.c5 !== "NO"){
-      return true;
-    }else if(cartas.current.c6.charAt(1) === palo && cartas.current.c6 !== "NO"){
-      return true;
-    }
-  }
-
-  function mata(carta1, carta2){
-    var palo1 = carta1.charAt(1);
-    var valor1 = carta1.charAt(0);
-    var palo2 = carta2.charAt(1);
-    var valor2 = carta2.charAt(0);
-    var palotriunfo = triunfo.current.charAt(1);
-    if(palo1 === palo2 && carta2 !== "NO"){
-      if(valor2 == 0 || 
-        (valor2 == 2 && valor1 != 0) || 
-        (valor2 == 9 && valor1 != 0 && valor1 != 2) ||
-        (valor2 == 7 && valor1 != 0 && valor1 != 2 && valor1 != 9) ||
-        (valor2 == 8 && valor1 != 0 && valor1 != 2 && valor1 != 9 && valor2 != 7) ||
-        (valor2 == 6 && (valor1 == 1 || valor1 == 3 || valor1 == 4 || valor1 == 5)) ||
-        (valor2 == 5 && (valor1 == 1 || valor1 == 3 || valor1 == 4)) ||
-        (valor2 == 4 && (valor1 == 1 || valor1 == 3 )) ||
-        (valor2 == 3 && valor1 == 1)
-      ){
-        return true;
-      }else{
-        return false;
-      }
-    }else if(palo1 !== palo2 && palo1 === palotriunfo && carta2 !== "NO"){
-      return false;
-    }else if(palo1 !== palo2 && palo2 === palotriunfo && carta2 !== "NO"){
-      return true;
-    }else{
-      return false;
-    }
-  }
-
-  function puedeMatar(carta,palo){
-    if(cartas.current.c1.charAt(1) === palo && cartas.current.c1 !== "NO"){
-      if(mata(carta,cartas.current.c1)){
-        return true;
-      }
-    }if(cartas.current.c2.charAt(1) === palo && cartas.current.c2 !== "NO"){
-      if(mata(carta,cartas.current.c2)){
-        return true;
-      }
-    }if(cartas.current.c3.charAt(1) === palo && cartas.current.c3 !== "NO"){
-      if(mata(carta,cartas.current.c3)){
-        return true;
-      }
-    }if(cartas.current.c4.charAt(1) === palo && cartas.current.c4 !== "NO"){
-      if(mata(carta,cartas.current.c4)){
-        return true;
-      }
-    }if(cartas.current.c5.charAt(1) === palo && cartas.current.c5 !== "NO"){
-      if(mata(carta,cartas.current.c5)){
-        return true;
-      }
-    }if(cartas.current.c6.charAt(1) === palo && cartas.current.c6 !== "NO"){
-      if(mata(carta,cartas.current.c6)){
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function handleRonda(){
-    jugada0.current = "NO";
-    setJugada0M(jugada0.current);
-    jugada1.current = "NO";
-    setJugada1M(jugada1.current);
-    jugada2.current = "NO";
-    setJugada2M(jugada2.current);
-    jugada3.current = "NO";
-    setJugada3M(jugada3.current);
-    
-    var data = {
-      partida: roomName.current,
-      nronda: round.current
-    }
-
-    console.log(data)
-
-    socket.emit("contarPuntos",data, (error) => {
-      if(error) {
-        alert(error);
-      }
-    });
-
-    if(round.current%10 < 4){
-      socket.emit("robarCarta",data, (error) => {
-        if(error) {
-          alert(error);
-        }
-      });
-    }else if(round.current%10 === 9){
-      socket.emit("finalizarPartida",data, (error) => {
-        if(error) {
-          alert(error);
-        }
-      });
-    }
-  }
-
-  function handleCambiar7(){
-    if(baza.current%2 === (myOrden.current-1)%2){
-      var has7 = false;
-      var aux = "6" + triunfo.current.charAt(1);
-      console.log(aux);
-      if(cartas.current.c1 === aux){
-        cartas.current.c1 = triunfo.current;
-        setCartasMc1(triunfo.current);
-        has7=true;
-      }else if(cartas.current.c2 === aux){
-        cartas.current.c2 = triunfo.current;
-        setCartasMc2(triunfo.current);
-        has7=true;
-      }else if(cartas.current.c3 === aux){
-        cartas.current.c3 = triunfo.current;
-        setCartasMc3(triunfo.current);
-        has7=true;
-      }else if(cartas.current.c4 === aux){
-        cartas.current.c4 = triunfo.current;
-        setCartasMc4(triunfo.current);
-        has7=true;
-      }else if(cartas.current.c5 === aux){
-        cartas.current.c5 = triunfo.current;
-        setCartasMc5(triunfo.current);
-        has7=true;
-      }else if(cartas.current.c6 === aux){
-        cartas.current.c6 = triunfo.current;
-        setCartasMc6(triunfo.current);
-        has7=true;
-      }else{
-        alert('Necesitas el 7 de triunfo para poder cambiar');
-      }
-
-      if(has7){
-        triunfo.current = aux;
-        setTriunfoM(triunfo.current);
-        var data = {
-          jugador: username,
-          nombre: roomName.current,
-        }
-        socket.emit("cambiar7",data, (error) => {
-          if(error) {
-            alert(error);
-          }
-        });
-      }
-    }else{
-      alert('Necesitas tener baza para poder cambiar');
-    }
-  };
-
-  function handleCantar(){
-    if(baza.current%2 === (myOrden.current-1)%2){
-      var data = {
-        jugador: username,
-        nombre: roomName.current,
-      }
-      socket.emit("cantar",data, (error) => {
-        if(error) {
-          alert(error);
-        }
-      });
-    }else{
-      alert('Necesitas tener baza para poder cambiar');
-    }
-  }
-
-  function handleLancarCarta(carta,madeByUser){
-    if(carta !== "NO"){
-      if(turno.current === myOrden.current-1){
-        var cartaValida = true;
-        if(round.current%10 >= 4 && jugada1.current !== "NO"){
-          var palo0 = carta.charAt(1);
-          var palo1 = jugada1.current.charAt(1);
-          var palotriunfo = triunfo.current.charAt(1);
-          if(palo0 === palo1){
-            if(!mata(jugada1.current,carta) && puedeMatar(jugada1.current,palo1)){
-              cartaValida = false;
-            }
-          }else if(palo0 === palotriunfo){
-            if(tieneEnMano(palo1)){
-              cartaValida = false;
-            }
-          }else if(tieneEnMano(palo1) || tieneEnMano(palotriunfo)){
-            cartaValida = false;
-          }
-        }
-        if (cartaValida){
-          jugada0.current = carta;
-          setJugada0M(jugada0.current);
-          turno.current = ( turno.current + 1 ) % 4;
-          setTurnoM(turno.current);
-          if(cartas.current.c1 === carta){
-            cartas.current.c1 = "NO";
-            setCartasMc1("NO");
-          }else if(cartas.current.c2 === carta){
-            cartas.current.c2 = "NO";
-            setCartasMc2("NO");
-          }else if(cartas.current.c3 === carta){
-            cartas.current.c3 = "NO";
-            setCartasMc3("NO");
-          }else if(cartas.current.c4 === carta){
-            cartas.current.c4 = "NO";
-            setCartasMc4("NO");
-          }else if(cartas.current.c5 === carta){
-            cartas.current.c5 = "NO";
-            setCartasMc5("NO");
-          }else if(cartas.current.c6 === carta){
-            cartas.current.c6 = "NO";
-            setCartasMc6("NO");
-          }
-          var data = {
-            jugador: username,
-            partida: roomName.current,
-            nronda: round.current,
-            carta: carta
-          }
-          socket.emit("lanzarCarta",data, (error) => {
-            if(error) {
-              if(madeByUser){
-                alert(error);  
-              }
-              return false;
-            }
-          })
-        }else{
-          if(madeByUser){
-            alert("No puedes tirar esa carta");
-          }
-          return false;
-        }
-      }else{
-        if(madeByUser){
-          alert("No es tu turno");
-        }
-        return false;
-      }
-      return true;
-    }else{
-      return false;
-    }
-  };
-
-  function handleMoveCarta(carta){  
-    var carta2mov = "NO";
-    var carta2mov2 = "NO";
-    if("c1" === selectedCard.current){
-      carta2mov = cartas.current.c1;
-    }else if("c2" === selectedCard.current){
-      carta2mov = cartas.current.c2;
-    }else if("c3" === selectedCard.current){
-      carta2mov = cartas.current.c3;
-    }else if("c4" === selectedCard.current){
-      carta2mov = cartas.current.c4;
-    }else if("c5" === selectedCard.current){
-      carta2mov = cartas.current.c5;
-    }else if("c6" === selectedCard.current){
-      carta2mov = cartas.current.c6;
-    }
-  
-    if("c1" === carta){
-      carta2mov2 = cartas.current.c1;
-    }else if("c2" === carta){
-      carta2mov2 = cartas.current.c2;
-    }else if("c3" === carta){
-      carta2mov2 = cartas.current.c3;
-    }else if("c4" === carta){
-      carta2mov2 = cartas.current.c4;
-    }else if("c5" === carta){
-      carta2mov2 = cartas.current.c5;
-    }else if("c6" === carta){
-      carta2mov2 = cartas.current.c6;
-    }
-
-    if("c1" === carta){
-      cartas.current.c1 = carta2mov;
-      setCartasMc1(carta2mov);
-    }else if("c2" === carta){
-      cartas.current.c2 = carta2mov;
-      setCartasMc2(carta2mov);
-    }else if("c3" === carta){
-      cartas.current.c3 = carta2mov;
-      setCartasMc3(carta2mov);
-    }else if("c4" === carta){
-      cartas.current.c4 = carta2mov;
-      setCartasMc4(carta2mov);
-    }else if("c5" === carta){
-      cartas.current.c5 = carta2mov;
-      setCartasMc5(carta2mov);
-    }else if("c6" === carta){
-      cartas.current.c6 = carta2mov;
-      setCartasMc6(carta2mov);
-    }
-
-    if("c1" === selectedCard.current){
-      cartas.current.c1 = carta2mov2;
-      setCartasMc1(carta2mov2);
-    }else if("c2" === selectedCard.current){
-      cartas.current.c2 = carta2mov2;
-      setCartasMc2(carta2mov2);
-    }else if("c3" === selectedCard.current){
-      cartas.current.c3 = carta2mov2;
-      setCartasMc3(carta2mov2);
-    }else if("c4" === selectedCard.current){
-      cartas.current.c4 = carta2mov2;
-      setCartasMc4(carta2mov2);
-    }else if("c5" === selectedCard.current){
-      cartas.current.c5 = carta2mov2;
-      setCartasMc5(carta2mov2);
-    }else if("c6" === selectedCard.current){
-      cartas.current.c6 = carta2mov2;
-      setCartasMc6(carta2mov2);
-    }
-  }
-
-  function handleClickCarta(carta){
-    if(selectedCard.current === carta){
-      var carta2mov = "NO";
-      if("c1" === selectedCard.current){
-        carta2mov = cartas.current.c1;
-      }else if("c2" === selectedCard.current){
-        carta2mov = cartas.current.c2;
-      }else if("c3" === selectedCard.current){
-        carta2mov = cartas.current.c3;
-      }else if("c4" === selectedCard.current){
-        carta2mov = cartas.current.c4;
-      }else if("c5" === selectedCard.current){
-        carta2mov = cartas.current.c5;
-      }else if("c6" === selectedCard.current){
-        carta2mov = cartas.current.c6;
-      }
-      handleLancarCarta(carta2mov,true);
-      selectedCard.current = "";
-      setSelectedCardM("");
-    }else if(selectedCard.current === ""){
-      selectedCard.current = carta;
-      setSelectedCardM(carta);
-    }else{
-      handleMoveCarta(carta);
-      selectedCard.current = "";
-      setSelectedCardM("");
-    }
-  }
-
-  function handlePause(){
-    var data = {
-      usuario: username,
-      partida: roomName.current,
-      tipo: 0,
-    }
-    socket.emit("pausar",data, (error) => {
-      if(error) {
-        alert(error);  
-      }
-    })
-  }
 
   return (
     <div className={Application.tapete}>
