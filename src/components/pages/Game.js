@@ -5,7 +5,7 @@
 //Fichero:      Home.js
 //Descripción:  Pagina de inicio del sistema Las10últimas*/
 
-import React, {useEffect} from 'react';
+import React, {useRef} from 'react';
 import { fade,makeStyles } from '@material-ui/core/styles';
 import Application from '../application.module.scss'
 import SelectGame from "../SelectGame"
@@ -70,6 +70,7 @@ export default function Game() {
   //const [background,setBackground] = React.useState("/images/tapete1.jpg");
   const classes = useStyles();
   const history = useHistory();
+  const gamemodeRef = useRef(0);
   const [gamemode,setGamemode] = React.useState(0);
   const [room,setRoom] = React.useState("none");
   const roomName = React.useRef("none")
@@ -78,12 +79,12 @@ export default function Game() {
   const user = AuthenticationDataService.getCurrentUser();
   const username = user ? user.data.username : "anonimus"
   const tapet = user ? "https://las10ultimas.herokuapp.com/images/"+user.data.f_tapete+".jpg" : "https://las10ultimas.herokuapp.com/images/tapete2.jpg";
-  const selectGame = SelectGame(setGamemode,socket,username);
+  const selectGame = SelectGame(setGamemode,socket,username,setMatched,roomName,gamemodeRef);
   const selectRoom = SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName);
   const chat=Chat(username,socket);
-  //const tapete2=Tapete2(socket,roomName);
-  const tapete1=Tapete1(socket,roomName);
-  //const tapeteIA=TapeteIA(socket,roomName);
+  const tapete2=Tapete2(socket,roomName,gamemodeRef);
+  const tapete1=Tapete1(socket,roomName,gamemodeRef);
+  const tapeteIA=TapeteIA(socket,roomName,gamemodeRef);
 
   /*if(!loaded){
     //scroll.scrollToTop();
@@ -123,7 +124,7 @@ export default function Game() {
               <h1 className={Application.header}>
                 Partida por parejas online
               </h1>
-              {/*tapete2*/}
+              {tapete2}
             </div>
             :
             <div className={Application.board}>  
@@ -137,7 +138,7 @@ export default function Game() {
             <h1 className={Application.header}>
               Partida contra la IA
             </h1>
-            {/*tapeteIA*/}
+            {tapeteIA}
           </div>
           :
           <div className={Application.board}>  

@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonBases(setGamemode,socket,username) {
+export default function ButtonBases(setGamemode,socket,username,setMatched,roomName,gamemodeRef) {
   const classes = useStyles();
 
   return (
@@ -114,6 +114,7 @@ export default function ButtonBases(setGamemode,socket,username) {
           }}
           onClick={()=>{
             setGamemode(image.mode_id);
+            gamemodeRef.current = image.mode_id;
             if(image.mode_id === 3){
               let data = {tipo: 0};
               partidaService.create(data)
@@ -123,6 +124,8 @@ export default function ButtonBases(setGamemode,socket,username) {
                       alert(error);
                     }
                   })
+                  roomName.current = response.nombre;
+                  setMatched(true);
               })
               .catch(e => {
                 console.log(e);

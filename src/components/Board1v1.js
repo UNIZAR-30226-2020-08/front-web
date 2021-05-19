@@ -12,7 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import "./Timer.css";
 
-export default function Board(socket,roomName) {
+export default function Board(socket,roomName,tipo) {
   const user = AuthenticationDataService.getCurrentUser();
 
   const history = useHistory();
@@ -65,10 +65,10 @@ export default function Board(socket,roomName) {
   const [tienesBaza,setTienesBaza] = useState(false);
 
   const puntose0 = useRef(0);
-  const [puntose0M,setPuntose0M] = useState(0);
-
   const puntose1 = useRef(0);
-  const [puntose1M,setPuntose1M] = useState(0);
+
+  const [misPuntos,setMisPuntos] = useState("0 malas");
+  const [susPuntos,setSusPuntos] = useState("0 malas");
 
   const selectedCard = useRef("");
   const [selectedCardM,setSelectedCardM] = useState("");
@@ -118,6 +118,7 @@ export default function Board(socket,roomName) {
   const [timer,setTimer] = useState(<div></div>);
 
   useEffect(() => { 
+    if(tipo.current===1){ 
     socket.on("orden", ( orden ) => {
       myOrden.current = orden;
       setMyOrdenM(myOrden.current);
@@ -217,7 +218,6 @@ export default function Board(socket,roomName) {
         jugada1.current = cartaJugada;
         setJugada1M(jugada1.current);
         if(jugada0.current === "NO"){
-          console.log("NO PIDO ROBAR")
           turno.current = myOrden.current-1;
           setTimer(
             <CountdownCircleTimer
@@ -232,10 +232,11 @@ export default function Board(socket,roomName) {
           )
           setTurnoM(turno.current);
           //console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
-        }else{
-          console.log("PIDO ROBAR")
-          setTimeout(handleRonda,2000);
         }
+      }
+      else if(jugador === username && jugada1.current !== "NO"){
+        console.log("PIDO ROBAR")
+        setTimeout(handleRonda,2000);
       }
     });
 
@@ -249,9 +250,27 @@ export default function Board(socket,roomName) {
 
     socket.on("puntos", ({ puntos_e0, puntos_e1 }) => {
       puntose0.current = puntos_e0;
-      setPuntose0M(puntos_e0);
       puntose1.current = puntos_e1;
-      setPuntose1M(puntos_e1);
+      var label_e0 = " malas";
+      var pts_e0 = puntos_e0;
+      if(puntos_e0/50 >= 1){
+        label_e0 = " buenas";
+        pts_e0 = pts_e0 - 50;
+      }
+      var label_e1 = " malas";
+      var pts_e1 = puntos_e1;
+      if(puntos_e1/50 >= 1){
+        label_e1 = " buenas";
+        pts_e1 = pts_e1 - 50;
+      }
+
+      if(myOrden.current === 1){
+        setMisPuntos(pts_e0 + label_e0);
+        setSusPuntos(pts_e1 + label_e1);
+      }else{
+        setMisPuntos(pts_e1 + label_e1);
+        setSusPuntos(pts_e0 + label_e0);
+      }  
       if(round.current/20 > 1){
         if(puntos_e0 > 100 || puntos_e1 > 100){
           var data = {
@@ -276,18 +295,18 @@ export default function Board(socket,roomName) {
       }
       var label_e1 = " malas";
       var pts_e1 = puntos_e1;
-      if(puntos_e0/50 >= 1){
+      if(puntos_e1/50 >= 1){
         label_e1 = " buenas";
         pts_e1 = pts_e1 - 50;
       }
-      var mensaje = "HAS PERDIDO"
+      var mensaje = "HAS PERDIDO, -15🏆"
       if(myOrden.current === 1){
         if(puntos_e0 > puntos_e1){
-          mensaje = "HAS GANADO"
+          mensaje = "HAS GANADO, +30🏆"
         }
       }else{
         if(puntos_e0 < puntos_e1){
-          mensaje = "HAS GANADO"
+          mensaje = "HAS GANADO, +30🏆"
         }
       }      
       console.log(puntos_e0 + " a " +puntos_e1)
@@ -339,7 +358,7 @@ export default function Board(socket,roomName) {
       }
       var label_e1 = " malas";
       var pts_e1 = puntos_e1;
-      if(puntos_e0/50 >= 1){
+      if(puntos_e1/50 >= 1){
         label_e1 = " buenas";
         pts_e1 = pts_e1 - 50;
       }
@@ -350,7 +369,16 @@ export default function Board(socket,roomName) {
         alert( "Tienes " + pts_e1 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + pts_e0 + label_e0 + "\nPARTIDA DE VUELTAS!");
       }
     });
-  }, []);
+
+    socket.on("copasActualizadas", ( copas ) => {
+      if(copas.jugador === username){
+        let user = AuthenticationDataService.getCurrentUser();
+        user.data.copas = copas.copas;
+        AuthenticationDataService.updateCurrentUser(user);
+      }
+    });
+    }
+  }, [tipo.current]);
 
   function tieneEnMano(palo){
     if(cartas.current.c1.charAt(1) === palo  && cartas.current.c1 !== "NO"){
@@ -440,6 +468,12 @@ export default function Board(socket,roomName) {
 
     console.log(data)
 
+    socket.emit("contarPuntos",data, (error) => {
+      if(error) {
+        alert(error);
+      }
+    });
+
     if(round.current%20 < 14){
       socket.emit("robarCarta",data, (error) => {
         if(error) {
@@ -453,12 +487,6 @@ export default function Board(socket,roomName) {
         }
       });
     }
-
-    socket.emit("contarPuntos",data, (error) => {
-      if(error) {
-        alert(error);
-      }
-    });
   }
 
   function handleCambiar7(){
@@ -773,6 +801,15 @@ export default function Board(socket,roomName) {
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton} onClick={()=>{handleCantar()}}>CANTAR</Button>
         <Radio checked={turnoM===myOrdenM-1}/>
+        { roundM / 20 >= 1 ?
+        <div className={Application.cuenta}>
+          <h1 className={Application.cuentaH}>Mi equipo: {misPuntos}</h1>
+          <h1 className={Application.cuentaH}>Rival: {susPuntos}</h1>
+        </div>
+        :
+        <div className={Application.cuenta}>
+        </div>
+        }
       </h1>
      </div>
      <div className={Application.carta00}>
