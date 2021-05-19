@@ -49,6 +49,9 @@ export default function Board(socket,roomName,tipo) {
   const quedanCartas = useRef(false);
   const [quedanCartasM,setQuedanCartasM] = useState(false);
   
+  const quierePausa = useRef(false);
+  const [quierePausaM,setQuierePausaM] = useState(false);
+
   const triunfo = useRef("NO");
   const [triunfoM,setTriunfoM] = useState("NO");
   
@@ -147,11 +150,91 @@ export default function Board(socket,roomName,tipo) {
       }
     });
 
+    socket.on("RepartirCartasRP", ({ repartidas }) => {
+      if (repartidas.jugador===username){
+        cartas.current = repartidas;
+        setCartasM(cartas.current)
+        if(myOrden.current-1 === turno.current){
+          setTimer(
+            <CountdownCircleTimer
+              isPlaying
+              duration={30}
+              size={100}
+              colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+              onComplete={()=>handleCountdownCompleted()}
+            >
+              {renderTime}
+            </CountdownCircleTimer>
+          )
+        }
+      }else{
+        user1.current = repartidas;
+        setUser1M(user1.current)
+      }
+    });
+
     socket.on("RepartirTriunfo", ({ triunfoRepartido }) => {
       triunfo.current = triunfoRepartido;
       setTriunfoM(triunfo.current);
       quedanCartas.current = true;
       setQuedanCartasM(quedanCartas.current);
+    });
+
+    socket.on("RepartirTriunfoRP", ({ triunfoRepartido, nronda, winner,puntos_e0,puntos_e1 }) => {
+      triunfo.current = triunfoRepartido;
+      setTriunfoM(triunfo.current);
+      quedanCartas.current = true;
+      setQuedanCartasM(quedanCartas.current);
+      if(winner === username){
+        turno.current = myOrden.current-1;
+        setTimer(
+          <CountdownCircleTimer
+            isPlaying
+            duration={30}
+            size={100}
+            colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+            onComplete={()=>{handleCountdownCompleted()}}
+          >
+            {renderTime}
+          </CountdownCircleTimer>
+        )
+        setTurnoM(turno.current);
+        baza.current = myOrden.current-1;
+        setBazaM(baza.current);
+        setTienesBaza(true);
+      }else{
+        turno.current = user1.current.orden-1;
+        setTurnoM(turno.current);
+        baza.current = user1.current.orden-1;
+        setBazaM(baza.current);
+        setTienenBaza(true);
+      }
+      jugada1.current = "NO";
+      setJugada1M(jugada1.current);
+      jugada0.current = "NO";
+      setJugada0M(jugada0.current);
+      puntose0.current = puntos_e0;
+      puntose1.current = puntos_e1;
+      var label_e0 = " malas";
+      var pts_e0 = puntos_e0;
+      if(puntos_e0/50 >= 1){
+        label_e0 = " buenas";
+        pts_e0 = pts_e0 - 50;
+      }
+      var label_e1 = " malas";
+      var pts_e1 = puntos_e1;
+      if(puntos_e1/50 >= 1){
+        label_e1 = " buenas";
+        pts_e1 = pts_e1 - 50;
+      }
+
+      if(myOrden.current === 1){
+        setMisPuntos(pts_e0 + label_e0);
+        setSusPuntos(pts_e1 + label_e1);
+      }else{
+        setMisPuntos(pts_e1 + label_e1);
+        setSusPuntos(pts_e0 + label_e0);
+      }
     });
 
     socket.on("winner", ({ winner }) => {
@@ -377,8 +460,12 @@ export default function Board(socket,roomName,tipo) {
         AuthenticationDataService.updateCurrentUser(user);
       }
     });
-    }
-  }, [tipo.current]);
+  
+    socket.on("pause", () => {
+      quierePausa.current = true;
+      setQuierePausaM(true);
+    });
+  }}, [tipo.current]);
 
   function tieneEnMano(palo){
     if(cartas.current.c1.charAt(1) === palo  && cartas.current.c1 !== "NO"){
@@ -733,12 +820,25 @@ export default function Board(socket,roomName,tipo) {
     }
   }
 
+  function handlePause(){
+    var data = {
+      usuario: username,
+      partida: roomName.current,
+      tipo: 0,
+    }
+    socket.emit("pausar",data, (error) => {
+      if(error) {
+        alert(error);  
+      }
+    })
+  }
+
   return (
     <div className={Application.tapete}>
      <div className={Application.controles1}>
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton} onClick={() => {window.location.reload();}}>SALIR</Button>
-        <Button variant="contained" className={Application.actionButton} onClick={() => {alert("Funcionalidad no implementada");}}>PAUSAR</Button>
+        <Button variant="contained" className={Application.actionButton} onClick={() => {handlePause()}}>PAUSAR</Button>
       </h1>
      </div>
      <div className={Application.timer}>
@@ -801,7 +901,7 @@ export default function Board(socket,roomName,tipo) {
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton} onClick={()=>{handleCantar()}}>CANTAR</Button>
         <Radio checked={turnoM===myOrdenM-1}/>
-        { roundM / 20 >= 1 ?
+        { roundM  >= 20 ?
         <div className={Application.cuenta}>
           <h1 className={Application.cuentaH}>Mi equipo: {misPuntos}</h1>
           <h1 className={Application.cuentaH}>Rival: {susPuntos}</h1>
