@@ -60,6 +60,7 @@ import Slide from '@material-ui/core/Slide';
 import FondoCartaService from "../../services/fondo_carta.service";
 import FondoTapeteService from "../../services/fondo_tapete.service";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -102,18 +103,27 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "green",
       color: "white",
       borderRadius: 8,
+      '&:hover': {
+        backgroundColor: "green",
+        color: "white",}
     },
     borrarcuenta: {
       margin: theme.spacing(3, 0, 2),
       backgroundColor: "green",
       color: "white",
       borderRadius: 8,
+      '&:hover': {
+        backgroundColor: "green",
+        color: "white",}
     },
     ultimasPartidas: {
       margin: theme.spacing(3, 0, 2),
       backgroundColor: "green",
       color: "white",
       borderRadius: 8,
+      '&:hover': {
+        backgroundColor: "green",
+        color: "white",}
     },
     search: {
       position: 'relative',
@@ -155,6 +165,14 @@ const useStyles = makeStyles((theme) => ({
     link: {
       color: "green"
     },
+    button: {
+      backgroundColor: '#3c52b2',
+      color: '#fff',
+      '&:hover': {
+        backgroundColor: '#fff',
+        color: '#3c52b2',
+    }},
+    
     media1: {
       maxWidth: 345,
     },
@@ -182,6 +200,7 @@ const useStyles = makeStyles((theme) => ({
     },
     appBar: {
       position: 'relative',
+      backgroundColor: "green",
     },
     title: {
       marginLeft: theme.spacing(2),
@@ -198,6 +217,7 @@ const useStyles = makeStyles((theme) => ({
     const [open1,setOpen1] = React.useState(false);
     const [open2,setOpen2] = React.useState(false);
     const [mail, setMail] = React.useState("");
+    const [numeroo, setNumero] = React.useState();
     const [open3, setOpen3] = React.useState(false);
     const [cartas,setCartas] = React.useState([]);
     const [tapetes,setTapetes] = React.useState([]);
@@ -303,6 +323,8 @@ const useStyles = makeStyles((theme) => ({
         PartidaService.historial(data).then(response => {
           console.log(response.data)
           setPartidas(response.data);
+          console.log(response.data.length)
+          setNumero(response.data.length);
         })
         .catch(e => {
           console.log(e);
@@ -438,7 +460,7 @@ const useStyles = makeStyles((theme) => ({
                           <List component="nav" className={classes.mostrartexto} aria-label="Copas">
                                 <ListItem >
                                   <ListItemIcon>
-                                    <LocalBarIcon></LocalBarIcon>
+                                    <EmojiEventsIcon></EmojiEventsIcon>
                                   </ListItemIcon>
                                   <ListItemText primary={user.data.copas}/>
                                 </ListItem>
@@ -450,7 +472,7 @@ const useStyles = makeStyles((theme) => ({
                                   <ListItemIcon>
                                     <SportsEsportsIcon></SportsEsportsIcon>
                                   </ListItemIcon>
-                                  <ListItemText primary="250"/>
+                                  <ListItemText primary={numeroo}/>
                                 </ListItem>
                               </List>
                             </Grid>
@@ -491,19 +513,20 @@ const useStyles = makeStyles((theme) => ({
                               </Card>
                               </Grid>
                               </Grid>
-                          <Link to="/EditProfile" className='nav-links'>
+                          <Link to="/EditProfile" style={{ textDecoration: 'none' }} >
                           <Button
                               type="customizar"
                               fullWidth
                               variant="contained"
                               color="primary"
                               className={classes.cambiarperfil}
+                              
                           >
                               Editar Perfil
                           </Button>
                           </Link>
                           <div>
-                          <Link className='nav-links'>
+                          <Link style={{ textDecoration: 'none' }}>
                           <Button
                               type="ultimasPartidas"
                               fullWidth
@@ -532,7 +555,7 @@ const useStyles = makeStyles((theme) => ({
                           </Dialog>
                           </div>
                           <div>
-                          <Link  className='nav-links'>
+                          <Link style={{ textDecoration: 'none' }}>
                           <Button
                               type="borrarcuenta"
                               fullWidth
