@@ -358,6 +358,9 @@ function Tournaments() {
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
+                Nuevo Torneo
+            </Button>
           <List className={classes.lista}>
           {value === 1? AvailableTournaments(1,8): <></>}
           </List>
@@ -376,6 +379,9 @@ function Tournaments() {
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
+                Nuevo Torneo
+            </Button>
           <List className={classes.lista}>
           {value === 2? AvailableTournaments(0,16): <></>}
           </List>
@@ -394,6 +400,9 @@ function Tournaments() {
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
+                Nuevo Torneo
+            </Button>
           <List className={classes.lista}>
           {value === 3? AvailableTournaments(1,16): <></>}
           </List>
