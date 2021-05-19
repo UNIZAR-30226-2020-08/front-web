@@ -35,6 +35,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import SendIcon from '@material-ui/icons/Send';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 
@@ -250,18 +251,14 @@ function Friends() {
           />
           <ListItemSecondaryAction>
           {rank === 0? 
-           <Button edge="end"  variant="outlined" aria-label="Unirse" margin-right="5vh" style={{ backgroundColor: "red" }} onClick={() => {handleEliminar(value.username)}}>
-           Eliminar
-            </Button>
-            : <></>}
-          {rank === 0? 
-           <Button edge="end"  variant="outlined" aria-label="Unirse" style={{ marginLeft: '10px' }}>
+           <Button edge="end"  variant="outlined" aria-label="Unirse" style={{ marginRight: '10px' }}>
            Invitar
             </Button>
             : <></>}
-            
-          
-         
+          {rank === 0? 
+           <DeleteIcon onClick={() => {handleEliminar(value.username)}} style={{ marginLeft: '30px' }}>
+            </DeleteIcon>
+            : <></>}
           </ListItemSecondaryAction>
       </ListItem>
         )

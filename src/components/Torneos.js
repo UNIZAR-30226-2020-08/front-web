@@ -163,10 +163,14 @@ function Tournaments() {
     const [value, setValue] = React.useState(0);
     const [value2, setValue2] = React.useState(0);
     const [torneos,setTorneos] = React.useState([]);
+    const [torneosB,setTorneosB] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
+    const [loaded2,setLoaded2] = React.useState(false);
     const [nombreTorneo,setnombreTorneo] = React.useState("");
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [open5, setOpen5] = React.useState(false);
+    const [input,setInput] = React.useState("");
+    const [largo, setLargo] = React.useState(false);
 
     const [equipo1,setnombreEquipo1] = React.useState("");
     const [equipo2,setnombreEquipo2] = React.useState("");
@@ -176,6 +180,14 @@ function Tournaments() {
     const [equipo6,setnombreEquipo6] = React.useState("");
     const [equipo7,setnombreEquipo7] = React.useState("");
     const [equipo8,setnombreEquipo8] = React.useState("");
+    const [equipo9,setnombreEquipo9] = React.useState("");
+    const [equipo10,setnombreEquipo10] = React.useState("");
+    const [equipo11,setnombreEquipo11] = React.useState("");
+    const [equipo12,setnombreEquipo12] = React.useState("");
+    const [equipo13,setnombreEquipo13] = React.useState("");
+    const [equipo14,setnombreEquipo14] = React.useState("");
+    const [equipo15,setnombreEquipo15] = React.useState("");
+    const [equipo16,setnombreEquipo16] = React.useState("");
 
     const rounds = [
       {
@@ -232,17 +244,123 @@ function Tournaments() {
       },
     ];
 
+    const rounds2 = [
+      {
+        title: 'Octavos',
+        seeds: [
+          {
+            id: 1,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo1 }, { name: equipo2 }],
+          },
+          {
+            id: 2,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo3 }, { name: equipo4 }],
+          },
+          {
+            id: 3,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo5 }, { name: equipo6 }],
+          },
+          {
+            id: 4,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo7 }, { name: equipo8 }],
+          },
+          {
+            id: 5,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo9 }, { name: equipo10 }],
+          },
+          {
+            id: 6,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo11 }, { name: equipo12 }],
+          },
+          {
+            id: 7,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo13 }, { name: equipo14 }],
+          },
+          {
+            id: 8,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo15 }, { name: equipo16 }],
+          },
+        ],
+      },
+      {
+        title: 'Cuartos',
+        seeds: [
+          {
+            id: 9,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo1 }, { name: equipo2 }],
+          },
+          {
+            id: 10,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo3 }, { name: equipo4 }],
+          },
+          {
+            id: 11,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo5 }, { name: equipo6 }],
+          },
+          {
+            id: 12,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo7 }, { name: equipo8 }],
+          },
+        ],
+      },
+      {
+        title: 'Semifinales',
+        seeds: [
+          {
+            
+              id: 13,
+              date: new Date().toDateString(),
+              teams: [{ name: 'Team A' }, { name: 'Team C' }],
+            },
+            {
+              id: 14,
+              date: new Date().toDateString(),
+              teams: [{ name: 'Team G' }, { name: 'Team F' }],
+            
+          },
+        ],
+      },
+      {
+        title: 'Final',
+        seeds: [
+          {     
+              id: 15,
+              date: new Date().toDateString(),
+              teams: [{ name: 'Team A' }, { name: 'Team F' }],
+            },
+          ],
+      },
+    ]
+  
+
     const ElBrack = () => {
       //....
       return (
-        <Bracket
-          rounds={rounds}
-        />
+       
+        {/*largo  ? <Bracket rounds={rounds2}/> : <Bracket rounds={rounds}/>*/}
       );
     };
-    
-    
 
+    
+    
+    
+    const onChangeInput = (e) => {
+      setInput(e.target.value);
+      console.log(e.target.value);
+      
+    }
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -256,6 +374,38 @@ function Tournaments() {
     };
     const handleClose5 = () => {
       setOpen5(false);
+    };
+
+    function AvailableBTorneos() {
+      var data = {
+        nombre:input,
+      };
+
+      if (!loaded2){
+        setLoaded2(true);
+        TorneoService.find(data).then(response => {
+          console.log(response);
+          setTorneosB(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+
+        return(
+          <ListItem key={torneosB.nombre} className="listItem">
+          <ListItemText
+          primary={torneosB.nombre}
+          secondary={torneosB.participantes}
+          />
+          <ListItemSecondaryAction>
+           <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {}}>
+           Unirse
+            </Button>
+          </ListItemSecondaryAction>
+      </ListItem>
+        )
+    
     };
 
 
@@ -303,7 +453,7 @@ function Tournaments() {
             </ListItem>
         )
       })
-    }
+    };
 
     return (
       <div className={Application.selectTournament}>
@@ -321,22 +471,10 @@ function Tournaments() {
             <Tab label="Por Parejas 8 equipos" icon={<GroupIcon />} {...a11yProps(1)} />
             <Tab label="Individuales 16 equipos" icon={<PersonIcon />} {...a11yProps(2)}  />
             <Tab label="Por Parejas 16 equipos" icon={<GroupIcon />} {...a11yProps(3)} />
+            <Tab label="Buscador" icon={<SearchIcon />} {...a11yProps(4)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Buscar torneo"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </div>
             <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
                 Nuevo Torneo
             </Button>
@@ -345,19 +483,6 @@ function Tournaments() {
           </List>
       </TabPanel>
       <TabPanel value={value} index={1}>
-      <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Buscar torneo"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </div>
             <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
                 Nuevo Torneo
             </Button>
@@ -366,19 +491,6 @@ function Tournaments() {
           </List>
       </TabPanel>
       <TabPanel value={value} index={2}>
-      <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Buscar torneo"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </div>
             <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
                 Nuevo Torneo
             </Button>
@@ -387,6 +499,14 @@ function Tournaments() {
           </List>
       </TabPanel>
       <TabPanel value={value} index={3}>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
+                Nuevo Torneo
+            </Button>
+          <List className={classes.lista}>
+          {value === 3? AvailableTournaments(1,16): <></>}
+          </List>
+      </TabPanel>
+      <TabPanel value={value} index={4}>
       <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -398,15 +518,17 @@ function Tournaments() {
                   input: classes.inputInput,
                 }}
                 inputProps={{ 'aria-label': 'search' }}
+                onChange={onChangeInput}
               />
             </div>
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
-                Nuevo Torneo
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px', marginLeft: '10px' }} onClick={() => {AvailableBTorneos();setLoaded2(false);}}>
+                Buscar
             </Button>
-          <List className={classes.lista}>
-          {value === 3? AvailableTournaments(1,16): <></>}
+            <List className={classes.lista}>
+          {AvailableBTorneos()}
           </List>
       </TabPanel>
+
       </div>
     );
 }

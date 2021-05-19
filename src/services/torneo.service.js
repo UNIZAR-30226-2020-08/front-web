@@ -6,6 +6,9 @@ class TorneoService {
     findAll(data) {
         return axios.get(http.URL_TORNEO_FINDALL + data.tipo + "/" + data.npart, data);
     }
+    find(data) {
+        return axios.get(http.URL_TORNEO_FIND, data);
+    }
 
 }
 
