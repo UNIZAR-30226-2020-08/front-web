@@ -217,7 +217,6 @@ export default function Board(socket,roomName) {
         jugada1.current = cartaJugada;
         setJugada1M(jugada1.current);
         if(jugada0.current === "NO"){
-          console.log("NO PIDO ROBAR")
           turno.current = myOrden.current-1;
           setTimer(
             <CountdownCircleTimer
@@ -232,10 +231,11 @@ export default function Board(socket,roomName) {
           )
           setTurnoM(turno.current);
           //console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
-        }else{
-          console.log("PIDO ROBAR")
-          setTimeout(handleRonda,2000);
         }
+      }
+      else if(jugador === username && jugada1.current !== "NO"){
+        console.log("PIDO ROBAR")
+        setTimeout(handleRonda,2000);
       }
     });
 
@@ -276,18 +276,18 @@ export default function Board(socket,roomName) {
       }
       var label_e1 = " malas";
       var pts_e1 = puntos_e1;
-      if(puntos_e0/50 >= 1){
+      if(puntos_e1/50 >= 1){
         label_e1 = " buenas";
         pts_e1 = pts_e1 - 50;
       }
-      var mensaje = "HAS PERDIDO"
+      var mensaje = "HAS PERDIDO, -15🏆"
       if(myOrden.current === 1){
         if(puntos_e0 > puntos_e1){
-          mensaje = "HAS GANADO"
+          mensaje = "HAS GANADO, +30🏆"
         }
       }else{
         if(puntos_e0 < puntos_e1){
-          mensaje = "HAS GANADO"
+          mensaje = "HAS GANADO, +30🏆"
         }
       }      
       console.log(puntos_e0 + " a " +puntos_e1)
@@ -339,7 +339,7 @@ export default function Board(socket,roomName) {
       }
       var label_e1 = " malas";
       var pts_e1 = puntos_e1;
-      if(puntos_e0/50 >= 1){
+      if(puntos_e1/50 >= 1){
         label_e1 = " buenas";
         pts_e1 = pts_e1 - 50;
       }
@@ -350,6 +350,15 @@ export default function Board(socket,roomName) {
         alert( "Tienes " + pts_e1 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + pts_e0 + label_e0 + "\nPARTIDA DE VUELTAS!");
       }
     });
+
+    socket.on("copasActualizadas", ( copas ) => {
+      if(copas.jugador === username){
+        let user = AuthenticationDataService.getCurrentUser();
+        user.data.copas = copas.copas;
+        AuthenticationDataService.updateCurrentUser(user);
+      }
+    });
+
   }, []);
 
   function tieneEnMano(palo){
@@ -440,6 +449,12 @@ export default function Board(socket,roomName) {
 
     console.log(data)
 
+    socket.emit("contarPuntos",data, (error) => {
+      if(error) {
+        alert(error);
+      }
+    });
+
     if(round.current%20 < 14){
       socket.emit("robarCarta",data, (error) => {
         if(error) {
@@ -453,12 +468,6 @@ export default function Board(socket,roomName) {
         }
       });
     }
-
-    socket.emit("contarPuntos",data, (error) => {
-      if(error) {
-        alert(error);
-      }
-    });
   }
 
   function handleCambiar7(){
