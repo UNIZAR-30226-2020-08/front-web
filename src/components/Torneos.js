@@ -288,7 +288,7 @@ function Tournaments() {
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-        <div className={classes.search}>
+            <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
@@ -301,6 +301,9 @@ function Tournaments() {
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
+                Nuevo Torneo
+            </Button>
           <List className={classes.lista}>
           {value === 0? AvailableTournaments(0,8): <></>}
           </List>

@@ -244,7 +244,7 @@ function Friends() {
             </Button>
             : <></>}
           {rank === 0? 
-           <Button edge="end"  variant="outlined" aria-label="Unirse">
+           <Button edge="end"  variant="outlined" aria-label="Unirse" style={{ marginLeft: '10px' }}>
            Invitar
             </Button>
             : <></>}
@@ -363,7 +363,7 @@ function Friends() {
                 onChange={onChangeInput}
               />
           </div>
-          <Button edge="end"  variant="outlined" onClick={() => {AvailableFriends2();setBusqueda(true);setLoaded3(false);}}>
+          <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {AvailableFriends2();setBusqueda(true);setLoaded3(false);}}>
                 Buscar
             </Button>
           
