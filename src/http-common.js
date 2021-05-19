@@ -23,6 +23,7 @@ module.exports = {
   URL_FONDOTAPETE_FIND: BASE_URL + "fondo_tapete/findAllRugsCard",
   URL_FOTOPERFIL_FINDALL: BASE_URL + "foto_perfil/findAllProfilePictures",
   URL_PARTIDA_GETALL: BASE_URL + "partida/findAllGames/",
+  URL_PARTIDA_GETALL_PAUSED: BASE_URL + "partida/listarPausadas/",
   URL_PARTIDA_HISTORIAL: BASE_URL + "partida/listarHistorial/",
   URL_PARTIDA_CREATE: BASE_URL + "partida/"
 };
