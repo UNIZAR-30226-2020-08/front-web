@@ -89,9 +89,11 @@ const useStyles = makeStyles((theme) => ({
 function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
     const classes = useStyles();
     const [loaded,setLoaded] = React.useState(false);
+    const [loaded2,setLoaded2] = React.useState(false);
     //const [loading,setLoading] = React.useState(false);
     //const [fail,setFail] = React.useState(false);
     const [rooms,setRooms] = React.useState([]);
+    const [roomsPaused,setRoomsPaused] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [correct, setCorrect] = React.useState(true);
     const [created, setCreated] = React.useState(false);
@@ -156,9 +158,39 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
       setCreated(false);
     }
 
+    function AvailableRoomsPaused(setRoom,setMatched,username) {
+      if (!loaded2 && gamemode>0){ 
+        partidaService.getAllPaused(username,gamemode-1).then(response => {
+          setRoomsPaused(response);
+          //setLoading(false);
+          //console.log(response);
+        })
+        .catch(e => {
+          console.log(e);
+          //setLoading(false);
+          //setFail(true);
+        });
+        setLoaded2(true);
+      }
+      return roomsPaused.map((value) => {
+        return(
+          <ListItem className="listItem" key={value.nombre}>
+              <ListItemText
+              primary={value.nombre}
+              secondary={"Usuarios en la sala: " + value.jugadores_online}
+              />
+              <ListItemSecondaryAction>
+              <Button edge="end"  variant="outlined" aria-label="Unirse" onClick={() => handleUnirsePartida(setRoom,setMatched,value,username)}>
+                  Unirse
+              </Button>
+              </ListItemSecondaryAction>
+          </ListItem>
+        )
+      })
+    }
+
     function AvailableRooms(setRoom,setMatched,username) {
-        if (!loaded && gamemode>0){
-            setLoaded(true);
+        if (!loaded && gamemode>0){ 
             partidaService.getAll(gamemode-1).then(response => {
                 setRooms(response);
                 //setLoading(false);
@@ -169,6 +201,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
               //setLoading(false);
               //setFail(true);
             });
+            setLoaded(true);
         }
         return rooms.map((value) => {
           return(
@@ -190,6 +223,21 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
     return (
       <div className={Application.selectRoom}>
         <List className={classes.root}>
+        { roomsPaused.length > 0 ?
+          <ListItem className="listItem" onClick={handleClickOpen}>
+            <ListItemText
+            primary="Partidas pausadas"
+            />
+          </ListItem>
+          :
+          <></>
+          }
+          {AvailableRoomsPaused(setRoom,setMatched,username)}
+          <ListItem className="listItem" onClick={handleClickOpen}>
+            <ListItemText
+            primary="Partidas a las que te puedes unir"
+            />
+          </ListItem>
           <ListItem button className="listItem" onClick={handleClickOpen}>
             <ListItemText
             primary="Crear una nueva sala"

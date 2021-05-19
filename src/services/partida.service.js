@@ -10,6 +10,14 @@ class PartidaService {
       });
   }
 
+  getAllPaused(jugador,tipo) {
+    return axios
+      .get(http.URL_PARTIDA_GETALL_PAUSADAS + jugador + "/" + tipo)
+      .then(response => {
+        return response.data;
+      });
+  }
+
   create(data) {
     // tipo, nombre y password
     return axios
