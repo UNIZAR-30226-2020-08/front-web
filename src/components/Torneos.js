@@ -168,30 +168,66 @@ function Tournaments() {
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [open5, setOpen5] = React.useState(false);
 
+    const [equipo1,setnombreEquipo1] = React.useState("");
+    const [equipo2,setnombreEquipo2] = React.useState("");
+    const [equipo3,setnombreEquipo3] = React.useState("");
+    const [equipo4,setnombreEquipo4] = React.useState("");
+    const [equipo5,setnombreEquipo5] = React.useState("");
+    const [equipo6,setnombreEquipo6] = React.useState("");
+    const [equipo7,setnombreEquipo7] = React.useState("");
+    const [equipo8,setnombreEquipo8] = React.useState("");
+
     const rounds = [
       {
-        title: 'Primera Ronda',
+        title: 'Cuartos',
         seeds: [
           {
             id: 1,
             date: new Date().toDateString(),
-            teams: [{ name: 'Team A' }, { name: 'Team B' }],
+            teams: [{ name: equipo1 }, { name: equipo2 }],
           },
           {
             id: 2,
             date: new Date().toDateString(),
-            teams: [{ name: 'Team C' }, { name: 'Team D' }],
+            teams: [{ name: equipo3 }, { name: equipo4 }],
+          },
+          {
+            id: 3,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo5 }, { name: equipo6 }],
+          },
+          {
+            id: 4,
+            date: new Date().toDateString(),
+            teams: [{ name: equipo7 }, { name: equipo8 }],
           },
         ],
       },
       {
-        title: 'Segunda Ronda',
+        title: 'Semifinales',
         seeds: [
           {
-            id: 3,
-            date: new Date().toDateString(),
-            teams: [{ name: 'Team A' }, { name: 'Team C' }],
+            
+              id: 5,
+              date: new Date().toDateString(),
+              teams: [{ name: 'Team A' }, { name: 'Team C' }],
+            },
+            {
+              id: 6,
+              date: new Date().toDateString(),
+              teams: [{ name: 'Team G' }, { name: 'Team F' }],
+            
           },
+        ],
+      },
+      {
+        title: 'Final',
+        seeds: [
+          {     
+              id: 7,
+              date: new Date().toDateString(),
+              teams: [{ name: 'Team A' }, { name: 'Team F' }],
+            },
         ],
       },
     ];
@@ -252,7 +288,7 @@ function Tournaments() {
                 <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre)}}>
                     Unirse
                 </Button>
-                  <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5}>
+                  <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5} style={{ maxWidth: "100%" }}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose5}>
                       Torneo {nombreTorneo}
                     </DialogTitle>

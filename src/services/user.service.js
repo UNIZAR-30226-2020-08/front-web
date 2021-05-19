@@ -10,6 +10,9 @@ class UserService {
   find(data) {
     return axios.get(http.URL_USER_FIND + data.username, data);
   }
+  findAll(data) {
+    return axios.get(http.URL_USER_FINDALL, data);
+  }
 
   delete(data) {
     return axios.delete(http.URL_USER_DELETE + data.username, data); 

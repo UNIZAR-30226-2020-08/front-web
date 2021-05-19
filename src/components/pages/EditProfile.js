@@ -63,21 +63,25 @@ const useStyles = makeStyles((theme) => ({
     text: {
       borderColor: 'white',
     },
-    cambiarperfil: {
+
+    butoon: {
       margin: theme.spacing(3, 0, 2),
-      backgroundColor: "white",
-      color: "green"
+      backgroundColor: "green",
+      color: "white",
+      borderRadius: 8,
+      '&:hover': {
+        backgroundColor: "green",
+        color: "white",}
     },
+    
+
+    
     submit: {
       margin: theme.spacing(3, 0, 2),
       backgroundColor: "white",
       color: "green"
     },
-    ultimasPartidas: {
-      margin: theme.spacing(3, 0, 2),
-      backgroundColor: "white",
-      color: "green"
-    },
+    
     search: {
       position: 'relative',
       borderRadius: theme.shape.borderRadius,
@@ -388,7 +392,7 @@ const useStyles = makeStyles((theme) => ({
                               variant="contained"
                               color="primary"
                               onClick={handleUpdate2}
-                              className={classes.submit}
+                              className={classes.butoon}
                               >
                                   Cambiar email 
                               </Button>  
@@ -430,7 +434,7 @@ const useStyles = makeStyles((theme) => ({
                               variant="contained"
                               color="primary"
                               onClick={handleUpdate3}
-                              className={classes.submit}
+                              className={classes.butoon}
                           >
                               Cambiar Contraseña
                           </Button>                        

@@ -33,8 +33,8 @@ import UserService from "../services/user.service";
 
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ContactsIcon from '@material-ui/icons/Contacts';
-import LocalBarIcon from '@material-ui/icons/LocalBar';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
+import SendIcon from '@material-ui/icons/Send';
 
 
 
@@ -47,11 +47,18 @@ const useStyles = makeStyles((theme) => ({
   lista: {
     width: "100%",
     marginTop: "6px",
-    maxHeight: "100%",
-    height: "100%",
+    height: "30vh",
     margin: "auto",
     overflow: "auto"
   },
+  lista2: {
+    width: "100%",
+    marginTop: "6px",
+    height: "40vh",
+    margin: "auto",
+    overflow: "auto"
+  },
+  
   cont: {
     width: "100%",
     height: "100%",
@@ -152,11 +159,15 @@ function Friends() {
     const [rank, setRank] = React.useState(0);
     const [busqueda, setBusqueda] = React.useState(false);
     const [amigs,setAmigs] = React.useState([]);
+    const [global,setGlobal] = React.useState([]);
     const [busc,setBusc] = React.useState([]);
     const [solicitudes,setSolicitudes] = React.useState([]);
+    const [invitaciones,setInvitaciones] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
     const [loaded3,setLoaded3] = React.useState(false);
+    const [loaded4,setLoaded4] = React.useState(false);
+    const [loaded5,setLoaded5] = React.useState(false);
     const [bien,setBien] = React.useState(false);
     const [input,setInput] = React.useState("");
     
@@ -239,7 +250,7 @@ function Friends() {
           />
           <ListItemSecondaryAction>
           {rank === 0? 
-           <Button edge="end"  variant="outlined" aria-label="Unirse" margin-right="5vh" onClick={() => {handleEliminar(value.username)}}>
+           <Button edge="end"  variant="outlined" aria-label="Unirse" margin-right="5vh" style={{ backgroundColor: "red" }} onClick={() => {handleEliminar(value.username)}}>
            Eliminar
             </Button>
             : <></>}
@@ -287,6 +298,59 @@ function Friends() {
       </ListItem>
         )
     
+    }
+
+    function AvailableGlobal() {
+      var data = {
+      };
+
+      if (!loaded4){
+        setLoaded4(true);
+        UserService.findAll(data).then(response => {
+          console.log(response.data)
+          setGlobal(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+
+      return global.map((value) => {
+        return(
+          <ListItem key={value} className="listItem">
+          <ListItemText
+          primary={value.username}
+          secondary={value.copas+"🏆"}
+          />
+      </ListItem>
+        )
+      })
+    }
+
+    function AvailableInvitaciones() {
+      var data = {
+      };
+
+      if (!loaded5){
+        setLoaded5(true);
+        UserService.findAll(data).then(response => {
+          console.log(response.data)
+          setGlobal(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+
+      return invitaciones.map((value) => {
+        return(
+          <ListItem key={value} className="listItem">
+          <ListItemText
+          primary={value.username}
+          />
+      </ListItem>
+        )
+      })
     }
 
     function AvailableSolicitudes() {
@@ -345,7 +409,10 @@ function Friends() {
       >
         <Tab label="Amigos" icon={<ContactsIcon />} {...a11yProps(0)} />
         {<Tab label="Solicitudes" icon={<PersonAddIcon />} {...a11yProps(1)} />}
-        {<Tab label="Ranking" icon={<EmojiEventsIcon />} {...a11yProps(2)} />}
+        {<Tab label="Ranking Amigos" icon={<EmojiEventsIcon />} {...a11yProps(2)} />}
+        {<Tab label="Ranking Global" icon={<EmojiEventsIcon />} {...a11yProps(3)} />}
+        {<Tab label="Invitaciones" icon={<SendIcon />} {...a11yProps(3)} />}
+        
       </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -372,13 +439,23 @@ function Friends() {
         </List>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <List className={classes.lista}>
+        <List className={classes.lista2}>
           {AvailableSolicitudes()}
         </List>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <List className={classes.lista}>
+        <List className={classes.lista2}>
             {AvailableFriends()}
+          </List>
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <List className={classes.lista2}>
+            {AvailableGlobal()}
+          </List>
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <List className={classes.lista2}>
+            {AvailableInvitaciones()}
           </List>
       </TabPanel>
   </div>

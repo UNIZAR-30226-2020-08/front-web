@@ -109,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
     },
     borrarcuenta: {
       margin: theme.spacing(3, 0, 2),
-      backgroundColor: "green",
+      backgroundColor: "red",
       color: "white",
       borderRadius: 8,
       '&:hover': {

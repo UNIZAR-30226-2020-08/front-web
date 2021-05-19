@@ -10,6 +10,7 @@ module.exports = {
   URL_AUTH_SIGNUP: BASE_URL + "auth/signup/",
   URL_USER_UPDATE: BASE_URL + "usuario/updateUser/",
   URL_USER_FIND: BASE_URL + "usuario/findUser/",
+  URL_USER_FINDALL: BASE_URL + "usuario/findAll/",
   URL_USER_DELETE: BASE_URL + "usuario/dropUser/",
   URL_AMIGO_FINDALL: BASE_URL + "amigo/findAll/",
   URL_AMIGO_CREATE: BASE_URL + "amigo/",
