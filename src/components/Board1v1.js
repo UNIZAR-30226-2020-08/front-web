@@ -263,7 +263,7 @@ export default function Board(socket,roomName,tipo) {
         setTienenBaza(true);
       }
       round.current++;
-      setRoundM(round.current%20);
+      setRoundM(round.current);
       jugada1.current = "NO";
       setJugada1M(jugada1.current);
       jugada0.current = "NO";
@@ -875,7 +875,7 @@ export default function Board(socket,roomName,tipo) {
       }
      </div>
      <div className={Application.mazo1}>
-     { roundM < 14 ?
+     { roundM%20 < 14 ?
       <Card
         src={"images/"+baraja+"/"+triunfoM+".png"}
         text="Palo"
@@ -887,7 +887,7 @@ export default function Board(socket,roomName,tipo) {
      }
      </div>
      <div className={Application.mazo2}>
-     { roundM < 14 ?
+     { roundM%20 < 14 ?
       <Card
         src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
         text="Baraja"
@@ -901,7 +901,7 @@ export default function Board(socket,roomName,tipo) {
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton} onClick={()=>{handleCantar()}}>CANTAR</Button>
         <Radio checked={turnoM===myOrdenM-1}/>
-        { roundM  >= 20 ?
+        { roundM > 19 ?
         <div className={Application.cuenta}>
           <h1 className={Application.cuentaH}>Mi equipo: {misPuntos}</h1>
           <h1 className={Application.cuentaH}>Rival: {susPuntos}</h1>
