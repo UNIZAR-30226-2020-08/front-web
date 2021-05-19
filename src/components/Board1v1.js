@@ -9,10 +9,12 @@ import Radio from "@material-ui/core/Radio";
 import Dialog from '@material-ui/core/Dialog';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import "./Timer.css";
 
 export default function Board(socket,roomName) {
   const user = AuthenticationDataService.getCurrentUser();
-  
+
   const history = useHistory();
 
   const user1 = useRef({});
@@ -76,7 +78,44 @@ export default function Board(socket,roomName) {
   const [resultado,setResultado] = useState("");
 
   const baraja = user ? user.data.f_carta : "baraja1";
+
   const username = user ? user.data.username : "anonimo";
+
+  const renderTime = ({ remainingTime }) => {
+    return (
+      <div className="timer">
+        <div className="value">{remainingTime}</div>
+      </div>
+    );
+  };
+
+  function throwRandomCard(){
+    if(handleLancarCarta(cartas.current.c1,false)){
+      console.log("Tira c1")
+    }else if(handleLancarCarta(cartas.current.c2,false)){
+      console.log("Tira c2")
+    }else if(handleLancarCarta(cartas.current.c3,false)){
+      console.log("Tira c3")
+    }else if(handleLancarCarta(cartas.current.c4,false)){
+      console.log("Tira c4")
+    }else if(handleLancarCarta(cartas.current.c5,false)){
+      console.log("Tira c5")
+    }else if(handleLancarCarta(cartas.current.c6,false)){
+      console.log("Tira c6")
+    }else{
+      console.log("No puedo tirar")
+    }
+  }
+
+  function handleCountdownCompleted(){
+    console.log("SE HA COMPLETADO EL TIEMPO")
+    if(jugada0.current === "NO"){
+      console.log("TIRANDO CARTA ALEATORIA...")
+      throwRandomCard();
+    }
+  }
+
+  const [timer,setTimer] = useState(<div></div>);
 
   useEffect(() => { 
     socket.on("orden", ( orden ) => {
@@ -88,6 +127,19 @@ export default function Board(socket,roomName) {
       if (repartidas.jugador===username){
         cartas.current = repartidas;
         setCartasM(cartas.current)
+        if(myOrden.current-1 === turno.current){
+          setTimer(
+            <CountdownCircleTimer
+              isPlaying
+              duration={30}
+              size={100}
+              colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+              onComplete={()=>handleCountdownCompleted()}
+            >
+              {renderTime}
+            </CountdownCircleTimer>
+          )
+        }
       }else{
         user1.current = repartidas;
         setUser1M(user1.current)
@@ -104,6 +156,17 @@ export default function Board(socket,roomName) {
     socket.on("winner", ({ winner }) => {
       if(winner === username){
         turno.current = myOrden.current-1;
+        setTimer(
+          <CountdownCircleTimer
+            isPlaying
+            duration={30}
+            size={100}
+            colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+            onComplete={()=>{handleCountdownCompleted()}}
+          >
+            {renderTime}
+          </CountdownCircleTimer>
+        )
         setTurnoM(turno.current);
         baza.current = myOrden.current-1;
         setBazaM(baza.current);
@@ -156,6 +219,17 @@ export default function Board(socket,roomName) {
         if(jugada0.current === "NO"){
           console.log("NO PIDO ROBAR")
           turno.current = myOrden.current-1;
+          setTimer(
+            <CountdownCircleTimer
+              isPlaying
+              duration={30}
+              size={100}
+              colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+              onComplete={()=>handleCountdownCompleted()}
+            >
+              {renderTime}
+            </CountdownCircleTimer>
+          )
           setTurnoM(turno.current);
           //console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
         }else{
@@ -454,7 +528,7 @@ export default function Board(socket,roomName) {
     }
   }
 
-  function handleLancarCarta(carta){
+  function handleLancarCarta(carta,madeByUser){
     if(carta !== "NO"){
       if(turno.current === myOrden.current-1){
         var cartaValida = true;
@@ -506,15 +580,27 @@ export default function Board(socket,roomName) {
           }
           socket.emit("lanzarCarta",data, (error) => {
             if(error) {
-              alert(error);
+              if(madeByUser){
+                alert(error);  
+              }
+              return false;
             }
           })
         }else{
-          alert("No puedes tirar esa carta");
+          if(madeByUser){
+            alert("No puedes tirar esa carta");
+          }
+          return false;
         }
       }else{
-        alert("No es tu turno");
+        if(madeByUser){
+          alert("No es tu turno");
+        }
+        return false;
       }
+      return true;
+    }else{
+      return false;
     }
   };
 
@@ -606,7 +692,7 @@ export default function Board(socket,roomName) {
       }else if("c6" === selectedCard.current){
         carta2mov = cartas.current.c6;
       }
-      handleLancarCarta(carta2mov);
+      handleLancarCarta(carta2mov,true);
       selectedCard.current = "";
       setSelectedCardM("");
     }else if(selectedCard.current === ""){
@@ -626,6 +712,11 @@ export default function Board(socket,roomName) {
         <Button variant="contained" className={Application.actionButton} onClick={() => {window.location.reload();}}>SALIR</Button>
         <Button variant="contained" className={Application.actionButton} onClick={() => {alert("Funcionalidad no implementada");}}>PAUSAR</Button>
       </h1>
+     </div>
+     <div className={Application.timer}>
+     <div className="timer-wrapper">
+       {turnoM===myOrdenM-1 ? timer : <></>}
+     </div>
      </div>
      <div className={Application.usuario1}>
     { user1M.jugador ? 
