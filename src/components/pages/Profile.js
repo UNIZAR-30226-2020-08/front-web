@@ -113,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
       borderRadius: 8,
       '&:hover': {
-        backgroundColor: "green",
+        backgroundColor: "red",
         color: "white",}
     },
     ultimasPartidas: {
@@ -423,8 +423,8 @@ const useStyles = makeStyles((theme) => ({
         {! user ?
           history.push("/")
           :
-          <Container component="main" maxWidth="xs" className={classes.container}>
-          <div className={classes.top}>
+          <Container component="main" maxWidth="xs" className={classes.container} style={{ paddingTop: '0rem', }}>
+          <div className={classes.top} style={{ paddingTop: '0rem', paddingBottom: '0rem', }}>
             <h1 className={Application.header}>
                 Mi Cuenta
             </h1>

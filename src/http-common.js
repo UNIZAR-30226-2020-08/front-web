@@ -19,6 +19,7 @@ module.exports = {
   URL_AMIGO_LISTSOLICITUDES: BASE_URL + "amigo/listRequest/",
   URL_TORNEO_FINDALL: BASE_URL + "torneo/findAllTournament/",
   URL_TORNEO_FIND: BASE_URL + "torneo/findTournament/",
+  URL_TORNEO_MATCHROUND: BASE_URL + "torneo/matchRound/",
   URL_FONDOCARTA_FIND: BASE_URL + "fondo_carta/findAllCardsBack",
   URL_FONDOTAPETE_FIND: BASE_URL + "fondo_tapete/findAllRugsCard",
   URL_FOTOPERFIL_FINDALL: BASE_URL + "foto_perfil/findAllProfilePictures",
