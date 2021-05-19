@@ -157,7 +157,6 @@ const useStyles = makeStyles((theme) => ({
     },
     media1: {
       maxWidth: 345,
-      
     },
     modal: {
       display: 'flex',
@@ -411,7 +410,7 @@ const useStyles = makeStyles((theme) => ({
               <CssBaseline />
                   <Card className={classes.root}>
                       <CardContent>
-                      <img src="images/LOGO.png" alt="logo las10ultimas" className={Application.icon}/>                                           
+                      <img src="images/LOGO.png" alt="logo las10ultimas" className={Application.icon} onClick={() => {}}/>                                           
                         <div className={classes.paper}>
                           <form className={classes.form} noValidate>
                             <Grid container spacing={2}>

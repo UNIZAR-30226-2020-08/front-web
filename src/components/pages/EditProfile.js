@@ -22,6 +22,14 @@ import Tournaments from '../Torneos'
 import { useHistory } from "react-router-dom";
 import UserService from "../../services/user.service";
 import AuthenticationDataService from "../../services/auth.service";
+import FotoPerfilService from "../../services/foto_perfil.service";
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -106,7 +114,24 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.up('md')]: {
         width: '20ch',
       },
-    },   
+    }, 
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paper1: {
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+    media2: {
+      height: 140,
+    },
+    media1: {
+      maxWidth: 345,
+    },  
     link: {
       color: "green"
     }
@@ -128,6 +153,9 @@ const useStyles = makeStyles((theme) => ({
     const [errorPasswd, setErrorPasswd] = React.useState(false);
     const [passwdBis, setPasswdBis] = React.useState("");
     const [errorPasswdBis, setErrorPasswdBis] = React.useState(false);
+    const [loaded,setLoaded] = React.useState(false);
+    const [logos,setLogos] = React.useState([]);
+    const [open1,setOpen1] = React.useState(false);
 
 
     const emailRegEx = /^\S+@\S+\.\S+$/;
@@ -220,6 +248,67 @@ const useStyles = makeStyles((theme) => ({
           });
       }
     }
+
+    function AvailableLogo() {
+      
+      var data = {
+      };
+
+      if (!loaded){
+        setLoaded(true);
+        FotoPerfilService.findAll(data).then(response => {
+          console.log(response.data)
+          setLogos(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+
+    const handleLogo1 = (logoo) => {  
+      var data = {
+        username: user.data.username,
+        f_perfil: logoo,
+      };
+      UserService.update(data)
+        .then(response => {
+        })
+        .catch(e => {
+          console.log(e);
+        });
+        user.data.f_perfil=logoo;
+        AuthenticationDataService.updateCurrentUser(user);
+      }
+
+      return logos.map((value) => {
+        return(         
+          <Grid item xs={12} sm={6}>
+          <Card button onClick={() => {handleLogo1(value.f_perfil);;handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_perfil+".png"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_perfil}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> 
+          </Grid>
+        )
+      })
+    }
+
+    const handleClose = () => {
+      setOpen1(false);
+    };
+
+    const handleOpen1 = () => {
+      setOpen1(true);
+    };
   
     return (
       <div className={Application.container}>
@@ -235,7 +324,47 @@ const useStyles = makeStyles((theme) => ({
               <CssBaseline />
                   <Card className={classes.root}>
                       <CardContent>
-                      <img src="images/LOGO.png" alt="logo las10ultimas" className={Application.icon}/>                                           
+                      <img src="images/LOGO.png" alt="logo las10ultimas" className={Application.icon}/> 
+                          <Card button  onClick={() => {handleOpen1();}} className={classes.media1}>
+                            <CardActionArea>
+                              <CardMedia
+                                className={classes.media2}
+                                image={"images/"+user.data.f_perfil+".png"}
+                                title="logo 1"
+                              />
+                              <CardContent>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                  Avatar
+                                </Typography>
+                              
+                              </CardContent>
+                            </CardActionArea>                                                
+                          </Card>    
+
+                          <Modal
+                            aria-labelledby="transition-modal-title"
+                            aria-describedby="transition-modal-description"
+                            className={classes.modal}
+                            open={open1}
+                            onClose={handleClose}
+                            closeAfterTransition
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{
+                              timeout: 500,
+                            }}
+                          >
+                            <Fade in={open1}>
+                              <div className={classes.paper1}>
+                                <h2 id="transition-modal-title">Logos disponibles</h2>          
+                                <div id="transition-modal-description">
+                                <Grid container spacing={2}>
+                                  {AvailableLogo()}
+                                      </Grid>
+                                </div>
+                              </div>
+                            </Fade>
+                          </Modal>
+
                         <div className={classes.paper}>
                           <form className={classes.form} noValidate>
                             <Grid container spacing={2}>                          
