@@ -348,8 +348,7 @@ function Tournaments() {
     const ElBrack = () => {
       //....
       return (
-       
-        {/*largo  ? <Bracket rounds={rounds2}/> : <Bracket rounds={rounds}/>*/}
+        <Bracket rounds={rounds2}/>
       );
     };
 
