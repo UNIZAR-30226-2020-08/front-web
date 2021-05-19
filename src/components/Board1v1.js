@@ -235,6 +235,8 @@ export default function Board(socket,roomName,tipo) {
         setMisPuntos(pts_e1 + label_e1);
         setSusPuntos(pts_e0 + label_e0);
       }
+      round.current = nronda;
+      setRoundM(round.current);
     });
 
     socket.on("winner", ({ winner }) => {

@@ -9,21 +9,23 @@ import Radio from "@material-ui/core/Radio";
 import Dialog from '@material-ui/core/Dialog';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import "./Timer.css";
 
 export default function Board(socket,roomName,tipo) {
   const user = AuthenticationDataService.getCurrentUser();
-  
+
   const history = useHistory();
 
   const user1 = useRef({});
   const [user1M,setUser1M] = useState({});
-  
+
   const user2 = useRef({});
   const [user2M,setUser2M] = useState({});
 
   const user3 = useRef({});
   const [user3M,setUser3M] = useState({});
-
+  
   const cartas = useRef({jugador: "none", partida: "none", c1: "NO", c2: "NO", c3: "NO", c4: "NO", c5: "NO", c6: "NO"});
   const [cartasMc1,setCartasMc1] = useState("NO");
   const [cartasMc2,setCartasMc2] = useState("NO");
@@ -55,9 +57,12 @@ export default function Board(socket,roomName,tipo) {
 
   const jugada3 = useRef("NO");
   const [jugada3M,setJugada3M] = useState("NO");
-  
+
   const quedanCartas = useRef(false);
   const [quedanCartasM,setQuedanCartasM] = useState(false);
+  
+  const quierePausa = useRef(false);
+  const [quierePausaM,setQuierePausaM] = useState(false);
 
   const triunfo = useRef("NO");
   const [triunfoM,setTriunfoM] = useState("NO");
@@ -75,10 +80,10 @@ export default function Board(socket,roomName,tipo) {
   const [tienesBaza,setTienesBaza] = useState(false);
 
   const puntose0 = useRef(0);
-  const [puntose0M,setPuntose0M] = useState(0);
-
   const puntose1 = useRef(0);
-  const [puntose1M,setPuntose1M] = useState(0);
+
+  const [misPuntos,setMisPuntos] = useState("0 malas");
+  const [susPuntos,setSusPuntos] = useState("0 malas");
 
   const selectedCard = useRef("");
   const [selectedCardM,setSelectedCardM] = useState("");
@@ -88,7 +93,44 @@ export default function Board(socket,roomName,tipo) {
   const [resultado,setResultado] = useState("");
 
   const baraja = user ? user.data.f_carta : "baraja1";
+
   const username = user ? user.data.username : "anonimo";
+
+  const renderTime = ({ remainingTime }) => {
+    return (
+      <div className="timer">
+        <div className="value">{remainingTime}</div>
+      </div>
+    );
+  };
+
+  function throwRandomCard(){
+    if(handleLancarCarta(cartas.current.c1,false)){
+      console.log("Tira c1")
+    }else if(handleLancarCarta(cartas.current.c2,false)){
+      console.log("Tira c2")
+    }else if(handleLancarCarta(cartas.current.c3,false)){
+      console.log("Tira c3")
+    }else if(handleLancarCarta(cartas.current.c4,false)){
+      console.log("Tira c4")
+    }else if(handleLancarCarta(cartas.current.c5,false)){
+      console.log("Tira c5")
+    }else if(handleLancarCarta(cartas.current.c6,false)){
+      console.log("Tira c6")
+    }else{
+      console.log("No puedo tirar")
+    }
+  }
+
+  function handleCountdownCompleted(){
+    console.log("SE HA COMPLETADO EL TIEMPO")
+    if(jugada0.current === "NO"){
+      console.log("TIRANDO CARTA ALEATORIA...")
+      throwRandomCard();
+    }
+  }
+
+  const [timer,setTimer] = useState(<div></div>);
 
   useEffect(() => { 
     if(tipo.current===2){ 
@@ -102,9 +144,52 @@ export default function Board(socket,roomName,tipo) {
       if (repartidas.jugador===username){
         cartas.current = repartidas;
         setCartasM(cartas.current)
-      }else if(ord === 1) {
+        if(myOrden.current-1 === turno.current){
+          setTimer(
+            <CountdownCircleTimer
+              isPlaying
+              duration={30}
+              size={100}
+              colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+              onComplete={()=>handleCountdownCompleted()}
+            >
+              {renderTime}
+            </CountdownCircleTimer>
+          )
+        }
+      }else if(ord === 1){
         user1.current = repartidas;
-        setUser1M(user1.current);
+        setUser1M(user1.current)
+      }else if(ord === 2) {
+        user2.current = repartidas;
+        setUser2M(user2.current);
+      }else if(ord === 3) {
+        user3.current = repartidas;
+        setUser3M(user3.current);
+      }
+    });
+
+    socket.on("RepartirCartasRP", ({ repartidas }) => {
+      var ord = (repartidas.orden-myOrden.current+4) % 4;
+      if (repartidas.jugador===username){
+        cartas.current = repartidas;
+        setCartasM(cartas.current)
+        if(myOrden.current-1 === turno.current){
+          setTimer(
+            <CountdownCircleTimer
+              isPlaying
+              duration={30}
+              size={100}
+              colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+              onComplete={()=>handleCountdownCompleted()}
+            >
+              {renderTime}
+            </CountdownCircleTimer>
+          )
+        }
+      }else if(ord === 1){
+        user1.current = repartidas;
+        setUser1M(user1.current)
       }else if(ord === 2) {
         user2.current = repartidas;
         setUser2M(user2.current);
@@ -121,8 +206,94 @@ export default function Board(socket,roomName,tipo) {
       setQuedanCartasM(quedanCartas.current);
     });
 
+    socket.on("RepartirTriunfoRP", ({ triunfoRepartido, nronda, winner,puntos_e0,puntos_e1 }) => {
+      triunfo.current = triunfoRepartido;
+      setTriunfoM(triunfo.current);
+      quedanCartas.current = true;
+      setQuedanCartasM(quedanCartas.current);
+      if(winner === username){
+        setTimer(
+          <CountdownCircleTimer
+            isPlaying
+            duration={30}
+            size={100}
+            colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+            onComplete={()=>{handleCountdownCompleted()}}
+          >
+            {renderTime}
+          </CountdownCircleTimer>
+        )
+        turno.current = myOrden.current-1;
+        setTurnoM(turno.current);
+        baza.current = myOrden.current-1;
+        setBazaM(baza.current);
+        setTienesBaza(true);
+      }else if(winner === user2.current.jugador){
+        turno.current = user2.current.orden-1;
+        setTurnoM(turno.current);
+        baza.current = user2.current.orden-1;
+        setBazaM(baza.current);
+        setTienesBaza(true);
+      }else if(winner === user1.current.jugador){
+        turno.current = user1.current.orden-1;
+        setTurnoM(turno.current);
+        baza.current = user1.current.orden-1;
+        setBazaM(baza.current);
+        setTienenBaza(true);
+      }else if(winner === user3.current.jugador){
+        turno.current = user3.current.orden-1;
+        setTurnoM(turno.current);
+        baza.current = user3.current.orden-1;
+        setBazaM(baza.current);
+        setTienenBaza(true);
+      }
+      jugada0.current = "NO";
+      setJugada0M(jugada0.current);
+      jugada1.current = "NO";
+      setJugada1M(jugada1.current);
+      jugada2.current = "NO";
+      setJugada2M(jugada2.current);
+      jugada3.current = "NO";
+      setJugada3M(jugada3.current);
+      puntose0.current = puntos_e0;
+      puntose1.current = puntos_e1;
+      var label_e0 = " malas";
+      var pts_e0 = puntos_e0;
+      if(puntos_e0/50 >= 1){
+        label_e0 = " buenas";
+        pts_e0 = pts_e0 - 50;
+      }
+      var label_e1 = " malas";
+      var pts_e1 = puntos_e1;
+      if(puntos_e1/50 >= 1){
+        label_e1 = " buenas";
+        pts_e1 = pts_e1 - 50;
+      }
+
+      if(myOrden.current === 1 || myOrden.current === 3){
+        setMisPuntos(pts_e0 + label_e0);
+        setSusPuntos(pts_e1 + label_e1);
+      }else{
+        setMisPuntos(pts_e1 + label_e1);
+        setSusPuntos(pts_e0 + label_e0);
+      }
+      round.current = nronda;
+      setRoundM(round.current);
+    });
+
     socket.on("winner", ({ winner }) => {
       if(winner === username){
+        setTimer(
+          <CountdownCircleTimer
+            isPlaying
+            duration={30}
+            size={100}
+            colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+            onComplete={()=>{handleCountdownCompleted()}}
+          >
+            {renderTime}
+          </CountdownCircleTimer>
+        )
         turno.current = myOrden.current-1;
         setTurnoM(turno.current);
         baza.current = myOrden.current-1;
@@ -148,7 +319,7 @@ export default function Board(socket,roomName,tipo) {
         setTienenBaza(true);
       }
       round.current++;
-      setRoundM(round.current%20);
+      setRoundM(round.current);
       jugada0.current = "NO";
       setJugada0M(jugada0.current);
       jugada1.current = "NO";
@@ -185,22 +356,43 @@ export default function Board(socket,roomName,tipo) {
     });
   
     socket.on("cartaJugada", ({ cartaJugada, jugador }) => {
-      console.log("Carta ",cartaJugada," jugada por ",jugador, ", mi carta es ",jugada0.current);
+      console.log("Carta ",cartaJugada," jugada por ",jugador);
       if (jugador === user1.current.jugador){
+        console.log("Asignada al jugador 1 ", user1.current.jugador)
         jugada1.current = cartaJugada;
         setJugada1M(jugada1.current);
+        turno.current = (turno.current+1)%4;
+        setTurnoM(turno.current); 
       }else if(jugador === user2.current.jugador){
+        console.log("Asignada al jugador 2 ", user2.current.jugador)
         jugada2.current = cartaJugada;
         setJugada2M(jugada2.current);
+        turno.current = (turno.current+1)%4;
+        setTurnoM(turno.current); 
       }else if(jugador === user3.current.jugador){
+        console.log("Asignada al jugador 3 ", user3.current.jugador)
         jugada3.current = cartaJugada;
         setJugada3M(jugada3.current);
-      }
-      turno.current = (turno.current+1)%4;
-      setTurnoM(turno.current);
-      if(jugador === username && jugada1.current !== "NO" && jugada2.current !== "NO" && jugada3.current !== "NO"){
+        turno.current = (turno.current+1)%4;
+      setTurnoM(turno.current); 
+      }else if(jugador === username && jugada1.current !== "NO" && jugada2.current !== "NO" && jugada3.current !== "NO"){
         console.log("PIDO ROBAR")
-        setTimeout(handleRonda,2000); 
+        setTimeout(handleRonda,2000);
+        turno.current = (turno.current+1)%4;
+        setTurnoM(turno.current); 
+      }
+      if(turno.current === myOrden.current-1){
+        setTimer(
+          <CountdownCircleTimer
+            isPlaying
+            duration={30}
+            size={100}
+            colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+            onComplete={()=>handleCountdownCompleted()}
+          >
+            {renderTime}
+          </CountdownCircleTimer>
+        )
       }
     });
 
@@ -214,10 +406,28 @@ export default function Board(socket,roomName,tipo) {
 
     socket.on("puntos", ({ puntos_e0, puntos_e1 }) => {
       puntose0.current = puntos_e0;
-      setPuntose0M(puntos_e0);
       puntose1.current = puntos_e1;
-      setPuntose1M(puntos_e1);
-      if(round.current/20 > 1){
+      var label_e0 = " malas";
+      var pts_e0 = puntos_e0;
+      if(puntos_e0/50 >= 1){
+        label_e0 = " buenas";
+        pts_e0 = pts_e0 - 50;
+      }
+      var label_e1 = " malas";
+      var pts_e1 = puntos_e1;
+      if(puntos_e1/50 >= 1){
+        label_e1 = " buenas";
+        pts_e1 = pts_e1 - 50;
+      }
+
+      if(myOrden.current === 1 || myOrden.current === 3){
+        setMisPuntos(pts_e0 + label_e0);
+        setSusPuntos(pts_e1 + label_e1);
+      }else{
+        setMisPuntos(pts_e1 + label_e1);
+        setSusPuntos(pts_e0 + label_e0);
+      }  
+      if(round.current > 9){
         if(puntos_e0 > 100 || puntos_e1 > 100){
           var data = {
             partida: roomName.current,
@@ -241,25 +451,25 @@ export default function Board(socket,roomName,tipo) {
       }
       var label_e1 = " malas";
       var pts_e1 = puntos_e1;
-      if(puntos_e0/50 >= 1){
+      if(puntos_e1/50 >= 1){
         label_e1 = " buenas";
         pts_e1 = pts_e1 - 50;
       }
-      var mensaje = "HAS PERDIDO"
-      if(myOrden.current === 1){
+      var mensaje = "HAS PERDIDO, -15🏆"
+      if(myOrden.current === 1 || myOrden.current === 3){
         if(puntos_e0 > puntos_e1){
-          mensaje = "HAS GANADO"
+          mensaje = "HAS GANADO, +30🏆"
         }
       }else{
         if(puntos_e0 < puntos_e1){
-          mensaje = "HAS GANADO"
+          mensaje = "HAS GANADO, +30🏆"
         }
       }      
       console.log(puntos_e0 + " a " +puntos_e1)
-      if(myOrden.current === 1){
-        setResultado( "Tienes " + pts_e0 + label_e0 + " y el otro equipo ha conseguido " + pts_e1 + label_e1 + "\n" + mensaje);
+      if(myOrden.current === 1 || myOrden.current === 3){
+        setResultado( "Tenéis " + pts_e0 + label_e0 + " y el otro equipo tiene " + pts_e1 + label_e1 + "\n" + mensaje);
       }else{
-        setResultado( "Tienes " + pts_e1 + label_e1 + " y el otro equipo ha conseguido " + pts_e0 + label_e0 + "\n" + mensaje);
+        setResultado( "Tenéis " + pts_e1 + label_e1 + " y el otro equipo tiene " + pts_e0 + label_e0 + "\n" + mensaje);
       }
       setFinished(true);
     });
@@ -304,19 +514,31 @@ export default function Board(socket,roomName,tipo) {
       }
       var label_e1 = " malas";
       var pts_e1 = puntos_e1;
-      if(puntos_e0/50 >= 1){
+      if(puntos_e1/50 >= 1){
         label_e1 = " buenas";
         pts_e1 = pts_e1 - 50;
       }
       console.log(puntos_e0 + " a " +puntos_e1)
-      if(myOrden.current === 1){
-        alert( "Tienes " + pts_e0 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + pts_e1 + label_e1 + "\nPARTIDA DE VUELTAS!");
+      if(myOrden.current === 1 || myOrden.current === 3){
+        alert( "Tenéis " + pts_e0 + label_e0 + " y el otro equipo tiene " + pts_e1 + label_e1 + "\nPARTIDA DE VUELTAS!");
       }else{
-        alert( "Tienes " + pts_e1 + label_e1 + " y " + user1.current.jugador + " ha conseguido " + pts_e0 + label_e0 + "\nPARTIDA DE VUELTAS!");
+        alert( "Tenéis " + pts_e1 + label_e1 + " y el otro equipo tiene " + pts_e0 + label_e0 + "\nPARTIDA DE VUELTAS!");
       }
     });
-    }
-  }, [tipo.current]);
+
+    socket.on("copasActualizadas", ( copas ) => {
+      if(copas.jugador === username){
+        let user = AuthenticationDataService.getCurrentUser();
+        user.data.copas = copas.copas;
+        AuthenticationDataService.updateCurrentUser(user);
+      }
+    });
+  
+    socket.on("pause", () => {
+      quierePausa.current = true;
+      setQuierePausaM(true);
+    });
+  }}, [tipo.current]);
 
   function tieneEnMano(palo){
     if(cartas.current.c1.charAt(1) === palo  && cartas.current.c1 !== "NO"){
@@ -394,15 +616,15 @@ export default function Board(socket,roomName,tipo) {
   }
 
   function handleRonda(){
-    jugada1.current = "NO";
-    setJugada1M(jugada1.current);
     jugada0.current = "NO";
     setJugada0M(jugada0.current);
+    jugada1.current = "NO";
+    setJugada1M(jugada1.current);
     jugada2.current = "NO";
     setJugada2M(jugada2.current);
     jugada3.current = "NO";
     setJugada3M(jugada3.current);
-
+    
     var data = {
       partida: roomName.current,
       nronda: round.current
@@ -410,29 +632,29 @@ export default function Board(socket,roomName,tipo) {
 
     console.log(data)
 
-    if(round.current%20 < 14){
+    socket.emit("contarPuntos",data, (error) => {
+      if(error) {
+        alert(error);
+      }
+    });
+
+    if(round.current%10 < 4){
       socket.emit("robarCarta",data, (error) => {
         if(error) {
           alert(error);
         }
       });
-    }else if(round.current%20 === 19){
+    }else if(round.current%10 === 9){
       socket.emit("finalizarPartida",data, (error) => {
         if(error) {
           alert(error);
         }
       });
     }
-
-    socket.emit("contarPuntos",data, (error) => {
-      if(error) {
-        alert(error);
-      }
-    });
   }
 
   function handleCambiar7(){
-    if(baza.current === myOrden.current-1){
+    if(baza.current%2 === (myOrden.current-1)%2){
       var has7 = false;
       var aux = "6" + triunfo.current.charAt(1);
       console.log(aux);
@@ -483,7 +705,7 @@ export default function Board(socket,roomName,tipo) {
   };
 
   function handleCantar(){
-    if(baza.current === myOrden.current-1 || baza.current === user2.current.orden-1){
+    if(baza.current%2 === (myOrden.current-1)%2){
       var data = {
         jugador: username,
         nombre: roomName.current,
@@ -498,11 +720,11 @@ export default function Board(socket,roomName,tipo) {
     }
   }
 
-  function handleLancarCarta(carta){
+  function handleLancarCarta(carta,madeByUser){
     if(carta !== "NO"){
       if(turno.current === myOrden.current-1){
         var cartaValida = true;
-        if(round.current%20 >= 14 && jugada1.current !== "NO"){
+        if(round.current%10 >= 4 && jugada1.current !== "NO"){
           var palo0 = carta.charAt(1);
           var palo1 = jugada1.current.charAt(1);
           var palotriunfo = triunfo.current.charAt(1);
@@ -521,7 +743,7 @@ export default function Board(socket,roomName,tipo) {
         if (cartaValida){
           jugada0.current = carta;
           setJugada0M(jugada0.current);
-          turno.current = ( turno.current + 1 ) % 2;
+          turno.current = ( turno.current + 1 ) % 4;
           setTurnoM(turno.current);
           if(cartas.current.c1 === carta){
             cartas.current.c1 = "NO";
@@ -550,15 +772,27 @@ export default function Board(socket,roomName,tipo) {
           }
           socket.emit("lanzarCarta",data, (error) => {
             if(error) {
-              alert(error);
+              if(madeByUser){
+                alert(error);  
+              }
+              return false;
             }
           })
         }else{
-          alert("No puedes tirar esa carta");
+          if(madeByUser){
+            alert("No puedes tirar esa carta");
+          }
+          return false;
         }
       }else{
-        alert("No es tu turno");
+        if(madeByUser){
+          alert("No es tu turno");
+        }
+        return false;
       }
+      return true;
+    }else{
+      return false;
     }
   };
 
@@ -650,7 +884,7 @@ export default function Board(socket,roomName,tipo) {
       }else if("c6" === selectedCard.current){
         carta2mov = cartas.current.c6;
       }
-      handleLancarCarta(carta2mov);
+      handleLancarCarta(carta2mov,true);
       selectedCard.current = "";
       setSelectedCardM("");
     }else if(selectedCard.current === ""){
@@ -663,15 +897,50 @@ export default function Board(socket,roomName,tipo) {
     }
   }
 
+  function handlePause(){
+    var data = {
+      usuario: username,
+      partida: roomName.current,
+      tipo: 0,
+    }
+    socket.emit("pausar",data, (error) => {
+      if(error) {
+        alert(error);  
+      }
+    })
+  }
+
   return (
     <div className={Application.tapete}>
      <div className={Application.controles1}>
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton} onClick={() => {window.location.reload();}}>SALIR</Button>
-        <Button variant="contained" className={Application.actionButton} onClick={() => {alert("Funcionalidad no implementada");}}>PAUSAR</Button>
+        <Button variant="contained" className={Application.actionButton} onClick={() => {handlePause()}}>PAUSAR</Button>
       </h1>
      </div>
-    
+     <div className={Application.timer}>
+     <div className="timer-wrapper">
+       {turnoM===myOrdenM-1 ? timer : <></>}
+     </div>
+     </div>
+     <div className={Application.usuario3}>
+    { user1M.jugador ? 
+      <Usuario
+        nombre={user1M.jugador}
+        copas={user1M.copas + " 🏆"}
+        image={"images/"+user1M.f_perfil+".png"}
+        checked={turnoM===user1M.orden-1}
+      />
+      :
+      <></>
+    }
+     </div>
+     <div className={Application.carta3}>
+      <Card
+        src={"images/"+baraja+"/"+jugada1M+".png"}
+        text="Carta jugador 1"
+      />
+     </div>
      <div className={Application.usuario1}>
     { user2M.jugador ? 
       <Usuario
@@ -690,27 +959,7 @@ export default function Board(socket,roomName,tipo) {
         text="Carta jugador 2"
       />
      </div>
-    
      <div className={Application.usuario2}>
-    { user1M.jugador ? 
-      <Usuario
-        nombre={user1M.jugador}
-        copas={user1M.copas + " 🏆"}
-        image={"images/"+user1M.f_perfil+".png"}
-        checked={turnoM===user1M.orden-1}
-      />
-      :
-      <></>
-    }
-     </div>
-     <div className={Application.carta1}>
-      <Card
-        src={"images/"+baraja+"/"+jugada1M+".png"}
-        text="Carta jugador 1"
-      />
-     </div>
-
-     <div className={Application.usuario3}>
     { user3M.jugador ? 
       <Usuario
         nombre={user3M.jugador}
@@ -722,7 +971,7 @@ export default function Board(socket,roomName,tipo) {
       <></>
     }
      </div>
-     <div className={Application.carta3}>
+     <div className={Application.carta2}>
       <Card
         src={"images/"+baraja+"/"+jugada3M+".png"}
         text="Carta jugador 3"
@@ -732,7 +981,7 @@ export default function Board(socket,roomName,tipo) {
      <div className={Application.bazas1}>
       { tienenBaza ?
       <Card
-      src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
+        src={"images/"+baraja+"/reverso.png"}
         text="Sus Bazas"
       />
       :
@@ -740,7 +989,7 @@ export default function Board(socket,roomName,tipo) {
       }
      </div>
      <div className={Application.mazo1}>
-     { roundM < 14 ?
+     { roundM%10 < 4 ?
       <Card
         src={"images/"+baraja+"/"+triunfoM+".png"}
         text="Palo"
@@ -752,11 +1001,11 @@ export default function Board(socket,roomName,tipo) {
      }
      </div>
      <div className={Application.mazo2}>
-     { roundM < 14 ?
+     { roundM%10 < 4 ?
       <Card
-        src={"images/"+baraja+"/reverso.png"}
+        src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
         text="Baraja"
-        onClick={() => {alert("Quedan "+ (28-round.current*2) + " cartas.");}}
+        onClick={() => {alert("Quedan "+ (16-round.current*2) + " cartas.");}}
       />
       :
       <></>
@@ -766,6 +1015,15 @@ export default function Board(socket,roomName,tipo) {
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton} onClick={()=>{handleCantar()}}>CANTAR</Button>
         <Radio checked={turnoM===myOrdenM-1}/>
+        { roundM > 9 ?
+        <div className={Application.cuenta}>
+          <h1 className={Application.cuentaH}>Mi equipo: {misPuntos}</h1>
+          <h1 className={Application.cuentaH}>Rival: {susPuntos}</h1>
+        </div>
+        :
+        <div className={Application.cuenta}>
+        </div>
+        }
       </h1>
      </div>
      <div className={Application.carta00}>
