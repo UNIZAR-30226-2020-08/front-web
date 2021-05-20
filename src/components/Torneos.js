@@ -203,6 +203,7 @@ function Tournaments(props) {
     const [tipoo, setTipoo] = React.useState(0);
     const [participantes, setParticipantes] = React.useState(0);
     const [contrasenya, setContrasenya] = React.useState("");
+    const [partidaActual, setPartidaActual] = React.useState({});
 
     const [equipos,setEquipos] = React.useState([]);
     const [equipo1,setnombreEquipo1] = React.useState("");
@@ -678,6 +679,11 @@ function Tournaments(props) {
     
 
     const handleUnirse = (value,nombreeTorneo) => {
+      
+      setGamemode(value.tipo + 1);
+      gamemodeRef.current = value.tipo + 1;
+      roomName.current = partidaActual.partida ;
+      setMatched(true);
       console.log("value: "+value.tipo);
       props.socket.emit('joinTournament', { name:user.data.username, tournament:nombreeTorneo , tipo: value.tipo, nTeams:value.npart}, (error) => {
         if(error) {
@@ -730,8 +736,14 @@ function Tournaments(props) {
 
     useEffect(() => {
       props.socket.on("matches", ( dataMatches ) => {
-       console.log(dataMatches);
+       console.log("Matches: "+dataMatches);
         setEquipos(dataMatches);
+        var d;
+        for(d of dataMatches){
+          if(d.jugador === username){
+              setPartidaActual(d);
+          }
+        }
       });
     }, []);
 
