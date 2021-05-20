@@ -492,7 +492,7 @@ function Tournaments(props) {
           secondary={"Tipo: "+torneosB.nparticipantes+" jugadores. "}
           />
           <ListItemSecondaryAction>
-           <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {handleClickOpen6(value.nombre); UnirseTorneo(value.nombre);}}>
+           <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {handleClickOpen6(value.nombre); UnirseTorneo(value.nombre);handleUnirseTorneo(torneosB);}}>
            Unirse
             </Button>
             <Dialog onClose={handleClose6} aria-labelledby="customized-dialog-title" open={open6} style={{ maxWidth: "100%" }}>
@@ -502,7 +502,7 @@ function Tournaments(props) {
                     <div>
                     {ElBrack()}
                     </div>
-                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {{handleUnirse(torneosB)}}}>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(data,nombreTorneo)}}>
                       Jugar
                     </Button>
                   </Dialog>
@@ -641,7 +641,7 @@ function Tournaments(props) {
                 secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre); UnirseTorneo(value.nombre);}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre); UnirseTorneo(value.nombre); handleUnirseTorneo(data,nombreTorneo);}}>
                     Unirse
                 </Button>
                   <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5} style={{ maxWidth: "100%" }}>
@@ -651,7 +651,7 @@ function Tournaments(props) {
                     <div>
                     {ElBrack()}
                     </div>
-                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirse(data,nombreTorneo);}}>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(data,nombreTorneo)}}>
                       Jugar
                     </Button>
                   </Dialog>
@@ -662,32 +662,23 @@ function Tournaments(props) {
     
     };
 
-    {/*const handleUnirse = (value) => {
-      setGamemode(1);
-      gamemodeRef.current = 1;
-      roomName.current = value.nombre;
-      setMatched(true);
-      let rm = value.nombre;
-      console.log(username , " " , rm, " ")
-      props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
-        if(error) {
-          alert("La invitacion a la partida ", value.nombre, " ya no está disponible");
-        }
-      })
-    }*/}
-
-    
-
-    const handleUnirse = (value,nombreeTorneo) => {
-      
-      setGamemode(value.tipo + 1);
-      gamemodeRef.current = value.tipo + 1;
-      roomName.current = partidaActual.partida ;
-      setMatched(true);
-      console.log("value: "+value.tipo);
+    const handleUnirseTorneo = (value,nombreeTorneo) => {
       props.socket.emit('joinTournament', { name:user.data.username, tournament:nombreeTorneo , tipo: value.tipo, nTeams:value.npart}, (error) => {
         if(error) {
           alert("No se ha podido unir al torneo");
+        }
+      })
+    }
+
+    const handleUnirsePartida = (value,nombreeTorneo) => {
+      setGamemode(value.tipo + 1);
+      gamemodeRef.current = value.tipo + 1;
+      roomName.current = partidaActual.partida;
+      setMatched(true);
+      let rm = partidaActual.partida;
+      props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
+        if(error) {
+          alert("La partida ", partidaActual.partida, " del torneo ", nombreeTorneo, " ya no está disponible");
         }
       })
     }
