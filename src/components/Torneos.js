@@ -496,7 +496,7 @@ function Tournaments() {
                     <div>
                     {ElBrack()}
                     </div>
-                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {{/*handleUnirse(torneosB.nombre)*/}}}>
                       Jugar
                     </Button>
                   </Dialog>
@@ -548,7 +548,19 @@ function Tournaments() {
     
     };
 
-   
+    {/*const handleUnirse = (value) => {
+      setGamemode(1);
+      gamemodeRef.current = 1;
+      roomName.current = value.nombre;
+      setMatched(true);
+      let rm = value.nombre;
+      console.log(username , " " , rm, " ")
+      props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
+        if(error) {
+          alert("No se ha podido unir al torneo");
+        }
+      })
+    }*/}
 
     function VerCrearTorneo(tipoEquipo,Nparticipantess){
       return(
@@ -665,7 +677,7 @@ function Tournaments() {
                     <div>
                     {ElBrack()}
                     </div>
-                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {{/*handleUnirse(nombreTorneo)*/}}}>
                       Jugar
                     </Button>
                   </Dialog>
@@ -675,6 +687,20 @@ function Tournaments() {
       })
     
     };
+
+    {/*const handleUnirse = (value) => {
+      setGamemode(1);
+      gamemodeRef.current = 1;
+      roomName.current = value.nombre;
+      setMatched(true);
+      let rm = value.nombre;
+      console.log(username , " " , rm, " ")
+      props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
+        if(error) {
+          alert("La invitacion a la partida ", value.nombre, " ya no está disponible");
+        }
+      })
+    }*/}
 
     function CreateTournament(nombree,tipoo,nparticipantess,contrasenyaa,username,join) {
       setCreated(true);
@@ -701,8 +727,10 @@ function Tournaments() {
         TorneoService.create(data)
         .then(response => {
             if(join){
-              MatchMakingTorneos(TournamentName,inicial);
-              handleClickOpen5(TournamentName);
+              if(created){
+                MatchMakingTorneos(TournamentName,inicial);
+                handleClickOpen5(TournamentName);
+              }
               setLoaded4(true);
               let value = {
                 nombre: response.nombre
