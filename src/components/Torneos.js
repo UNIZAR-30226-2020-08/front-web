@@ -196,7 +196,7 @@ function Tournaments(props) {
     const [largo, setLargo] = React.useState(false);
     const [inicial, setInicial] = React.useState(1);
     const [busqueda, setBusqueda] = React.useState(false);
-    const [TournamentName, setTournamentname] = React.useState(false);
+    const [TournamentName, setTournamentname] = React.useState("");
     const [checkbox, setCheck] = React.useState(false);
     const [correct, setCorrect] = React.useState(true);
     const [created, setCreated] = React.useState(false);
@@ -491,7 +491,7 @@ function Tournaments(props) {
           secondary={"Tipo: "+torneosB.nparticipantes+" jugadores. "}
           />
           <ListItemSecondaryAction>
-           <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {handleClickOpen6(value.nombre);MatchMakingTorneos(value.nombre,inicial); UnirseTorneo(value.nombre);}}>
+           <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {handleClickOpen6(value.nombre); UnirseTorneo(value.nombre);}}>
            Unirse
             </Button>
             <Dialog onClose={handleClose6} aria-labelledby="customized-dialog-title" open={open6} style={{ maxWidth: "100%" }}>
@@ -511,27 +511,7 @@ function Tournaments(props) {
     
     };
 
-    function MatchMakingTorneos(torneoo,rondaa) {
-      var data = {
-        torneo: torneoo,
-        ronda: rondaa,
-      };
-
-      if (!loaded3){
-        setLoaded3(true);
-        TorneoService.matchRound(data).then(response => {
-          console.log(response);
-          setEquipos(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    }
-        return(  
-          <h1>Hola</h1>      
-        )
     
-    };
 
     function UnirseTorneo(torneoDisp) {
       var data = {
@@ -660,7 +640,7 @@ function Tournaments(props) {
                 secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre);MatchMakingTorneos(value.nombre,inicial); UnirseTorneo(value.nombre);}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre); UnirseTorneo(value.nombre);}}>
                     Unirse
                 </Button>
                   <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5} style={{ maxWidth: "100%" }}>
@@ -731,7 +711,6 @@ function Tournaments(props) {
         TorneoService.create(data)
         .then(response => {
             if(join){
-                MatchMakingTorneos(TournamentName,inicial);
                 handleClickOpen5(TournamentName);
               setLoaded4(true);
               let value = {
@@ -752,7 +731,7 @@ function Tournaments(props) {
     useEffect(() => {
       props.socket.on("matches", ( dataMatches ) => {
        console.log(dataMatches);
-        
+        setEquipos(dataMatches);
       });
     }, []);
 
