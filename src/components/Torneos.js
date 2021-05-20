@@ -548,19 +548,7 @@ function Tournaments() {
     
     };
 
-    {/*const handleUnirse = (value) => {
-      setGamemode(1);
-      gamemodeRef.current = 1;
-      roomName.current = value.nombre;
-      setMatched(true);
-      let rm = value.nombre;
-      console.log(username , " " , rm, " ")
-      props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
-        if(error) {
-          alert("No se ha podido unir al torneo");
-        }
-      })
-    }*/}
+    
 
     function VerCrearTorneo(tipoEquipo,Nparticipantess){
       return(
@@ -677,7 +665,7 @@ function Tournaments() {
                     <div>
                     {ElBrack()}
                     </div>
-                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {{/*handleUnirse(nombreTorneo)*/}}}>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirse(value);}}>
                       Jugar
                     </Button>
                   </Dialog>
@@ -701,6 +689,16 @@ function Tournaments() {
         }
       })
     }*/}
+
+    const handleUnirse = (value) => {
+      console.log("value: "+value);
+      let rm = value.nombre;
+      {/*props.socket.emit('joinTournament', { name:user.data.username, tournament:rm , tipo: value.tipo, nTeams:value.nparticipantes}, (error) => {
+        if(error) {
+          alert("No se ha podido unir al torneo");
+        }
+      })*/}
+    }
 
     function CreateTournament(nombree,tipoo,nparticipantess,contrasenyaa,username,join) {
       setCreated(true);
