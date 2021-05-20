@@ -455,10 +455,11 @@ function Friends(props) {
         
       >
         <Tab label="Amigos" icon={<ContactsIcon />} {...a11yProps(0)} />
-        {<Tab label="Solicitudes" icon={<PersonAddIcon />} {...a11yProps(1)} />}
-        {<Tab label="Ranking Amigos" icon={<EmojiEventsIcon />} {...a11yProps(2)} />}
-        {<Tab label="Ranking Global" icon={<EmojiEventsIcon />} {...a11yProps(3)} />}
-        {<Tab label="Invitaciones" icon={<SendIcon />} {...a11yProps(4)} />}
+        {<Tab label="Invitaciones" icon={<SendIcon />} {...a11yProps(1)} />}
+        {<Tab label="Solicitudes" icon={<PersonAddIcon />} {...a11yProps(2)} />}
+        {<Tab label="Ranking Amigos" icon={<EmojiEventsIcon />} {...a11yProps(3)} />}
+        {<Tab label="Ranking Global" icon={<EmojiEventsIcon />} {...a11yProps(4)} />}
+        
         
       </Tabs>
       </AppBar>
@@ -487,24 +488,25 @@ function Friends(props) {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <List className={classes.lista2}>
+            {AvailableInvitaciones()}
+          </List>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <List className={classes.lista2}>
           {AvailableSolicitudes()}
         </List>
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={3}>
         <List className={classes.lista2}>
             {AvailableFriends()}
           </List>
       </TabPanel>
-      <TabPanel value={value} index={3}>
+      <TabPanel value={value} index={4}>
         <List className={classes.lista2}>
             {AvailableGlobal()}
           </List>
       </TabPanel>
-      <TabPanel value={value} index={4}>
-        <List className={classes.lista2}>
-            {AvailableInvitaciones()}
-          </List>
-      </TabPanel>
+      
   </div>
     );
 }
