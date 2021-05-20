@@ -14,7 +14,24 @@ class TorneoService {
     }
     matchRound(data) {
         return axios.put(http.URL_TORNEO_MATCHROUND + data.torneo + "/" + data.ronda, data);
-      }
+    }
+    
+    createCurrentTournament(data) {
+        localStorage.setItem("torneo", JSON.stringify(data));
+    }
+
+    getCurrentTournament() {
+        return JSON.parse(localStorage.getItem('torneo'));
+    }
+    
+    updateCurrentTournament(data){
+        localStorage.setItem('torneo', JSON.stringify(data));
+    }
+
+    removeCurrentTournament() {
+        localStorage.removeItem("torneo");
+        window.location.reload();
+    }
 }
 
 export default new TorneoService();

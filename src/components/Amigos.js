@@ -8,30 +8,22 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Button from "@material-ui/core/Button";
 import { fade,makeStyles } from '@material-ui/core/styles';
 import Application from "./application.module.scss";
+import Dialog from '@material-ui/core/Dialog';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import partidaService from '../services/partida.service';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
-
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
-import HelpIcon from '@material-ui/icons/Help';
-import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
-import ThumbDown from '@material-ui/icons/ThumbDown';
-import ThumbUp from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-
 import AmigoService from "../services/amigo.service";
 import AuthenticationDataService from "../services/auth.service";
 import UserService from "../services/user.service";
-
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
@@ -130,18 +122,6 @@ function TabPanel(props) {
   );
 }
 
-const getFriends = () => {
-  var exampleFriends = [
-    {}
-  ];
-};
-
-const getSolicitudes = () => {
-  var exampleFriends = {
-
-  };
-};
-
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
@@ -175,9 +155,9 @@ function Friends(props) {
     const [loaded2,setLoaded2] = React.useState(false);
     const [loaded3,setLoaded3] = React.useState(true);
     const [loaded4,setLoaded4] = React.useState(false);
-    const [loaded5,setLoaded5] = React.useState(false);
     const [bien,setBien] = React.useState(false);
     const [input,setInput] = React.useState("");
+    const [inviteDialog,setInviteDialog] = React.useState(false);
     
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
 
@@ -435,6 +415,7 @@ function Friends(props) {
         if(data.destinatario === username){
           invitacionesRecibidas.current.push(data);
           setInvitaciones(invitacionesRecibidas.current);
+          setInviteDialog(true);
         }
       });
     }, []);
@@ -506,7 +487,18 @@ function Friends(props) {
             {AvailableGlobal()}
           </List>
       </TabPanel>
-      
+      <Dialog open={inviteDialog} handleClose={()=>setInviteDialog(false)} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">INVITACIÓN</DialogTitle>
+      <DialogContentText>
+        Se te ha invitado a una partida
+      </DialogContentText>
+      <Button edge="end"  variant="outlined" aria-label="Cancelar" onClick={() => {setInviteDialog(false)}}>
+        Cancelar
+      </Button>
+      <Button edge="end"  variant="outlined" aria-label="Aceptar" onClick={() => {setValue(1);setInviteDialog(false);}}>
+        Ver invitación
+      </Button>
+      </Dialog>
   </div>
     );
 }
