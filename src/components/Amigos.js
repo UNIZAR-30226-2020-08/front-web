@@ -429,9 +429,11 @@ function Friends(props) {
     }
 
     useEffect(() => {
-      props.socket.on("invitacionRecibida", ( invitacion ) => {
-        if(invitacion.destinatario === username){
-          invitacionesRecibidas.current.push(invitacion);
+      props.socket.on("invitacionRecibida", ( data ) => {
+        console.log("Invitacion recibida")
+        console.log(data)
+        if(data.destinatario === username){
+          invitacionesRecibidas.current.push(data);
           setInvitaciones(invitacionesRecibidas.current);
         }
       });
