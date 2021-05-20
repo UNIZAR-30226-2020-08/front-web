@@ -523,6 +523,8 @@ function Tournaments(props) {
         setLoaded4(true);
         ParticipantesTorneoService.create(data).then(response => {
           console.log(response);
+          setLoaded2(false);
+          setLoaded(false);
         })
         .catch(e => {
           console.log(e);
@@ -714,7 +716,8 @@ function Tournaments(props) {
                 nombre: response.nombre
               }
               console.log("Legaaaaaaaaaaaaaaaaaaaaa: "+ nombree);
-              UnirseTorneo(nombree)
+              UnirseTorneo(nombree);
+              setLoaded(false);
             }
             setCorrect(true);
         })
