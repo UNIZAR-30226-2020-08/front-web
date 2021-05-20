@@ -8,6 +8,12 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import Application from "./application.module.scss";
 
 
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+
+
+
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
@@ -22,6 +28,10 @@ import TorneoService from "../services/torneo.service";
 import AuthenticationDataService from "../services/auth.service";
 
 import ParticipantesTorneoService from "../services/participantes_torneo.service";
+import TextField from '@material-ui/core/TextField';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 
 import { withStyles } from '@material-ui/core/styles';
@@ -171,13 +181,23 @@ function Tournaments() {
     const [loaded2,setLoaded2] = React.useState(true);
     const [loaded3,setLoaded3] = React.useState(false);
     const [loaded4,setLoaded4] = React.useState(false);
+    const [loaded8,setLoaded8] = React.useState(false);
     const [nombreTorneo,setnombreTorneo] = React.useState("");
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [open5, setOpen5] = React.useState(false);
     const [open6, setOpen6] = React.useState(false);
+    const [open7, setOpen7] = React.useState(false);
     const [input,setInput] = React.useState("");
     const [largo, setLargo] = React.useState(false);
     const [inicial, setInicial] = React.useState(1);
+    const [busqueda, setBusqueda] = React.useState(false);
+    const [TournamentName, setTournamentname] = React.useState(false);
+    const [checkbox, setCheck] = React.useState(false);
+    const [correct, setCorrect] = React.useState(true);
+    const [created, setCreated] = React.useState(false);
+    const [tipoo, setTipoo] = React.useState(0);
+    const [participantes, setParticipantes] = React.useState(0);
+    const [contrasenya, setContrasenya] = React.useState("");
 
     const [equipos,setEquipos] = React.useState([]);
     const [equipo1,setnombreEquipo1] = React.useState("");
@@ -366,12 +386,24 @@ function Tournaments() {
     };
 
     
-    
+    function Reset() {
+      setLoaded8(false);
+      setOpen7(false);
+      setCreated(false);
+    }
     
     const onChangeInput = (e) => {
       setInput(e.target.value);
       console.log(e.target.value);
       
+    }
+
+    const onChangeTournamentname = (e) => {
+      setTournamentname(e.target.value);
+    }
+
+    const onChangeContrasenya = (e) => {
+      setContrasenya(e.target.value);
     }
 
     const handleChange = (event, newValue) => {
@@ -384,6 +416,11 @@ function Tournaments() {
         setLargo(true);
         setInicial(0);
       }
+      if(newValue===4){
+        setLoaded2(false);
+      }else{
+        setLoaded2(true);
+      }
     };
 
     const handleClickOpen5 = (namee) => {
@@ -393,6 +430,18 @@ function Tournaments() {
     };
     const handleClose5 = () => {
       setOpen5(false);
+    };
+
+    const handleClickOpen7 = () => {
+      setOpen7(true);
+    }
+
+    const handleCheck = (e) =>{
+      setCheck(e.target.checked);
+    };
+
+    const handleClose7 = () => {
+      setOpen7(false);
     };
 
     const handleClickOpen6 = (namee) => {
@@ -442,7 +491,7 @@ function Tournaments() {
             </Button>
             <Dialog onClose={handleClose6} aria-labelledby="customized-dialog-title" open={open6} style={{ maxWidth: "100%" }}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose6}>
-                      Torneo {nombreTorneo}
+                      Torneo {torneosB.nombre}
                     </DialogTitle>
                     <div>
                     {ElBrack()}
@@ -484,7 +533,6 @@ function Tournaments() {
         torneo: torneoDisp,
         jugador: user.data.username,
       };
-
       if (!loaded4){
         setLoaded4(true);
         ParticipantesTorneoService.create(data).then(response => {
@@ -499,6 +547,85 @@ function Tournaments() {
         )
     
     };
+
+   
+
+    function VerCrearTorneo(tipoEquipo,Nparticipantess){
+      return(
+        <Dialog open={open7} onClose={handleClose7} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">{"CREAR TORNEO " + tipoEquipo + " " + Nparticipantess }</DialogTitle>
+        { created ?
+        <div>
+          { correct ?
+            Reset()
+            :
+            <div>
+              <div>
+                <h1>
+                Algo salio mal...
+                </h1>
+              </div>  
+              <DialogActions>
+              <Button edge="end"  variant="outlined" aria-label="Aceptar" onClick={handleClose7}>
+                Aceptar
+              </Button>
+            </DialogActions>
+            </div>
+          }
+        </div>
+        :
+        <div>
+          <DialogContent>
+            <DialogContentText>
+              Introduzca los datos solicidatos.
+            </DialogContentText>
+                <TextField
+                    label="Nombre del torneo"
+                    onChange={onChangeTournamentname}
+                    id="outlined-margin-normal"
+                    placeholder= "Nombre del torneo"
+                    className={classes.textField}
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    fullWidth
+                    variant="outlined"
+                    value={TournamentName}
+                />
+
+                <TextField
+                    label="Contraseña (Opcional)"
+                    onChange={onChangeContrasenya}
+                    id="outlined-margin-normal"
+                    placeholder= "Contraseña"
+                    className={classes.textField}
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    fullWidth
+                    variant="outlined"
+                    value={contrasenya}
+                />
+                
+          </DialogContent>
+          <DialogActions>
+            <Button edge="end"  variant="outlined" aria-label="Cancelar" onClick={handleClose7}>
+              Cancelar
+            </Button>
+            <Button edge="end"  variant="outlined" aria-label="Crear" onClick={() => {CreateTournament(TournamentName,tipoEquipo,Nparticipantess,contrasenya,user.data.username,false);setLoaded8(false)}}>
+              Crear
+            </Button>
+            <Button edge="end"  variant="outlined" aria-label="Crear" onClick={() => {CreateTournament(TournamentName,tipoEquipo,Nparticipantess,contrasenya,user.data.username,true);setLoaded8(false);}}>
+              Crear y unirse
+            </Button>
+          </DialogActions>
+          </div>
+        }         
+      </Dialog>
+      )
+    }
 
 
     
@@ -549,6 +676,49 @@ function Tournaments() {
     
     };
 
+    function CreateTournament(nombree,tipoo,nparticipantess,contrasenyaa,username,join) {
+      setCreated(true);
+      if (TournamentName != ""){
+        if(contrasenyaa!= ""){
+          var data = {
+                  nombre: nombree,
+                  tipo: tipoo,
+                  nparticipantes: nparticipantess,
+                  contrasenya: contrasenyaa,
+                };
+          }else{
+            var data = {
+              nombre: nombree,
+              tipo: tipoo,
+              nparticipantes: nparticipantess,
+            };
+          }
+      }
+      
+      if(!loaded8){
+        setLoaded8(true);
+        console.log(data);
+        TorneoService.create(data)
+        .then(response => {
+            if(join){
+              MatchMakingTorneos(TournamentName,inicial);
+              handleClickOpen5(TournamentName);
+              setLoaded4(true);
+              let value = {
+                nombre: response.nombre
+              }
+              console.log("Legaaaaaaaaaaaaaaaaaaaaa: "+ nombree);
+              UnirseTorneo(nombree)
+            }
+            setCorrect(true);
+        })
+        .catch(e => {
+          setCorrect(false);
+          console.log(e);
+        });
+      }
+  };
+
     return (
       <div className={Application.selectTournament}>
           <AppBar position="static" color="transparent" className={classes.bar}>
@@ -569,33 +739,37 @@ function Tournaments() {
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4();}}>
                 Nuevo Torneo
             </Button>
+            {VerCrearTorneo(0,8)}
           <List className={classes.lista}>
           {value === 0? AvailableTournaments(0,8): <></>}
           </List>
       </TabPanel>
       <TabPanel value={value} index={1}>
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4();}}>
                 Nuevo Torneo
             </Button>
+            {VerCrearTorneo(1,8)}
           <List className={classes.lista}>
           {value === 1? AvailableTournaments(1,8): <></>}
           </List>
       </TabPanel>
       <TabPanel value={value} index={2}>
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4();}}>
                 Nuevo Torneo
             </Button>
+            {VerCrearTorneo(0,16)}
           <List className={classes.lista}>
           {value === 2? AvailableTournaments(0,16): <></>}
           </List>
       </TabPanel>
       <TabPanel value={value} index={3}>
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {}}>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4();}}>
                 Nuevo Torneo
             </Button>
+            {VerCrearTorneo(1,16)}
           <List className={classes.lista}>
           {value === 3? AvailableTournaments(1,16): <></>}
           </List>

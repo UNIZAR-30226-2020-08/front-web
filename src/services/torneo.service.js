@@ -3,6 +3,9 @@ import http from '../http-common';
 
 class TorneoService {
 
+    create(data) {
+        return axios.post(http.URL_TORNEO_CREATE,data).then(response => {return response.data;});
+     }
     findAll(data) {
         return axios.get(http.URL_TORNEO_FINDALL + data.tipo + "/" + data.npart, data);
     }
