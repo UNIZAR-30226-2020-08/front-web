@@ -173,7 +173,7 @@ function Friends(props) {
     const [invitaciones,setInvitaciones] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
-    const [loaded3,setLoaded3] = React.useState(false);
+    const [loaded3,setLoaded3] = React.useState(true);
     const [loaded4,setLoaded4] = React.useState(false);
     const [loaded5,setLoaded5] = React.useState(false);
     const [bien,setBien] = React.useState(false);
