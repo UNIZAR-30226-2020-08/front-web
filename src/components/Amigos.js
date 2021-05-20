@@ -8,7 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Button from "@material-ui/core/Button";
 import { fade,makeStyles } from '@material-ui/core/styles';
 import Application from "./application.module.scss";
-
+import partidaService from '../services/partida.service';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Fade from '@material-ui/core/Fade';
@@ -169,8 +169,8 @@ function Friends(props) {
     const [global,setGlobal] = React.useState([]);
     const [busc,setBusc] = React.useState([]);
     const [solicitudes,setSolicitudes] = React.useState([]);
-    const invitacionesRecibidas = useRef([{username: "prueba", nombre:"sala1234"}]);
-    const [invitaciones,setInvitaciones] = React.useState([{username: "prueba", nombre:"sala1234"}]);
+    const invitacionesRecibidas = useRef([]);
+    const [invitaciones,setInvitaciones] = React.useState([]);
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
     const [loaded3,setLoaded3] = React.useState(false);
@@ -231,7 +231,30 @@ function Friends(props) {
               console.log(e);
             });
         }
-    
+
+    function handleInvitar(value){
+      setGamemode(1);
+      gamemodeRef.current = 1;
+      let data = {tipo: 0};
+      partidaService.create(data)
+      .then(response => {
+          props.socket.emit('joinPartida', { name:username, room:response.nombre , tipo: parseInt(0)}, (error) => {
+            if(error) {
+              alert(error);
+            }
+          })
+          props.socket.emit('enviarInvitacion', { username:username, nombre:response.nombre , tipo: parseInt(0), destinatario:value.nombre}, (error) => {
+            if(error) {
+              alert(error);
+            }
+          })
+          roomName.current = response.nombre;
+          setMatched(true);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    } 
 
     function AvailableFriends() {
       var data = {
@@ -258,7 +281,7 @@ function Friends(props) {
           />
           <ListItemSecondaryAction>
           {rank === 0? 
-           <Button edge="end"  variant="outlined" aria-label="Unirse" style={{ marginRight: '10px' }}>
+           <Button edge="end"  onClick={()=>handleInvitar(value.username)} variant="outlined" aria-label="Unirse" style={{ marginRight: '10px' }}>
            Invitar
             </Button>
             : <></>}
@@ -341,7 +364,7 @@ function Friends(props) {
     setMatched(true);
     let rm = value.nombre;
     console.log(username , " " , rm, " ")
-    props.socket.emit('join', { name:username, room:rm , tipo: parseInt(0)}, (error) => {
+    props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
       if(error) {
         alert("La invitacion a la partida ", value.nombre, " ya no está disponible");
       }
@@ -407,8 +430,10 @@ function Friends(props) {
 
     useEffect(() => {
       props.socket.on("invitacionRecibida", ( invitacion ) => {
-        invitacionesRecibidas.current.push(invitacion);
-        setInvitaciones(invitacionesRecibidas.current);
+        if(invitacion.destinatario === username){
+          invitacionesRecibidas.current.push(invitacion);
+          setInvitaciones(invitacionesRecibidas.current);
+        }
       });
     }, []);
 
