@@ -238,7 +238,7 @@ function Friends(props) {
       let data = {tipo: 0};
       partidaService.create(data)
       .then(response => {
-          props.socket.emit('joinPartida', { name:username, room:response.nombre , tipo: parseInt(0)}, (error) => {
+          props.socket.emit('join', { name:username, room:response.nombre , tipo: parseInt(0)}, (error) => {
             if(error) {
               alert(error);
             }
