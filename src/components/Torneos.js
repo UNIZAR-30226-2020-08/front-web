@@ -168,12 +168,13 @@ function Tournaments() {
     const [torneos,setTorneos] = React.useState([]);
     const [torneosB,setTorneosB] = React.useState({nombre:""});
     const [loaded,setLoaded] = React.useState(false);
-    const [loaded2,setLoaded2] = React.useState(false);
+    const [loaded2,setLoaded2] = React.useState(true);
     const [loaded3,setLoaded3] = React.useState(false);
     const [loaded4,setLoaded4] = React.useState(false);
     const [nombreTorneo,setnombreTorneo] = React.useState("");
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [open5, setOpen5] = React.useState(false);
+    const [open6, setOpen6] = React.useState(false);
     const [input,setInput] = React.useState("");
     const [largo, setLargo] = React.useState(false);
     const [inicial, setInicial] = React.useState(1);
@@ -394,6 +395,15 @@ function Tournaments() {
       setOpen5(false);
     };
 
+    const handleClickOpen6 = (namee) => {
+      setnombreTorneo(namee);
+      setOpen6(true);
+      
+    };
+    const handleClose6 = () => {
+      setOpen6(false);
+    };
+
     function AvailableBTorneos() {
       var data = {
         torneo:input,
@@ -404,6 +414,15 @@ function Tournaments() {
         TorneoService.find(data).then(response => {
           console.log(response);
           setTorneosB(response.data);
+          if(response.data.nparticipantes === 8){
+            console.log("8");
+            setLargo(false);
+            setInicial(1);
+          }else if(response.data.nparticipantes === 16){
+            console.log("16");
+            setLargo(true);
+            setInicial(0);
+          }
         })
         .catch(e => {
           console.log(e);
@@ -419,9 +438,20 @@ function Tournaments() {
           secondary={torneosB.participantes}
           />
           <ListItemSecondaryAction>
-           <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {}}>
+           <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {handleClickOpen6(value.nombre);MatchMakingTorneos(value.nombre,inicial); UnirseTorneo(value.nombre);}}>
            Unirse
             </Button>
+            <Dialog onClose={handleClose6} aria-labelledby="customized-dialog-title" open={open6} style={{ maxWidth: "100%" }}>
+                    <DialogTitle id="customized-dialog-title" onClose={handleClose6}>
+                      Torneo {nombreTorneo}
+                    </DialogTitle>
+                    <div>
+                    {ElBrack()}
+                    </div>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
+                      Jugar
+                    </Button>
+                  </Dialog>
           </ListItemSecondaryAction>
       </ListItem> 
         )}
