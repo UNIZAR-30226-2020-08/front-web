@@ -1041,7 +1041,7 @@ export default function Board(socket,roomName,tipo) {
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton} onClick={()=>{handleCantar()}}>CANTAR</Button>
         <Radio checked={turnoM===myOrdenM-1}/>
-        { roundM > 9 ?
+        { roundM > 0/*9*/ ?
         <div className={Application.cuenta}>
           <h1 className={Application.cuentaH}>Mi equipo: {misPuntos}</h1>
           <h1 className={Application.cuentaH}>Rival: {susPuntos}</h1>
