@@ -327,7 +327,7 @@ export default function Board(socket,roomName,tipo) {
           var palotriunfo = triunfo.current.charAt(1);
           if(palo0 === paloSalida){
             if(paloMata === paloSalida){
-              if(!mata(cartaMata.current,carta) && puedeMatar(cartaMata.current,paloSalida)){
+              if(cartaMata.current !== jugada2.current && !mata(cartaMata.current,carta) && puedeMatar(cartaMata.current,paloSalida)){
                 cartaValida = false;
               }
             }
@@ -336,11 +336,11 @@ export default function Board(socket,roomName,tipo) {
               cartaValida = false;
             }
             if(paloMata === palotriunfo){
-              if(!mata(cartaMata.current,carta) && puedeMatar(cartaMata.current,palotriunfo)){
+              if(cartaMata.current !== jugada2.current && !mata(cartaMata.current,carta) && puedeMatar(cartaMata.current,palotriunfo)){
                 cartaValida = false;
               }
             }
-          }else if(tieneEnMano(paloSalida) || puedeMatar(cartaMata.current,palotriunfo)){
+          }else if(tieneEnMano(paloSalida) || (cartaMata.current !== jugada2.current && puedeMatar(cartaMata.current,palotriunfo))){
             cartaValida = false;
           }
         }
@@ -1031,7 +1031,7 @@ export default function Board(socket,roomName,tipo) {
       <Card
         src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
         text="Baraja"
-        onClick={() => {alert("Quedan "+ (16-round.current*2) + " cartas.");}}
+        onClick={() => {alert("Quedan "+ (16-round.current*4) + " cartas.");}}
       />
       :
       <></>

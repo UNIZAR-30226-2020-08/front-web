@@ -169,7 +169,7 @@ export default function Board(socket,roomName,tipo) {
 
     socket.on("winner", ({ winner }) => {
       round.current++;
-      setRoundM(round.current%20);
+      setRoundM(round.current);
       jugada1.current = "NO";
       setJugada1M(jugada1.current);
       jugada0.current = "NO";
@@ -319,7 +319,7 @@ export default function Board(socket,roomName,tipo) {
         setMisPuntos(pts_e1 + label_e1);
         setSusPuntos(pts_e0 + label_e0);
       }  
-      if(round.current/20 > 1){
+      if(round.current > 19){
         if(puntos_e0 > 100 || puntos_e1 > 100){
           var data = {
             partida: roomName.current,
@@ -847,7 +847,7 @@ export default function Board(socket,roomName,tipo) {
       <h1 className={Application.header}>
         <Button variant="contained" className={Application.actionButton} onClick={()=>{handleCantar()}}>CANTAR</Button>
         <Radio checked={turnoM===myOrdenM-1}/>
-        { (roundM / 20) > 1 ?
+        { roundM > 19 ?
         <div className={Application.cuenta}>
           <h1 className={Application.cuentaH}>Mi equipo: {misPuntos}</h1>
           <h1 className={Application.cuentaH}>Rival: {susPuntos}</h1>
