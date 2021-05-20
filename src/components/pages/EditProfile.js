@@ -315,7 +315,7 @@ const useStyles = makeStyles((theme) => ({
     };
   
     return (
-      <div className={Application.container}>
+      <div className={Application.container2}>
         {! user ?
           history.push("/")
           :
@@ -444,20 +444,6 @@ const useStyles = makeStyles((theme) => ({
               </Card>
           </Container>
         }
-          <div className={Application.chat}>
-        <div className={Application.amigos}>
-          <h1 className={Application.header}>
-            Amigos
-          </h1>
-          <Friends/>
-        </div>
-        <div className={Application.torneos}>
-          <h1 className={Application.header}>
-            Torneos
-          </h1>
-          <Tournaments/>
-        </div>
-      </div>
       </div>
     );
   }

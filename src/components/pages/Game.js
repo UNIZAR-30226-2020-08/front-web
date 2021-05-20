@@ -154,7 +154,7 @@ export default function Game() {
           <h1 className={Application.header}>
             Amigos
           </h1>
-          {<Friends/>}
+          {<Friends socket={socket} setMatched={setMatched} setGamemode={setGamemode} gamemode={gamemodeRef} username={username} roomName={roomName}/>}
         </div>
         <div className={Application.torneos}>
           <h1 className={Application.header}>

@@ -419,7 +419,7 @@ const useStyles = makeStyles((theme) => ({
 
   
     return (
-      <div className={Application.container}>
+      <div className={Application.container2}>
         {! user ?
           history.push("/")
           :
@@ -595,19 +595,6 @@ const useStyles = makeStyles((theme) => ({
               </Card>
           </Container>
         }
-        <div className={Application.chat}>
-        <div className={Application.amigos}>
-          <h1 className={Application.header}>
-            Amigos
-          </h1>
-          <Friends></Friends>
-        </div>
-        <div className={Application.torneos}>
-          <h1 className={Application.header}>
-            Torneos
-          </h1>
-          <Tournaments></Tournaments>
-        </div>
         <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -655,7 +642,6 @@ const useStyles = makeStyles((theme) => ({
           </div>
         </Fade>
       </Modal>
-      </div>
       </div>
     );
   }

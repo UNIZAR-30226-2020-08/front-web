@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect,useRef} from 'react';
 //import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 //import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import List from "@material-ui/core/List";
@@ -155,7 +155,12 @@ function a11yProps(index) {
   };
 }
 
-function Friends() {
+function Friends(props) {
+    const setGamemode = props.setGamemode
+    const setMatched = props.setMatched
+    const gamemodeRef = props.gamemode
+    const username = props.username
+    const roomName = props.roomName
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [rank, setRank] = React.useState(0);
@@ -164,7 +169,8 @@ function Friends() {
     const [global,setGlobal] = React.useState([]);
     const [busc,setBusc] = React.useState([]);
     const [solicitudes,setSolicitudes] = React.useState([]);
-    const [invitaciones,setInvitaciones] = React.useState([]);
+    const invitacionesRecibidas = useRef([{username: "prueba", nombre:"sala1234"}]);
+    const [invitaciones,setInvitaciones] = React.useState([{username: "prueba", nombre:"sala1234"}]);
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
     const [loaded3,setLoaded3] = React.useState(false);
@@ -326,28 +332,34 @@ function Friends() {
       })
     }
 
+  const handleUnirse = (value) => {
+    setGamemode(1);
+    gamemodeRef.current = 1;
+    roomName.current = value.nombre;
+    setMatched(true);
+    let rm = value.nombre;
+    console.log(username , " " , rm, " ")
+    props.socket.emit('join', { name:username, room:rm , tipo: parseInt(0)}, (error) => {
+      if(error) {
+        alert("La invitacion a la partida ", value.nombre, " ya no está disponible");
+      }
+    })
+  }
+
     function AvailableInvitaciones() {
-      var data = {
-      };
-
-      if (!loaded5){
-        setLoaded5(true);
-        UserService.findAll(data).then(response => {
-          console.log(response.data)
-          setGlobal(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    }
-
       return invitaciones.map((value) => {
         return(
           <ListItem key={value} className="listItem">
           <ListItemText
           primary={value.username}
+          secondary="Individual"
           />
-      </ListItem>
+          <ListItemSecondaryAction>
+          <Button edge="end"  variant="outlined" onClick={()=>{handleUnirse(value)}}>
+              Unirse
+          </Button>
+          </ListItemSecondaryAction>
+          </ListItem>
         )
       })
     }
@@ -390,6 +402,13 @@ function Friends() {
           )
         })}
     }
+
+    useEffect(() => {
+      props.socket.on("invitacionRecibida", ( invitacion ) => {
+        invitacionesRecibidas.current.push(invitacion);
+        setInvitaciones(invitacionesRecibidas.current);
+      });
+    }, []);
 
 
     return (
