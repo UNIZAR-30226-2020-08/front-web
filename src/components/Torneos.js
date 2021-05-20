@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect,useRef} from 'react';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -171,7 +171,12 @@ const DialogTitle = withStyles(useStyles)((props) => {
   );
 });
 
-function Tournaments() {
+function Tournaments(props) {
+    const setGamemode = props.setGamemode
+    const setMatched = props.setMatched
+    const gamemodeRef = props.gamemode
+    const username = props.username
+    const roomName = props.roomName
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [value2, setValue2] = React.useState(0);
@@ -496,7 +501,7 @@ function Tournaments() {
                     <div>
                     {ElBrack()}
                     </div>
-                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {{/*handleUnirse(torneosB.nombre)*/}}}>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {{handleUnirse(torneosB)}}}>
                       Jugar
                     </Button>
                   </Dialog>
@@ -665,7 +670,7 @@ function Tournaments() {
                     <div>
                     {ElBrack()}
                     </div>
-                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirse(value);}}>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirse(data,nombreTorneo);}}>
                       Jugar
                     </Button>
                   </Dialog>
@@ -690,14 +695,15 @@ function Tournaments() {
       })
     }*/}
 
-    const handleUnirse = (value) => {
-      console.log("value: "+value);
-      let rm = value.nombre;
-      {/*props.socket.emit('joinTournament', { name:user.data.username, tournament:rm , tipo: value.tipo, nTeams:value.nparticipantes}, (error) => {
+    
+
+    const handleUnirse = (value,nombreeTorneo) => {
+      console.log("value: "+value.tipo);
+      props.socket.emit('joinTournament', { name:user.data.username, tournament:nombreeTorneo , tipo: value.tipo, nTeams:value.npart}, (error) => {
         if(error) {
           alert("No se ha podido unir al torneo");
         }
-      })*/}
+      })
     }
 
     function CreateTournament(nombree,tipoo,nparticipantess,contrasenyaa,username,join) {
@@ -725,10 +731,8 @@ function Tournaments() {
         TorneoService.create(data)
         .then(response => {
             if(join){
-              if(created){
                 MatchMakingTorneos(TournamentName,inicial);
                 handleClickOpen5(TournamentName);
-              }
               setLoaded4(true);
               let value = {
                 nombre: response.nombre
@@ -744,6 +748,13 @@ function Tournaments() {
         });
       }
   };
+
+    useEffect(() => {
+      props.socket.on("matches", ( dataMatches ) => {
+       console.log(dataMatches);
+        
+      });
+    }, []);
 
     return (
       <div className={Application.selectTournament}>

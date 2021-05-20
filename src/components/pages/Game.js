@@ -160,7 +160,7 @@ export default function Game() {
           <h1 className={Application.header}>
             Torneos
           </h1>
-          <Tournaments/>
+          <Tournaments socket={socket} setMatched={setMatched} setGamemode={setGamemode} gamemode={gamemodeRef} username={username} roomName={roomName}/>
         </div>
       </div>
       :
