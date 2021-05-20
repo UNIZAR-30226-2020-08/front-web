@@ -767,7 +767,7 @@ function Tournaments(props) {
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4();}}>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4(false);}}>
                 Nuevo Torneo
             </Button>
             {VerCrearTorneo(0,8)}
@@ -776,7 +776,7 @@ function Tournaments(props) {
           </List>
       </TabPanel>
       <TabPanel value={value} index={1}>
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4();}}>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4(false);}}>
                 Nuevo Torneo
             </Button>
             {VerCrearTorneo(1,8)}
@@ -785,7 +785,7 @@ function Tournaments(props) {
           </List>
       </TabPanel>
       <TabPanel value={value} index={2}>
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4();}}>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4(false);}}>
                 Nuevo Torneo
             </Button>
             {VerCrearTorneo(0,16)}
@@ -794,7 +794,7 @@ function Tournaments(props) {
           </List>
       </TabPanel>
       <TabPanel value={value} index={3}>
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4();}}>
+            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4(false);}}>
                 Nuevo Torneo
             </Button>
             {VerCrearTorneo(1,16)}
