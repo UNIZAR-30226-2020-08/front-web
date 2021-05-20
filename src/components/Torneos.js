@@ -203,6 +203,7 @@ function Tournaments(props) {
     const [tipoo, setTipoo] = React.useState(0);
     const [participantes, setParticipantes] = React.useState(0);
     const [contrasenya, setContrasenya] = React.useState("");
+    const [torneoUnido, SetTorneoUnido] = React.useState("");
     const [partidaActual, setPartidaActual] = React.useState({});
 
     const [equipos,setEquipos] = React.useState([]);
@@ -469,6 +470,11 @@ function Tournaments(props) {
         TorneoService.find(data).then(response => {
           console.log(response);
           setTorneosB(response.data);
+          var data = {
+            torneo:torneosB.nombre,
+            tipo: torneosB.tipo,
+            npart: torneosB.nparticipantes,
+          };
           if(response.data.nparticipantes === 8){
             console.log("8");
             setLargo(false);
@@ -492,9 +498,12 @@ function Tournaments(props) {
           secondary={"Tipo: "+torneosB.nparticipantes+" jugadores. "}
           />
           <ListItemSecondaryAction>
-           <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {handleClickOpen6(value.nombre); UnirseTorneo(value.nombre);handleUnirseTorneo(torneosB);}}>
-           Unirse
-            </Button>
+          {value.nombre !== torneoUnido ?
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen6(value.nombre); UnirseTorneo(value.nombre); handleUnirseTorneo(data,nombreTorneo);}}>
+                    Unirse
+                </Button> : <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen6(value.nombre);}}>
+                    Ver Bracket
+                </Button>}
             <Dialog onClose={handleClose6} aria-labelledby="customized-dialog-title" open={open6} style={{ maxWidth: "100%" }}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose6}>
                       Torneo {torneosB.nombre}
@@ -502,7 +511,7 @@ function Tournaments(props) {
                     <div>
                     {ElBrack()}
                     </div>
-                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(data,nombreTorneo)}}>
+                    <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(data,torneosB.nombre)}}>
                       Jugar
                     </Button>
                   </Dialog>
@@ -523,6 +532,9 @@ function Tournaments(props) {
         setLoaded4(true);
         ParticipantesTorneoService.create(data).then(response => {
           console.log(response);
+          SetTorneoUnido(torneoDisp);
+          setLoaded2(false);
+          setLoaded(false);
         })
         .catch(e => {
           console.log(e);
@@ -641,9 +653,12 @@ function Tournaments(props) {
                 secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
+                  {value.nombre!== torneoUnido ?
                 <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre); UnirseTorneo(value.nombre); handleUnirseTorneo(data,nombreTorneo);}}>
                     Unirse
-                </Button>
+                </Button> : <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre);}}>
+                    Ver Bracket
+                </Button>}
                   <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5} style={{ maxWidth: "100%" }}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose5}>
                       Torneo {nombreTorneo}
@@ -714,7 +729,8 @@ function Tournaments(props) {
                 nombre: response.nombre
               }
               console.log("Legaaaaaaaaaaaaaaaaaaaaa: "+ nombree);
-              UnirseTorneo(nombree)
+              UnirseTorneo(nombree);
+              setLoaded(false);
             }
             setCorrect(true);
         })
@@ -731,6 +747,7 @@ function Tournaments(props) {
         setEquipos(dataMatches);
         var d;
         for(d of dataMatches){
+          console.log(d);
           if(d.jugador === username){
               setPartidaActual(d);
           }
