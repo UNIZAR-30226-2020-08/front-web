@@ -428,14 +428,13 @@ function Tournaments() {
           console.log(e);
         });
     }
-      console.log("Respuesta: "+torneosB.data);
       
       if (torneosB.nombre !== "" && torneosB.nombre !== undefined ){
         return(       
           <ListItem key={torneosB.nombre} className="listItem">
           <ListItemText
           primary={torneosB.nombre}
-          secondary={torneosB.participantes}
+          secondary={"Tipo: "+torneosB.nparticipantes+" jugadores. "}
           />
           <ListItemSecondaryAction>
            <Button edge="end"  variant="outlined" aria-label="Solicitar" onClick={() => {handleClickOpen6(value.nombre);MatchMakingTorneos(value.nombre,inicial); UnirseTorneo(value.nombre);}}>
