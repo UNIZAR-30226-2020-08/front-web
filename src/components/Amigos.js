@@ -243,7 +243,7 @@ function Friends(props) {
               alert(error);
             }
           })
-          props.socket.emit('enviarInvitacion', { username:username, nombre:response.nombre , tipo: parseInt(0), destinatario:value.nombre}, (error) => {
+          props.socket.emit('enviarInvitacion', { username:username, nombre:response.nombre , tipo: parseInt(0), destinatario:value.username}, (error) => {
             if(error) {
               alert(error);
             }
@@ -281,7 +281,7 @@ function Friends(props) {
           />
           <ListItemSecondaryAction>
           {rank === 0? 
-           <Button edge="end"  onClick={()=>handleInvitar(value.username)} variant="outlined" aria-label="Unirse" style={{ marginRight: '10px' }}>
+           <Button edge="end"  onClick={()=>handleInvitar(value)} variant="outlined" aria-label="Unirse" style={{ marginRight: '10px' }}>
            Invitar
             </Button>
             : <></>}
