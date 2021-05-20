@@ -289,6 +289,7 @@ function Friends(props) {
         });
     }
 
+    if(busc.username !== undefined){
         return(
           <ListItem key={busc.username} className="listItem">
           <ListItemText
@@ -304,6 +305,7 @@ function Friends(props) {
         )
     
     }
+  }
 
     function AvailableGlobal() {
       var data = {

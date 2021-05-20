@@ -409,7 +409,9 @@ function Tournaments() {
           console.log(e);
         });
     }
-      if (torneosB.nombre !== ""){
+      console.log("Respuesta: "+torneosB.data);
+      
+      if (torneosB.nombre !== "" && torneosB.nombre !== undefined ){
         return(       
           <ListItem key={torneosB.nombre} className="listItem">
           <ListItemText
@@ -489,7 +491,6 @@ function Tournaments() {
     }
 
     
-
       return torneos.map((value) => {
         return(
           <ListItem key={value.nombre} className="listItem">
@@ -516,6 +517,7 @@ function Tournaments() {
             </ListItem>
         )
       })
+    
     };
 
     return (
