@@ -45,6 +45,7 @@ import { Bracket, RoundProps } from 'react-brackets';
 import GroupIcon from '@material-ui/icons/Group';
 
 import PersonIcon from '@material-ui/icons/Person';
+import torneoService from '../services/torneo.service';
 
 
 
@@ -471,7 +472,6 @@ function Tournaments(props) {
           console.log(response);
           setTorneosB(response.data);
           var data = {
-            torneo:torneosB.nombre,
             tipo: torneosB.tipo,
             npart: torneosB.nparticipantes,
           };
@@ -498,12 +498,9 @@ function Tournaments(props) {
           secondary={"Tipo: "+torneosB.nparticipantes+" jugadores. "}
           />
           <ListItemSecondaryAction>
-          {value.nombre !== torneoUnido ?
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen6(value.nombre); UnirseTorneo(value.nombre); handleUnirseTorneo(data,nombreTorneo);}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen6(torneosB.nombre); UnirseTorneo(data); handleUnirseTorneo(data,torneosB.nombre);}}>
                     Unirse
-                </Button> : <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen6(value.nombre);}}>
-                    Ver Bracket
-                </Button>}
+                </Button> 
             <Dialog onClose={handleClose6} aria-labelledby="customized-dialog-title" open={open6} style={{ maxWidth: "100%" }}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose6}>
                       Torneo {torneosB.nombre}
@@ -523,7 +520,7 @@ function Tournaments(props) {
 
     
 
-    function UnirseTorneo(torneoDisp) {
+    function UnirseTorneo(value,torneoDisp) {
       var data = {
         torneo: torneoDisp,
         jugador: user.data.username,
@@ -532,7 +529,13 @@ function Tournaments(props) {
         setLoaded4(true);
         ParticipantesTorneoService.create(data).then(response => {
           console.log(response);
-          SetTorneoUnido(torneoDisp);
+          var data = {
+            torneo: torneoDisp,
+            tipo:value.tipo,
+            npart:value.npart,
+          };
+          var torneo = torneoService.updateCurrentTournament(data);
+          SetTorneoUnido(torneo.torneo);
           setLoaded2(false);
           setLoaded(false);
         })
@@ -633,6 +636,7 @@ function Tournaments(props) {
         tipo: tip,
         npart: part,
       };
+      var torneo = torneoService.getCurrentTournament();
       if (!loaded){
         setLoaded(true);
         TorneoService.findAll(data).then(response => {
@@ -648,17 +652,25 @@ function Tournaments(props) {
       return torneos.map((value) => {
         return(
           <ListItem key={value.nombre} className="listItem">
+                
                 <ListItemText
                 primary={value.nombre}
                 secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
-                  {value.nombre!== torneoUnido ?
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre); UnirseTorneo(value.nombre); handleUnirseTorneo(data,nombreTorneo);}}>
+                {torneo && torneo.torneo === value.nombre  ?
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre); UnirseTorneo(data,value.nombre); handleUnirseTorneo(data,nombreTorneo);}}>
+                Ver Brackets
+                </Button> :
+                <></> 
+                }
+
+                {torneo &&  torneo.torneo!=="" ?
+                <></> :
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre); UnirseTorneo(data,value.nombre); handleUnirseTorneo(data,nombreTorneo);}}>
                     Unirse
-                </Button> : <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre);}}>
-                    Ver Bracket
                 </Button>}
+
                   <Dialog onClose={handleClose5} aria-labelledby="customized-dialog-title" open={open5} style={{ maxWidth: "100%" }}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose5}>
                       Torneo {nombreTorneo}
