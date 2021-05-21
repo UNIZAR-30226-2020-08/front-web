@@ -191,6 +191,8 @@ function Friends(props) {
           username: user.data.username,
           amigoname: amigo,
         };
+        setLoaded(false);
+        setLoaded2(false);
         AmigoService.aceptar(data)
           .then(response => {
           })
@@ -327,12 +329,16 @@ function Friends(props) {
 
       return global.map((value) => {
         return(
+          
           <ListItem key={value} className="listItem">
+            {value.username !== "IA" ?
           <ListItemText
           primary={value.username}
           secondary={value.copas+"🏆"}
           />
-      </ListItem>
+          : <></>}
+           </ListItem>
+          
         )
       })
     }
