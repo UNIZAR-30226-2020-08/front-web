@@ -368,11 +368,11 @@ function Tournaments(props) {
     }
 
     const onChangeTournamentname = (e) => {
-      /*if(e.target.value !== ""){
+      if(e.target.value !== ""){
         setErrorNameTorneo(false);
       }else{
         setErrorNameTorneo(true);
-      }*/
+      }
       setTournamentname(e.target.value);
     }
 
