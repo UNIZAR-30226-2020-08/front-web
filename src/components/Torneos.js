@@ -549,7 +549,13 @@ function Tournaments(props) {
             tipo:value.tipo,
             npart:value.npart,
           };
-          var torneo = torneoService.updateCurrentTournament(data);
+
+          var torneo = torneoService.getCurrentTournament(data);
+          if(torneo){
+            torneo = torneoService.updateCurrentTournament(data);
+          }else{
+            torneo = torneoService.createCurrentTournament(data);
+          }
           SetTorneoUnido(torneo.torneo);
           setLoaded2(false);
           setLoaded(false);
