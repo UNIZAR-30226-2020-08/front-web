@@ -377,7 +377,6 @@ function Tournaments(props) {
     
     const onChangeInput = (e) => {
       setInput(e.target.value);
-      console.log(e.target.value);
       
     }
 
@@ -440,7 +439,6 @@ function Tournaments(props) {
           }
         })
         .catch(e => {
-          console.log(e);
         });
     }
       
@@ -453,7 +451,7 @@ function Tournaments(props) {
           />
           <ListItemSecondaryAction>
                 {torneo && torneo.torneo === torneosB.nombre  ?
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickBracket(torneosB.nombre);}}>
+                <Button edge="end"  variant="outlined" aria-label="Ver Bracket" onClick= {() => {handleClickBracket(torneosB.nombre);}}>
                 Ver Brackets
                 </Button> :
                 <></> 
@@ -461,7 +459,7 @@ function Tournaments(props) {
 
                 {torneo &&  torneo.torneo!=="" ?
                 <></> :
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {setnombreTorneo(torneosB.nombre); UnirseTorneo(data,torneosB.nombre); handleUnirseTorneo(data,torneosB.nombre);}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {UnirseTorneo(data,torneosB.nombre);}}>
                     Unirse
                 </Button>}
           </ListItemSecondaryAction>
@@ -473,39 +471,28 @@ function Tournaments(props) {
     
 
     function UnirseTorneo(value,torneoDisp) {
+      setnombreTorneo(torneoDisp);
       var data = {
         torneo: torneoDisp,
-        jugador: user.data.username,
+        tipo:value.tipo,
+        npart:value.npart,
+        username: username
       };
-      if (!loadedTorneoUnirse){
-        setLoadedTorneoUnirse(true);
-        ParticipantesTorneoService.create(data).then(response => {
-          console.log(response);
-          var data = {
-            torneo: torneoDisp,
-            tipo:value.tipo,
-            npart:value.npart,
-            username: username
-          };
-
-          if(torneo){
-            setTorneo(data);
-            torneoService.updateCurrentTournament(data);
-          }else{
-            setTorneo(data);
-            torneoService.createCurrentTournament(data);
-          }
-          setLoadedTorneoBuscado(false);
-          setLoadedListaTorneos(false);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    }
-        return(  
-          <></>    
-        )
-    
+      console.log("Torneo")
+      console.log(data)
+      if(torneo){
+        setTorneo(data);
+        torneoService.updateCurrentTournament(data);
+      }else{
+        setTorneo(data);
+        torneoService.createCurrentTournament(data);
+      }
+      setLoadedListaTorneos(false);
+      props.socket.emit('joinTournament', { name:user.data.username, tournament:torneoDisp , tipo: value.tipo, nTeams:value.npart}, (error) => {
+        if(error) {
+          alert("No se ha podido unir al torneo");
+        }
+      })
     };
 
     
@@ -597,17 +584,14 @@ function Tournaments(props) {
         tipo: tip,
         npart: part,
       };
-
       if (!loadedListaTorneos){
         setLoadedListaTorneos(true);
         TorneoService.findAll(data).then(response => {
-          console.log(response.data)
           setTorneos(response.data);
         })
         .catch(e => {
-          console.log(e);
         });
-    }
+      }
 
     
       return torneos.map((value) => {
@@ -628,7 +612,7 @@ function Tournaments(props) {
 
                 {torneo &&  torneo.torneo!=="" ?
                 <></> :
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {setnombreTorneo(value.nombre); UnirseTorneo(data,value.nombre); handleUnirseTorneo(data,nombreTorneo);}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {setnombreTorneo(value.nombre); UnirseTorneo(data,value.nombre);}}>
                     Unirse
                 </Button>}
                 </ListItemSecondaryAction>
@@ -637,15 +621,6 @@ function Tournaments(props) {
       })
     
     };
-
-    const handleUnirseTorneo = (value,nombreeTorneo) => {
-      console.log(user.data.username + nombreeTorneo + value.tipo + value.npart);
-      props.socket.emit('joinTournament', { name:user.data.username, tournament:nombreeTorneo , tipo: value.tipo, nTeams:value.npart}, (error) => {
-        if(error) {
-          alert("No se ha podido unir al torneo");
-        }
-      })
-    }
 
     const handleUnirsePartida = (value,nombreeTorneo) => {
       setGamemode(value.tipo + 1);
@@ -684,28 +659,25 @@ function Tournaments(props) {
       if(!loadedTorneoCreado && correct){
         setCreated(true);
         setLoadedTorneoCreado(true);
-        console.log(data);
         TorneoService.create(data)
         .then(response => {
-            console.log("Torneo creado");        
-            console.log(response);
             if(join){
               setnombreTorneo(response.nombre);
               var data = {
                 username: username,
                 tipo: response.tipo,
-                npart: response.nparticipantess,
+                npart: nparticipantess,
               };
-              UnirseTorneo(data,nombree);
-              handleUnirseTorneo(data,TournamentName);
-              setnombreTorneo(torneosB.nombre); UnirseTorneo(data,torneosB.nombre); handleUnirseTorneo(data,torneosB.nombre);
+              console.log("Create tournament")
+              console.log(data)
+              console.log(response.nombre)
+              UnirseTorneo(data,response.nombre);
             }
             setLoadedListaTorneos(false);
             setCorrect(true);
         })
         .catch(e => {
           setCorrect(false);
-          console.log(e);
         });
       }
   };
@@ -713,11 +685,9 @@ function Tournaments(props) {
     useEffect(() => {
       props.socket.on("matches", ( dataMatches ) => {
        settorneoReady(true);
-       console.log("Matches: "+dataMatches);
         setEquipos(dataMatches);
         var d;
         for(d of dataMatches){
-          console.log(d);
           if(d.jugador === username){
               setPartidaActual(d);
           }
@@ -782,6 +752,7 @@ function Tournaments(props) {
             }
             {VerCrearTorneo(0,8)}
       </TabPanel>
+      
       <TabPanel value={value} index={1}>
       {torneo && torneo.tipo===1 && torneo.npart === 8?
             <div>           
@@ -820,6 +791,7 @@ function Tournaments(props) {
             }
             {VerCrearTorneo(1,8)}
       </TabPanel>
+      
       <TabPanel value={value} index={2}>
         {torneo && torneo.tipo===0 && torneo.npart === 16?
             <div>           
@@ -858,6 +830,7 @@ function Tournaments(props) {
             }
             {VerCrearTorneo(0,16)}
       </TabPanel>
+
       <TabPanel value={value} index={3}>
       {torneo && torneo.tipo===1 && torneo.npart === 16?
             <div>           
@@ -896,6 +869,7 @@ function Tournaments(props) {
             }
             {VerCrearTorneo(1,16)}
       </TabPanel>
+
       <TabPanel value={value} index={4}>
       <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -918,6 +892,7 @@ function Tournaments(props) {
           {AvailableBTorneos()}
           </List>
       </TabPanel>
+
       <Dialog onClose={handleCloseBracket} aria-labelledby="customized-dialog-title" open={openBracket} style={{ maxWidth: "100%" }}>
         <DialogTitle id="customized-dialog-title">
           Torneo {nombreTorneo}
