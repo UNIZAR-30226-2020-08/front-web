@@ -244,12 +244,6 @@ export default function Board(socket,roomName,tipo) {
           alert(error);
         }
       });
-    }else if(round.current%10 === 9){
-      socket.emit("finalizarPartida",data, (error) => {
-        if(error) {
-          alert(error);
-        }
-      });
     }
   }
 
