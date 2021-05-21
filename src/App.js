@@ -13,7 +13,6 @@ import Game from './components/pages/Game';
 import SignUp from './components/pages/SignUp';
 import Profile from './components/pages/Profile';
 import EditProfile from './components/pages/EditProfile';
-import CreateTournament from './components/pages/CreateTournament';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 
@@ -27,7 +26,6 @@ function App() {
           <Route path='/inicio' exact component={Game} />
           <Route path='/profile' exact component={Profile} />
           <Route path='/editprofile' exact component={EditProfile} />
-          <Route path='/createtournament' exact component={CreateTournament} />
         </Switch>
         <Footer />
       </Router>
