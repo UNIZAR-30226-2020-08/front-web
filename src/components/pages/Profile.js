@@ -333,8 +333,40 @@ const useStyles = makeStyles((theme) => ({
 
       return partidas.map((value) => {
         return(         
-          <ListItem button>
-            <ListItemText primary= {value.partida} secondary={value.estado} />
+          <ListItem>
+            {value.tipo === 0 && value.estado === "VICTORIA" && value.puntos_e0 > value.puntos_e1?
+            <ListItemText style={{ backgroundColor: '#9CEE83', padding:"20px" }} primary= { "INDIVIDUALES" } secondary={value.estado + " Mis puntos: " + value.puntos_e0 + " Puntos rival: " + value.puntos_e1} />
+            : <></>
+            }
+            {value.tipo === 0 && value.estado === "VICTORIA" && value.puntos_e1 > value.puntos_e0?
+            <ListItemText style={{ backgroundColor: '#9CEE83', padding:"20px" }} primary= { "INDIVIDUALES" } secondary={value.estado + " Mis puntos: " + value.puntos_e1 + " Puntos rival: " + value.puntos_e0} />
+            : <></>
+            }
+            {value.tipo === 0 && value.estado === "DERROTA" && value.puntos_e0 < value.puntos_e1?
+            <ListItemText style={{ backgroundColor: '#F66464', padding:"20px" }} primary= { "INDIVIDUALES" } secondary={value.estado + " Mis puntos: " + value.puntos_e0 + " Puntos rival: " + value.puntos_e1} />
+            : <></>
+            }
+            {value.tipo === 0 && value.estado === "DERROTA" && value.puntos_e1 < value.puntos_e0?
+            <ListItemText style={{ backgroundColor: '#F66464', padding:"20px" }} primary= { "INDIVIDUALES" } secondary={value.estado + " Mis puntos: " + value.puntos_e1 + " Puntos rival: " + value.puntos_e0} />
+            : <></>
+            }
+            {value.tipo === 1 && value.estado === "VICTORIA" && value.puntos_e0 > value.puntos_e1?
+            <ListItemText style={{ backgroundColor: '#9CEE83', padding:"20px" }} primary= { "POR PAREJAS" } secondary={value.estado + " Puntos de mi equipo: " + value.puntos_e0 + " Puntos equipo rival: " + value.puntos_e1} />
+            : <></>
+            }
+            {value.tipo === 1 && value.estado === "VICTORIA" && value.puntos_e1 > value.puntos_e0?
+            <ListItemText style={{ backgroundColor: '#9CEE83', padding:"20px" }} primary= { "POR PAREJAS" } secondary={value.estado + " Puntos de mi equipo: " + value.puntos_e1 + " Puntos equipo rival: " + value.puntos_e0} />
+            : <></>
+            }
+            {value.tipo === 1 && value.estado === "DERROTA" && value.puntos_e0 < value.puntos_e1?
+            <ListItemText style={{ backgroundColor: '#F66464', padding:"20px" }} primary= { "POR PAREJAS" } secondary={value.estado + " Puntos de mi equipo: " + value.puntos_e0 + " Puntos equipo rival: " + value.puntos_e1} />
+            : <></>
+            }
+            {value.tipo === 1 && value.estado === "DERROTA" && value.puntos_e1 < value.puntos_e0?
+            <ListItemText style={{ backgroundColor: '#F66464', padding:"20px" }} primary= { "POR PAREJAS" } secondary={value.estado + " Puntos de mi equipo: " + value.puntos_e1 + " Puntos equipo rival: " + value.puntos_e0} />
+            : <></>
+            }
+            
           </ListItem> 
         )
       })
