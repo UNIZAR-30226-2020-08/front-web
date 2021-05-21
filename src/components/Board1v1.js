@@ -363,7 +363,7 @@ export default function Board(socket,roomName,tipo) {
         setMisPuntos(pts_e1 + label_e1);
         setSusPuntos(pts_e0 + label_e0);
       }  
-      if(round.current/20 > 1){
+      if(round.current > 19){
         if(puntos_e0 > 100 || puntos_e1 > 100){
           var data = {
             partida: roomName.current,
@@ -574,15 +574,8 @@ export default function Board(socket,roomName,tipo) {
         alert(error);
       }
     });
-
     if(round.current%20 < 14){
       socket.emit("robarCarta",data, (error) => {
-        if(error) {
-          alert(error);
-        }
-      });
-    }else if(round.current%20 === 19){
-      socket.emit("finalizarPartida",data, (error) => {
         if(error) {
           alert(error);
         }
