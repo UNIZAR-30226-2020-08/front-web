@@ -49,8 +49,8 @@ export default function Board(socket,roomName,tipo) {
   const quedanCartas = useRef(false);
   const [quedanCartasM,setQuedanCartasM] = useState(false);
   
-  const quierePausa = useRef(false);
-  const [quierePausaM,setQuierePausaM] = useState(false);
+  const paused = useRef(false);
+  const [pausedM,setPausedM] = useState(false);
 
   const triunfo = useRef("NO");
   const [triunfoM,setTriunfoM] = useState("NO");
@@ -79,6 +79,10 @@ export default function Board(socket,roomName,tipo) {
   const [finished,setFinished] = useState(false);
 
   const [resultado,setResultado] = useState("");
+
+  const [pausaDialog,setPausaDialog] = useState(false);
+
+  const [pausaMessage,setPausaMessage] = useState("");
 
   const baraja = user ? user.data.f_carta : "baraja1";
 
@@ -240,6 +244,9 @@ export default function Board(socket,roomName,tipo) {
     });
 
     socket.on("winner", ({ winner }) => {
+      if(paused.current){
+        window.location.reload();
+      }
       if(winner === username){
         turno.current = myOrden.current-1;
         setTimer(
@@ -464,8 +471,13 @@ export default function Board(socket,roomName,tipo) {
     });
   
     socket.on("pause", () => {
-      quierePausa.current = true;
-      setQuierePausaM(true);
+      paused.current = true;
+      setPausedM(true);
+    });
+
+    socket.on("pauseRequest", ({pauseMessage}) => {
+      setPausaDialog(true);
+      setPausaMessage(pauseMessage);
     });
   }}, [tipo.current]);
 
@@ -985,6 +997,16 @@ export default function Board(socket,roomName,tipo) {
       {resultado}
     </DialogContentText>
      <Button edge="end"  variant="outlined" aria-label="Aceptar" onClick={() => window.location.reload()}>
+      Aceptar
+     </Button>
+     </Dialog>
+
+     <Dialog open={pausaDialog} handleClose={()=>setPausaDialog(false)} aria-labelledby="form-dialog-title">
+     <DialogTitle id="form-dialog-title">{pausaMessage}</DialogTitle>
+    <Button edge="end"  variant="outlined" aria-label="Cancelar" onClick={() => {setPausaDialog(false)}}>
+      Cancelar
+     </Button>
+     <Button edge="end"  variant="outlined" aria-label="Aceptar" onClick={() => {handlePause();setPausaDialog(false);}}>
       Aceptar
      </Button>
      </Dialog>

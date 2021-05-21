@@ -128,6 +128,18 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
       })
     }
 
+    const handleReanudarPartida = (setRoom,setMatched,value,username) => {
+      setRoom(value.nombre);
+      roomName.current = value.nombre;
+      setMatched(true);
+      let rm = value.nombre;
+      socket.emit('reanudarPartida', { usuario:username, partida:rm , tipo: parseInt(gamemode-1)}, (error) => {
+        if(error) {
+          alert(error);
+        }
+      })
+    }
+
     function CreateRoom(setRoom,setMatched,username,join) {
         setCreated(true);
         let data = {tipo: (gamemode-1)};
@@ -162,6 +174,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
       if (!loaded2 && gamemode>0){ 
         partidaService.getAllPaused(username,gamemode-1).then(response => {
           setRoomsPaused(response);
+          console.log(response);
           //setLoading(false);
           //console.log(response);
         })
@@ -177,11 +190,11 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
           <ListItem className="listItem" key={value.nombre}>
               <ListItemText
               primary={value.nombre}
-              secondary={"Usuarios en la sala: " + value.jugadores_online}
+              secondary={"Partida pausada"}
               />
               <ListItemSecondaryAction>
-              <Button edge="end"  variant="outlined" aria-label="Unirse" onClick={() => handleUnirsePartida(setRoom,setMatched,value,username)}>
-                  Unirse
+              <Button edge="end"  variant="outlined" aria-label="Unirse" onClick={() => handleReanudarPartida(setRoom,setMatched,value,username)}>
+                  Reanudar
               </Button>
               </ListItemSecondaryAction>
           </ListItem>
@@ -223,21 +236,6 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
     return (
       <div className={Application.selectRoom}>
         <List className={classes.root}>
-        { roomsPaused.length > 0 ?
-          <ListItem className="listItem" onClick={handleClickOpen}>
-            <ListItemText
-            primary="Partidas pausadas"
-            />
-          </ListItem>
-          :
-          <></>
-          }
-          {AvailableRoomsPaused(setRoom,setMatched,username)}
-          <ListItem className="listItem" onClick={handleClickOpen}>
-            <ListItemText
-            primary="Partidas a las que te puedes unir"
-            />
-          </ListItem>
           <ListItem button className="listItem" onClick={handleClickOpen}>
             <ListItemText
             primary="Crear una nueva sala"
@@ -248,6 +246,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
             </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
+          {AvailableRoomsPaused(setRoom,setMatched,username)}
           {AvailableRooms(setRoom,setMatched,username)}
         </List>
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
