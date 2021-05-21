@@ -158,6 +158,7 @@ function Friends(props) {
     const [bien,setBien] = React.useState(false);
     const [input,setInput] = React.useState("");
     const [inviteDialog,setInviteDialog] = React.useState(false);
+    const [nombreranking,setNombreRanking] = React.useState("");
     
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
 
@@ -166,6 +167,9 @@ function Friends(props) {
       setValue(newValue);
       setRank(newValue);
       setBusqueda(false);
+      if(newValue==2){
+        setLoaded2(false);
+      }
     };
 
     const onChangeInput = (e) => {
@@ -199,6 +203,8 @@ function Friends(props) {
           .catch(e => {
             console.log(e);
           });
+          setLoaded(false);
+          setLoaded2(false);
       }
 
       const handleEliminar = (amigo) => {   
@@ -268,7 +274,7 @@ function Friends(props) {
             </Button>
             : <></>}
           {rank === 0? 
-           <IconButton  onClick={() => {handleEliminar(value.username)}} style={{ marginLeft: '30px' }}>
+           <IconButton  onClick={() => {handleEliminar(value.username);setLoaded(false)}} style={{ marginLeft: '30px' }}>
              <DeleteIcon />
             </IconButton>
             : <></>}
@@ -330,14 +336,17 @@ function Friends(props) {
       return global.map((value) => {
         return(
           
-          <ListItem key={value} className="listItem">
-            {value.username !== "IA" ?
-          <ListItemText
-          primary={value.username}
-          secondary={value.copas+"🏆"}
-          />
-          : <></>}
-           </ListItem>
+            <ListItem key={value} className="listItem">    
+            {value.username !== "IA" ? 
+            <ListItemText
+            primary={value.username}
+            secondary={value.copas+"🏆"}
+            />
+            :
+            <></>
+            }
+            </ListItem>
+            
           
         )
       })
@@ -405,7 +414,7 @@ function Friends(props) {
             primary={value.usuario}
             />
             <ListItemSecondaryAction>
-            <Button edge="end"  variant="outlined" onClick={() => {handleAceptar(value.usuario);}}>
+            <Button edge="end"  variant="outlined" onClick={() => {handleAceptar(value.usuario);setLoaded2(false);setLoaded(false);}}>
                 Aceptar
             </Button>
             </ListItemSecondaryAction>
