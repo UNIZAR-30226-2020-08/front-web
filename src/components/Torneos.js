@@ -708,6 +708,7 @@ function Tournaments(props) {
     };
 
     const handleUnirseTorneo = (value,nombreeTorneo) => {
+      console.log(user.data.username + nombreeTorneo + value.tipo + value.npart);
       props.socket.emit('joinTournament', { name:user.data.username, tournament:nombreeTorneo , tipo: value.tipo, nTeams:value.npart}, (error) => {
         if(error) {
           alert("No se ha podido unir al torneo");
@@ -757,7 +758,7 @@ function Tournaments(props) {
         .then(response => {
             if(join){
               handleClickOpen5(TournamentName);
-              setLoaded4(true);
+              setLoaded4(false);
               let value = {
                 nombre: response.nombre
               }
