@@ -8,6 +8,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import Application from "./application.module.scss";
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
@@ -139,20 +140,6 @@ function a11yProps(index) {
     'aria-controls': `scrollable-force-tabpanel-${index}`,
   };
 }
-
-const DialogTitle = withStyles(useStyles)((props) => {
-  const { children, classes, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
 
 function Tournaments(props) {
     const setGamemode = props.setGamemode
@@ -381,11 +368,11 @@ function Tournaments(props) {
     }
 
     const onChangeTournamentname = (e) => {
-      if(e.target.value !== ""){
+      /*if(e.target.value !== ""){
         setErrorNameTorneo(false);
       }else{
         setErrorNameTorneo(true);
-      }
+      }*/
       setTournamentname(e.target.value);
     }
 
@@ -500,7 +487,7 @@ function Tournaments(props) {
     function VerCrearTorneo(tipoEquipo,Nparticipantess){
       return(
         <Dialog open={openTorneoCreado} onClose={handleCloseTorneoCreado} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">{"CREAR TORNEO " + tipoEquipo + " " + Nparticipantess }</DialogTitle>
+        <DialogTitle id="form-dialog-title">{"CREAR TORNEO " +  (tipoEquipo===0 ? "INDIVIDUAL" : "POR PAREJAS") + " DE " + Nparticipantess + " EQUIPOS" }</DialogTitle>
         { created ?
         <div>
           { correct ?
@@ -529,9 +516,8 @@ function Tournaments(props) {
                 <TextField
                     label="Nombre del torneo"
                     onChange={onChangeTournamentname}
-                    id="outlined-margin-normal"
+                    id="outlined-margin-normal-2"
                     placeholder= "Nombre del torneo"
-                    className={classes.textField}
                     margin="normal"
                     InputLabelProps={{
                         shrink: true
@@ -548,7 +534,6 @@ function Tournaments(props) {
                     onChange={onChangeContrasenya}
                     id="outlined-margin-normal"
                     placeholder= "Contraseña"
-                    className={classes.textField}
                     margin="normal"
                     InputLabelProps={{
                         shrink: true
@@ -684,7 +669,7 @@ function Tournaments(props) {
 
     useEffect(() => {
       props.socket.on("matches", ( dataMatches ) => {
-       settorneoReady(true);
+        settorneoReady(true);
         setEquipos(dataMatches);
         var d;
         for(d of dataMatches){

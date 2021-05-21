@@ -249,7 +249,7 @@ const useStyles = makeStyles((theme) => ({
       return cartas.map((value) => {
         return(
           
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} key={value.f_carta}>
           <Card button onClick={() => {handleBaraja1(value.f_carta);handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
@@ -290,7 +290,7 @@ const useStyles = makeStyles((theme) => ({
       return tapetes.map((value) => {
         return(
           
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} key={value.f_tapete}>
           <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
@@ -333,7 +333,7 @@ const useStyles = makeStyles((theme) => ({
 
       return partidas.map((value) => {
         return(         
-          <ListItem>
+          <ListItem key={value.nombre}>
             {value.tipo === 0 && value.estado === "VICTORIA" && value.puntos_e0 > value.puntos_e1?
             <ListItemText style={{ backgroundColor: '#9CEE83', padding:"20px" }} primary= { "INDIVIDUALES" } secondary={value.estado + " Mis puntos: " + value.puntos_e0 + " Puntos rival: " + value.puntos_e1} />
             : <></>

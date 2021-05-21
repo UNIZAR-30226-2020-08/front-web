@@ -286,7 +286,7 @@ const useStyles = makeStyles((theme) => ({
 
       return logos.map((value) => {
         return(         
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} key={value.f_perfil}>
           <Card button onClick={() => {handleLogo1(value.f_perfil);;handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
