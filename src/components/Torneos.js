@@ -206,6 +206,7 @@ function Tournaments(props) {
     const [contrasenya, setContrasenya] = React.useState("");
     const [torneoUnido, SetTorneoUnido] = React.useState("");
     const [partidaActual, setPartidaActual] = React.useState({});
+    const [torneoReady, settorneoReady] = React.useState(false);
 
     const [equipos,setEquipos] = React.useState([]);
     const [equipo1,setnombreEquipo1] = React.useState("");
@@ -224,6 +225,8 @@ function Tournaments(props) {
     const [equipo14,setnombreEquipo14] = React.useState("");
     const [equipo15,setnombreEquipo15] = React.useState("");
     const [equipo16,setnombreEquipo16] = React.useState("");
+
+    var torneo = torneoService.getCurrentTournament();
 
     const rounds = [
       {
@@ -465,7 +468,7 @@ function Tournaments(props) {
       var data = {
         torneo:input,
       };
-
+      var torneo = torneoService.getCurrentTournament();
       if (!loaded2){
         setLoaded2(true);
         TorneoService.find(data).then(response => {
@@ -498,9 +501,19 @@ function Tournaments(props) {
           secondary={"Tipo: "+torneosB.nparticipantes+" jugadores. "}
           />
           <ListItemSecondaryAction>
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen6(torneosB.nombre); UnirseTorneo(data); handleUnirseTorneo(data,torneosB.nombre);}}>
+                {torneo && torneo.torneo === torneosB.nombre  ?
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen6(torneosB.nombre);}}>
+                Ver Brackets
+                </Button> :
+                <></> 
+                }
+
+                {torneo &&  torneo.torneo!=="" ?
+                <></> :
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen6(torneosB.nombre); UnirseTorneo(data,torneosB.nombre); handleUnirseTorneo(data,torneosB.nombre);}}>
                     Unirse
-                </Button> 
+                </Button>}
+
             <Dialog onClose={handleClose6} aria-labelledby="customized-dialog-title" open={open6} style={{ maxWidth: "100%" }}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose6}>
                       Torneo {torneosB.nombre}
@@ -508,9 +521,11 @@ function Tournaments(props) {
                     <div>
                     {ElBrack()}
                     </div>
+                    {torneoReady ?  
                     <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(data,torneosB.nombre)}}>
                       Jugar
                     </Button>
+                    : <></>}
                   </Dialog>
           </ListItemSecondaryAction>
       </ListItem> 
@@ -659,7 +674,7 @@ function Tournaments(props) {
                 />
                 <ListItemSecondaryAction>
                 {torneo && torneo.torneo === value.nombre  ?
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre); UnirseTorneo(data,value.nombre); handleUnirseTorneo(data,nombreTorneo);}}>
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickOpen5(value.nombre); }}>
                 Ver Brackets
                 </Button> :
                 <></> 
@@ -678,9 +693,12 @@ function Tournaments(props) {
                     <div>
                     {ElBrack()}
                     </div>
+                    {torneoReady ?
                     <Button edge="end"  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(data,nombreTorneo)}}>
                       Jugar
                     </Button>
+                    :
+                    <></>}
                   </Dialog>
                 </ListItemSecondaryAction>
             </ListItem>
@@ -728,6 +746,9 @@ function Tournaments(props) {
             };
           }
       }
+      var data2 = {
+
+      }
       
       if(!loaded8){
         setLoaded8(true);
@@ -735,13 +756,18 @@ function Tournaments(props) {
         TorneoService.create(data)
         .then(response => {
             if(join){
-                handleClickOpen5(TournamentName);
+              handleClickOpen5(TournamentName);
               setLoaded4(true);
               let value = {
                 nombre: response.nombre
               }
-              console.log("Legaaaaaaaaaaaaaaaaaaaaa: "+ nombree);
               UnirseTorneo(nombree);
+              var data = {
+                username: user.data.username,
+                tipo: tipoo,
+                npart: nparticipantess,
+              };
+              handleUnirseTorneo(data,TournamentName);
               setLoaded(false);
             }
             setCorrect(true);
@@ -755,6 +781,7 @@ function Tournaments(props) {
 
     useEffect(() => {
       props.socket.on("matches", ( dataMatches ) => {
+       settorneoReady(true);
        console.log("Matches: "+dataMatches);
         setEquipos(dataMatches);
         var d;
@@ -790,6 +817,19 @@ function Tournaments(props) {
             <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4(false);}}>
                 Nuevo Torneo
             </Button>
+            {!torneo ?
+            <></> :
+            <ListItem  key={torneo} className="listItem">            
+              <ListItemText
+              primary={torneo.torneo}
+              secondary="Torneo en Juego"
+              />          
+              <ListItemSecondaryAction>
+              <Button edge="end"  variant="outlined" onClick={()=>{handleClickOpen5(value.nombre);}}>
+                  Ver Bracket
+              </Button> 
+              </ListItemSecondaryAction>
+            </ListItem>}
             {VerCrearTorneo(0,8)}
           <List className={classes.lista}>
           {value === 0? AvailableTournaments(0,8): <></>}
@@ -799,6 +839,19 @@ function Tournaments(props) {
             <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4(false);}}>
                 Nuevo Torneo
             </Button>
+            {!torneo ?
+            <></> :
+            <ListItem  key={torneo} className="listItem">            
+              <ListItemText
+              primary={torneo.torneo}
+              secondary="Torneo en Juego"
+              />          
+              <ListItemSecondaryAction>
+              <Button edge="end"  variant="outlined" onClick={()=>{handleClickOpen5(value.nombre);}}>
+                  Ver Bracket
+              </Button> 
+              </ListItemSecondaryAction>
+            </ListItem>}
             {VerCrearTorneo(1,8)}
           <List className={classes.lista}>
           {value === 1? AvailableTournaments(1,8): <></>}
@@ -808,6 +861,19 @@ function Tournaments(props) {
             <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4(false);}}>
                 Nuevo Torneo
             </Button>
+            {!torneo ?
+            <></> :
+            <ListItem  key={torneo} className="listItem">            
+              <ListItemText
+              primary={torneo.torneo}
+              secondary="Torneo en Juego"
+              />          
+              <ListItemSecondaryAction>
+              <Button edge="end"  variant="outlined" onClick={()=>{handleClickOpen5(value.nombre);}}>
+                  Ver Bracket
+              </Button> 
+              </ListItemSecondaryAction>
+            </ListItem>}
             {VerCrearTorneo(0,16)}
           <List className={classes.lista}>
           {value === 2? AvailableTournaments(0,16): <></>}
@@ -817,6 +883,19 @@ function Tournaments(props) {
             <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpen7();setLoaded4(false);}}>
                 Nuevo Torneo
             </Button>
+            {!torneo ?
+            <></> :
+            <ListItem  key={torneo} className="listItem">            
+              <ListItemText
+              primary={torneo.torneo}
+              secondary="Torneo en Juego"
+              />          
+              <ListItemSecondaryAction>
+              <Button edge="end"  variant="outlined" onClick={()=>{handleClickOpen5(value.nombre);}}>
+                  Ver Bracket
+              </Button> 
+              </ListItemSecondaryAction>
+            </ListItem>}
             {VerCrearTorneo(1,16)}
           <List className={classes.lista}>
           {value === 3? AvailableTournaments(1,16): <></>}

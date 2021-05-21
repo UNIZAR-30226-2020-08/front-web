@@ -158,6 +158,7 @@ function Friends(props) {
     const [bien,setBien] = React.useState(false);
     const [input,setInput] = React.useState("");
     const [inviteDialog,setInviteDialog] = React.useState(false);
+    const [nombreranking,setNombreRanking] = React.useState("");
     
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
 
@@ -330,14 +331,17 @@ function Friends(props) {
       return global.map((value) => {
         return(
           
-          <ListItem key={value} className="listItem">
-            {value.username !== "IA" ?
-          <ListItemText
-          primary={value.username}
-          secondary={value.copas+"🏆"}
-          />
-          : <></>}
-           </ListItem>
+            <ListItem key={value} className="listItem">    
+            {value.username !== "IA" ? 
+            <ListItemText
+            primary={value.username}
+            secondary={value.copas+"🏆"}
+            />
+            :
+            <></>
+            }
+            </ListItem>
+            
           
         )
       })
