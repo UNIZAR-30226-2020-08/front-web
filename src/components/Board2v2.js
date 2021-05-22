@@ -824,7 +824,7 @@ export default function Board(socket,roomName,tipo) {
         setSusPuntos(pts_e0 + label_e0);
       }  
       if(round.current > 9){
-        if(puntos_e0 > 100 || puntos_e1 > 100){
+        if(puntos_e0 > 100 || puntos_e1 > 100 || round.current === 10){
           var data = {
             partida: roomName.current,
             nronda: round.current

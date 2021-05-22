@@ -368,12 +368,11 @@ export default function Board(socket,roomName,tipo) {
         setSusPuntos(pts_e0 + label_e0);
       }  
       if(round.current > 19){
-        if(puntos_e0 > 100 || puntos_e1 > 100){
+        if(puntos_e0 > 100 || puntos_e1 > 100 || round.current === 20){
           var data = {
             partida: roomName.current,
             nronda: round.current
           }
-          console.log("finalizarPartida")
           socket.emit("finalizarPartida",data, (error) => {
             if(error) {
               alert(error);
