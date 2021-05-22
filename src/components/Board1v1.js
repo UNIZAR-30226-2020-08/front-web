@@ -403,7 +403,7 @@ export default function Board(socket,roomName,tipo) {
             var data = {
               torneo: torneo.torneo,
               partida: roomName.current,
-              fase: torneo.fase,
+              fase: parseInt(torneo.fase),
             }
             socket.emit("partidaTorneoFin",data, (error) => {
               if(error) {
