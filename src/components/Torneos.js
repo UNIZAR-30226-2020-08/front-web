@@ -606,6 +606,7 @@ function Tournaments(props) {
         console.log(dataReanudar);
         var dataMatches;
         for (dataMatches of dataReanudar){
+          settorneoReady(false);
           var seeds = [];
           var team1;
           var team2;
@@ -650,6 +651,7 @@ function Tournaments(props) {
           var d;
           for(d of dataMatches.matches){
             if(d.jugador === username){
+                settorneoReady(true);
                 setPartidaActual(d);
             }
           }
