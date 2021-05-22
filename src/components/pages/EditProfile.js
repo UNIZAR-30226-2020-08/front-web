@@ -160,6 +160,10 @@ const useStyles = makeStyles((theme) => ({
     const [loaded,setLoaded] = React.useState(false);
     const [logos,setLogos] = React.useState([]);
     const [open1,setOpen1] = React.useState(false);
+    const [personalizacion1,setPersonalizacion1] = React.useState(0);
+    const [personalizacion2,setPersonalizacion2] = React.useState(100);
+    const [personalizacion3,setPersonalizacion3] = React.useState(200);
+    const [personalizacion4,setPersonalizacion4] = React.useState(300);
 
 
     const emailRegEx = /^\S+@\S+\.\S+$/;
@@ -287,6 +291,7 @@ const useStyles = makeStyles((theme) => ({
       return logos.map((value) => {
         return(         
           <Grid item xs={12} sm={6} key={value.f_perfil}>
+            {value.f_perfil === "userlogo1" && user.data.copas >= personalizacion1 ?
           <Card button onClick={() => {handleLogo1(value.f_perfil);;handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
@@ -300,7 +305,52 @@ const useStyles = makeStyles((theme) => ({
                 </Typography>
               </CardContent>
             </CardActionArea>                                
-          </Card> 
+          </Card> : <></>}
+          {value.f_perfil === "userlogo2" && user.data.copas >= personalizacion2 ?
+          <Card button onClick={() => {handleLogo1(value.f_perfil);;handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_perfil+".png"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_perfil}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> : <></>}
+          {value.f_perfil === "userlogo3" && user.data.copas >= personalizacion3 ?
+          <Card button onClick={() => {handleLogo1(value.f_perfil);;handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_perfil+".png"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_perfil}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> : <></>}
+          {value.f_perfil === "userlogo4" && user.data.copas >= personalizacion4 ?
+          <Card button onClick={() => {handleLogo1(value.f_perfil);;handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_perfil+".png"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_perfil}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> : <></>}
           </Grid>
         )
       })
@@ -359,8 +409,8 @@ const useStyles = makeStyles((theme) => ({
                           >
                             <Fade in={open1}>
                               <div className={classes.paper1}>
-                                <h2 id="transition-modal-title">Logos disponibles</h2>          
-                                <div id="transition-modal-description">
+                                <h2 id="transition-modal-title" style={{ padding: '10px' }}>Logos disponibles</h2>          
+                                <div id="transition-modal-description" >
                                 <Grid container spacing={2}>
                                   {AvailableLogo()}
                                       </Grid>

@@ -225,6 +225,10 @@ const useStyles = makeStyles((theme) => ({
     const [loaded,setLoaded] = React.useState(false);
     const [loaded2,setLoaded2] = React.useState(false);
     const [loaded3,setLoaded3] = React.useState(false);
+    const [personalizacion1,setPersonalizacion1] = React.useState(0);
+    const [personalizacion2,setPersonalizacion2] = React.useState(100);
+    const [personalizacion3,setPersonalizacion3] = React.useState(200);
+    const [personalizacion4,setPersonalizacion4] = React.useState(300);
 
     const [open4, setOpen4] = React.useState(false);
 
@@ -235,7 +239,6 @@ const useStyles = makeStyles((theme) => ({
       };
 
       if (!loaded){
-        console.log("Lleegaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         setLoaded(true);
         FondoCartaService.findAll(data).then(response => {
           console.log(response.data)
@@ -250,6 +253,7 @@ const useStyles = makeStyles((theme) => ({
         return(
           
           <Grid item xs={12} sm={6} key={value.f_carta}>
+          {value.f_carta === "baraja1" && user.data.copas >= personalizacion1 ?
           <Card button onClick={() => {handleBaraja1(value.f_carta);handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
@@ -263,8 +267,53 @@ const useStyles = makeStyles((theme) => ({
                 </Typography>
               </CardContent>
             </CardActionArea>                                
-          </Card> 
-          </Grid>
+          </Card> : <></>}
+          {value.f_carta === "baraja2" && user.data.copas >= personalizacion2 ?
+          <Card button onClick={() => {handleBaraja1(value.f_carta);handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_carta+"/0O.png"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_carta}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> : <></>}
+          {value.f_carta === "baraja3" && user.data.copas >= personalizacion3 ?
+          <Card button onClick={() => {handleBaraja1(value.f_carta);handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_carta+"/0O.png"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_carta}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> : <></>}
+          {value.f_carta === "baraja4" && user.data.copas >= personalizacion4 ?
+          <Card button onClick={() => {handleBaraja1(value.f_carta);handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_carta+"/0O.png"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_carta}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> : <></>}
+          </Grid> 
           
       
         )
@@ -291,6 +340,7 @@ const useStyles = makeStyles((theme) => ({
         return(
           
           <Grid item xs={12} sm={6} key={value.f_tapete}>
+            {value.f_tapete === "tapete1" && user.data.copas > personalizacion1 ?
           <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
@@ -304,7 +354,52 @@ const useStyles = makeStyles((theme) => ({
                 </Typography>
               </CardContent>
             </CardActionArea>                                
-          </Card> 
+          </Card> : <></>}
+          {value.f_tapete === "tapete2" && user.data.copas > personalizacion2 ?
+          <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_tapete+".jpg"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_tapete}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> : <></>}
+          {value.f_tapete === "tapete3" && user.data.copas > personalizacion3 ?
+          <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_tapete+".jpg"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_tapete}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> : <></>}
+          {value.f_tapete === "tapete4" && user.data.copas > personalizacion4 ?
+          <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={"images/"+value.f_tapete+".jpg"}
+                title="ascopas"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {value.f_tapete}
+                </Typography>
+              </CardContent>
+            </CardActionArea>                                
+          </Card> : <></>}
           </Grid>
           
       
@@ -641,7 +736,7 @@ const useStyles = makeStyles((theme) => ({
       >
         <Fade in={open1}>
           <div className={classes.paper1}>
-            <h2 id="transition-modal-title">Tapetes disponibles</h2>          
+            <h2 id="transition-modal-title" style={{ padding: '10px' }}>Tapetes disponibles</h2>          
             <div id="transition-modal-description">
             <Grid container spacing={2}>
               {AvailableTapetes()}
@@ -665,7 +760,7 @@ const useStyles = makeStyles((theme) => ({
       >
         <Fade in={open2}>
           <div className={classes.paper1}>
-            <h2 id="transition-modal-title">Cartas disponibles</h2>          
+            <h2 id="transition-modal-title" style={{ padding: '10px' }}>Cartas disponibles</h2>          
             <div id="transition-modal-description">
             <Grid container spacing={2}>
               {AvailableBarajas()}

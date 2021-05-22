@@ -148,6 +148,7 @@ function Tournaments(props) {
     const roomName = props.roomName
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [eliminado,setEliminado] = React.useState(false);
     const [torneos,setTorneos] = React.useState([]);
     const [torneosB,setTorneosB] = React.useState({nombre:""});
     const [loadedListaTorneos,setLoadedListaTorneos] = React.useState(false);
@@ -384,8 +385,12 @@ function Tournaments(props) {
         torneo: torneoDisp,
         tipo:value.tipo,
         npart:value.npart,
-        username: username
+        username: username,
+        fase: "1",
       };
+      if(value.npart === 16){
+        data.fase = "0"
+      }
       console.log("Torneo")
       console.log(data)
       if(torneo){
@@ -591,9 +596,84 @@ function Tournaments(props) {
   };
 
     useEffect(() => {
+      console.log("Component mounted")
+      if(torneo){
+        console.log("Hay torneo")
+        var data = {torneo: torneo.torneo};
+        props.socket.emit('reanudarTorneo', data, (error) => {
+          if(error) {
+            alert("El torneo ", torneo.torneo, " ya no está disponible");
+          }
+        })
+      }
+
+      props.socket.on("torneoReanudado", ( dataReanudar ) => {
+        console.log(dataReanudar);
+        var dataMatches;
+        var maxFase = torneoRef.current.tipo;
+        for (dataMatches of dataReanudar){
+          settorneoReady(true);
+          var estaEliminado = true;
+          var seeds = [];
+          var team1;
+          var team2;
+          console.log(dataMatches);
+          console.log(torneoRef.current.tipo);
+          var numPart = (torneoRef.current.tipo+1)*2;
+          var d;
+          var i = 0;
+          for(d of dataMatches.matches){
+            if (i%numPart === 0){
+              team1 = "";
+              team2 = "";
+            }
+            if(i%2===0){
+              if(team1 !== ""){
+                team1 = team1 + "-"
+              }
+              team1 = team1 + d.jugador
+            }else{
+              if(team2 !== ""){
+                team2 = team2 + "-"
+              }
+              team2 = team2 + d.jugador
+            }
+
+            if (i%numPart === numPart-1){
+              console.log({teams: [{name: team1}, {name: team2}]});
+              seeds.push({teams: [{name: team1}, {name: team2}]});
+            }
+            i = (i+1) %numPart;
+          }
+          console.log(seeds);
+          maxFase = dataMatches.matches[0].fase.charAt(0);
+          if(maxFase === "0"){
+            setSeeds0(seeds);
+          }else if(maxFase === "1"){
+            setSeeds1(seeds);
+          }else if(maxFase === "2"){
+            setSeeds2(seeds);
+          }else if(maxFase === "3"){
+            setSeeds3(seeds);
+          }
+          var d;
+          for(d of dataMatches.matches){
+            if(d.jugador === username){
+                estaEliminado = false;
+                setPartidaActual(d);
+            }
+          }
+          setEliminado(estaEliminado);
+          torneoRef.current.fase = maxFase;
+          setTorneo(torneoRef.current);
+          torneoService.updateCurrentTournament(torneoRef.current);
+        }
+      });
+
       props.socket.on("matches", ( dataMatches ) => {
         console.log(dataMatches);
         settorneoReady(true);
+        var estaEliminado = true;
         var seeds = [];
         var team1;
         var team2;
@@ -624,23 +704,29 @@ function Tournaments(props) {
             seeds.push({teams: [{name: team1}, {name: team2}]});
           }
           i = (i+1) %numPart;
-        }
+          }
           console.log(seeds);
-        if(dataMatches[0].fase.charAt(0) === "0"){
-          setSeeds0(seeds);
-        }else if(dataMatches[0].fase.charAt(0) === "1"){
-          setSeeds1(seeds);
-        }else if(dataMatches[0].fase.charAt(0) === "2"){
-          setSeeds2(seeds);
-        }else if(dataMatches[0].fase.charAt(0) === "3"){
-          setSeeds3(seeds);
-        }
+          var maxFase = dataMatches[0].fase.charAt(0);
+          if(maxFase === "0"){
+            setSeeds0(seeds);
+          }else if(maxFase === "1"){
+            setSeeds1(seeds);
+          }else if(maxFase === "2"){
+            setSeeds2(seeds);
+          }else if(maxFase === "3"){
+            setSeeds3(seeds);
+          }
           var d;
           for(d of dataMatches){
             if(d.jugador === username){
                 setPartidaActual(d);
+                estaEliminado = false;
             }
           }
+          setEliminado(estaEliminado);
+          torneoRef.current.fase = maxFase;
+          setTorneo(torneoRef.current);
+          torneoService.updateCurrentTournament(torneoRef.current);
         });
     }, []);
 
@@ -677,12 +763,12 @@ function Tournaments(props) {
               </Button> 
               </ListItem>
               <ListItem>
-              {torneoReady ?
-              <></>
-              :
+              {!torneoReady || eliminado ?
               <Button  className={Application.actionB}  variant="outlined" onClick={()=>{torneoService.removeCurrentTournament();window.location.reload()}}>
-                  Abandonar
+                Abandonar
               </Button> 
+              :
+              <></>
               }
               </ListItem>
               </List>
@@ -849,7 +935,12 @@ function Tournaments(props) {
         <div>
         {ElBrack()}
         </div>
-        {torneoReady ?
+        {eliminado ?
+        <Button  style={{ margin: "auto",backgroundColor: "#F1948A", width: "60vh"}} variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
+          Estás eliminado
+        </Button>
+        :
+        torneoReady ?
         <Button style={{  margin: "auto",width: "60vh"}}  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(torneo,nombreTorneo)}}>
           Jugar
         </Button>

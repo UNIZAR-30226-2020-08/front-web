@@ -5,6 +5,7 @@ import Card from "./Card"
 import Usuario from "./Usuario"
 import Button from "@material-ui/core/Button";
 import AuthenticationDataService from "../services/auth.service";
+import TorneoDataService from "../services/torneo.service";
 import Radio from "@material-ui/core/Radio";
 import Dialog from '@material-ui/core/Dialog';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -87,6 +88,8 @@ export default function Board(socket,roomName,tipo) {
   const baraja = user ? user.data.f_carta : "baraja1";
 
   const username = user ? user.data.username : "anonimo";
+
+  const torneo = user ? user.data.username : "anonimo";
 
   const renderTime = ({ remainingTime }) => {
     return (
@@ -395,10 +398,37 @@ export default function Board(socket,roomName,tipo) {
       if(myOrden.current === 1){
         if(puntos_e0 > puntos_e1){
           mensaje = "HAS GANADO, +30🏆"
-        }
+          var torneo = TorneoDataService.getCurrentTournament();
+          if(torneo){
+            var data = {
+              torneo: torneo.torneo,
+              partida: roomName.current,
+              fase: torneo.fase,
+            }
+            socket.emit("partidaTorneoFin",data, (error) => {
+              if(error) {
+                alert(error);
+              }
+            });
+          }
+        } 
       }else{
         if(puntos_e0 < puntos_e1){
           mensaje = "HAS GANADO, +30🏆"
+          var torneo = TorneoDataService.getCurrentTournament();
+          if(torneo){
+            var data = {
+              torneo: torneo.torneo,
+              partida: roomName.current,
+              fase: parseInt(torneo.fase),
+            }
+            console.log(data);
+            socket.emit("partidaTorneoFin",data, (error) => {
+              if(error) {
+                alert(error);
+              }
+            });
+          }
         }
       }      
       console.log(puntos_e0 + " a " +puntos_e1)
