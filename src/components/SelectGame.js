@@ -128,7 +128,7 @@ export default function ButtonBases(setGamemode,socket,username,setMatched,roomN
                   setMatched(true);
               })
               .catch(e => {
-                console.log(e);
+                //console.log(e);
               });
               
             }

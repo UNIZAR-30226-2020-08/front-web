@@ -160,7 +160,7 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
         })
         .catch(e => {
           setCorrect(false);
-          console.log(e);
+          //console.log(e);
         });
     }
 
@@ -174,12 +174,12 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
       if (!loaded2 && gamemode>0){ 
         partidaService.getAllPaused(username,gamemode-1).then(response => {
           setRoomsPaused(response);
-          console.log(response);
-          //setLoading(false);
           //console.log(response);
+          //setLoading(false);
+          ////console.log(response);
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
           //setLoading(false);
           //setFail(true);
         });
@@ -207,10 +207,10 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
             partidaService.getAll(gamemode-1).then(response => {
                 setRooms(response);
                 //setLoading(false);
-                //console.log(response);
+                ////console.log(response);
             })
             .catch(e => {
-              console.log(e);
+              //console.log(e);
               //setLoading(false);
               //setFail(true);
             });

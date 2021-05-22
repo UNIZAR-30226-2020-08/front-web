@@ -230,7 +230,7 @@ const useStyles = makeStyles((theme) => ({
         .then(response => {
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
         user.data.email=mail;
         AuthenticationDataService.updateCurrentUser(user);
@@ -252,7 +252,7 @@ const useStyles = makeStyles((theme) => ({
           .then(response => {
           })
           .catch(e => {
-            console.log(e);
+            //console.log(e);
           });
       }
     }
@@ -265,11 +265,11 @@ const useStyles = makeStyles((theme) => ({
       if (!loaded){
         setLoaded(true);
         FotoPerfilService.findAll(data).then(response => {
-          console.log(response.data)
+          //console.log(response.data)
           setLogos(response.data);
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
     }
 
@@ -282,7 +282,7 @@ const useStyles = makeStyles((theme) => ({
         .then(response => {
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
         user.data.f_perfil=logoo;
         AuthenticationDataService.updateCurrentUser(user);

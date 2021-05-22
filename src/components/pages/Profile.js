@@ -241,11 +241,11 @@ const useStyles = makeStyles((theme) => ({
       if (!loaded){
         setLoaded(true);
         FondoCartaService.findAll(data).then(response => {
-          console.log(response.data)
+          //console.log(response.data)
           setCartas(response.data);
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
     }
     
@@ -325,14 +325,14 @@ const useStyles = makeStyles((theme) => ({
       };
 
       if (!loaded2){
-        console.log("Lleegaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        //console.log("Lleegaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         setLoaded2(true);
         FondoTapeteService.findAll(data).then(response => {
-          console.log(response.data)
+          //console.log(response.data)
           setTapetes(response.data);
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
     }
 
@@ -416,13 +416,13 @@ const useStyles = makeStyles((theme) => ({
       if (!loaded3){
         setLoaded3(true);
         PartidaService.historial(data).then(response => {
-          console.log(response.data)
+          //console.log(response.data)
           setPartidas(response.data);
-          console.log(response.data.length)
+          //console.log(response.data.length)
           setNumero(response.data.length);
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
     }
 
@@ -478,7 +478,7 @@ const useStyles = makeStyles((theme) => ({
         .then(response => {
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
         user.data.f_tapete=tapetee;
         AuthenticationDataService.updateCurrentUser(user);
@@ -493,7 +493,7 @@ const useStyles = makeStyles((theme) => ({
             .then(response => {
             })
             .catch(e => {
-              console.log(e);
+              //console.log(e);
             });
             user.data.f_carta=cartaa;
             AuthenticationDataService.updateCurrentUser(user);
@@ -530,7 +530,7 @@ const useStyles = makeStyles((theme) => ({
               .then(response => {
               })
               .catch(e => {
-                console.log(e);
+                //console.log(e);
               });
       setOpen3(false);
       AuthenticationDataService.logout();
