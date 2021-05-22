@@ -665,42 +665,6 @@ export default function Board(socket,roomName,tipo) {
       if(paused.current){
         window.location.reload();
       }
-      if(winner === username){
-        setTimer(
-          <CountdownCircleTimer
-            isPlaying
-            duration={30}
-            size={100}
-            colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
-            onComplete={()=>{handleCountdownCompleted()}}
-          >
-            {renderTime}
-          </CountdownCircleTimer>
-        )
-        turno.current = myOrden.current-1;
-        setTurnoM(turno.current);
-        baza.current = myOrden.current-1;
-        setBazaM(baza.current);
-        setTienesBaza(true);
-      }else if(winner === user2.current.jugador){
-        turno.current = user2.current.orden-1;
-        setTurnoM(turno.current);
-        baza.current = user2.current.orden-1;
-        setBazaM(baza.current);
-        setTienesBaza(true);
-      }else if(winner === user1.current.jugador){
-        turno.current = user1.current.orden-1;
-        setTurnoM(turno.current);
-        baza.current = user1.current.orden-1;
-        setBazaM(baza.current);
-        setTienenBaza(true);
-      }else if(winner === user3.current.jugador){
-        turno.current = user3.current.orden-1;
-        setTurnoM(turno.current);
-        baza.current = user3.current.orden-1;
-        setBazaM(baza.current);
-        setTienenBaza(true);
-      }
       cartaSalida.current = "NO";
       cartaMata.current = "NO";
       round.current++;
@@ -713,6 +677,55 @@ export default function Board(socket,roomName,tipo) {
       setJugada2M(jugada2.current);
       jugada3.current = "NO";
       setJugada3M(jugada3.current);
+      if(winner === username){
+        turno.current = myOrden.current-1;
+        if(round.current !== 10){
+          setTimer(
+            <CountdownCircleTimer
+              isPlaying
+              duration={30}
+              size={100}
+              colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+              onComplete={()=>{handleCountdownCompleted()}}
+            >
+              {renderTime}
+            </CountdownCircleTimer>
+          )
+        }else{
+          turno.current = (turno.current+1)%4;
+        }
+        setTurnoM(turno.current);
+        baza.current = myOrden.current-1;
+        setBazaM(baza.current);
+        setTienesBaza(true);
+      }else if(winner === user2.current.jugador){
+        turno.current = user2.current.orden-1;
+        if(round.current === 10){
+          turno.current = (turno.current+1)%4;
+        }
+        setTurnoM(turno.current);
+        baza.current = user2.current.orden-1;
+        setBazaM(baza.current);
+        setTienesBaza(true);
+      }else if(winner === user1.current.jugador){
+        turno.current = user1.current.orden-1;
+        if(round.current === 10){
+          turno.current = (turno.current+1)%4;
+        }
+        setTurnoM(turno.current);
+        baza.current = user1.current.orden-1;
+        setBazaM(baza.current);
+        setTienenBaza(true);
+      }else if(winner === user3.current.jugador){
+        turno.current = user3.current.orden-1;
+        if(round.current === 10){
+          turno.current = (turno.current+1)%4;
+        }
+        setTurnoM(turno.current);
+        baza.current = user3.current.orden-1;
+        setBazaM(baza.current);
+        setTienenBaza(true);
+      }
     });
 
     socket.on("roba", ({ carta, jugador }) => {
