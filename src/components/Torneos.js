@@ -136,7 +136,6 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
   return {
-    id: `scrollable-force-tab-${index}`,
     'aria-controls': `scrollable-force-tabpanel-${index}`,
   };
 }
@@ -157,6 +156,7 @@ function Tournaments(props) {
     const [loadedTorneoCreado,setLoadedTorneoCreado] = React.useState(false);
     const [nombreTorneo,setnombreTorneo] = React.useState("");
     const [torneo,setTorneo] = React.useState(torneoService.getCurrentTournament());
+    const torneoRef = useRef(torneoService.getCurrentTournament())
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [openBracket, setOpenBracket] = React.useState(false);
     const [openTorneoCreado, setOpenTorneoCreado] = React.useState(false);
@@ -169,188 +169,109 @@ function Tournaments(props) {
     const [partidaActual, setPartidaActual] = React.useState({});
     const [torneoReady, settorneoReady] = React.useState(false);
     const [errorNameTorneo,setErrorNameTorneo] = React.useState(false);
-    const [equipos,setEquipos] = React.useState([]);
-    const [equipo1,setnombreEquipo1] = React.useState("");
-    const [equipo2,setnombreEquipo2] = React.useState("");
-    const [equipo3,setnombreEquipo3] = React.useState("");
-    const [equipo4,setnombreEquipo4] = React.useState("");
-    const [equipo5,setnombreEquipo5] = React.useState("");
-    const [equipo6,setnombreEquipo6] = React.useState("");
-    const [equipo7,setnombreEquipo7] = React.useState("");
-    const [equipo8,setnombreEquipo8] = React.useState("");
-    const [equipo9,setnombreEquipo9] = React.useState("");
-    const [equipo10,setnombreEquipo10] = React.useState("");
-    const [equipo11,setnombreEquipo11] = React.useState("");
-    const [equipo12,setnombreEquipo12] = React.useState("");
-    const [equipo13,setnombreEquipo13] = React.useState("");
-    const [equipo14,setnombreEquipo14] = React.useState("");
-    const [equipo15,setnombreEquipo15] = React.useState("");
-    const [equipo16,setnombreEquipo16] = React.useState("");
+    const [seeds0,setSeeds0] = React.useState([
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+    ])
+    
+    const [seeds1,setSeeds1] = React.useState([
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+      {
+        teams: [{ name: "" }, { name: "" }],
+      },
+    ])
+    
+    const [seeds2,setSeeds2] = React.useState([
+      {
+          teams: [{ name: "" }, { name: "" }],
+        },
+        {
+          teams: [{ name: "" }, { name: "" }],    
+      },
+    ])
+    
+    const [seeds3,setSeeds3] = React.useState([
+      {     
+          teams: [{ name: "" }, { name: "" }],
+        },
+    ])
 
-    const rounds = [
-      {
-        title: 'Cuartos',
-        seeds: [
-          {
-            id: 1,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo1 }, { name: equipo2 }],
-          },
-          {
-            id: 2,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo3 }, { name: equipo4 }],
-          },
-          {
-            id: 3,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo5 }, { name: equipo6 }],
-          },
-          {
-            id: 4,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo7 }, { name: equipo8 }],
-          },
-        ],
-      },
-      {
-        title: 'Semifinales',
-        seeds: [
-          {
-            
-              id: 5,
-              date: new Date().toDateString(),
-              teams: [{ name: 'Team A' }, { name: 'Team C' }],
-            },
-            {
-              id: 6,
-              date: new Date().toDateString(),
-              teams: [{ name: 'Team G' }, { name: 'Team F' }],
-            
-          },
-        ],
-      },
-      {
-        title: 'Final',
-        seeds: [
-          {     
-              id: 7,
-              date: new Date().toDateString(),
-              teams: [{ name: 'Team A' }, { name: 'Team F' }],
-            },
-        ],
-      },
-    ];
+    function generateRounds1(){
+      return [
+        {
+          title: 'Cuartos',
+          seeds: seeds1
+        },
+        {
+          title: 'Semifinales',
+          seeds: seeds2
+        },
+        {
+          title: 'Final',
+          seeds: seeds3
+        },
+      ]
+    }
 
-    const rounds2 = [
-      {
-        title: 'Octavos',
-        seeds: [
-          {
-            id: 1,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo1 }, { name: equipo2 }],
-          },
-          {
-            id: 2,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo3 }, { name: equipo4 }],
-          },
-          {
-            id: 3,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo5 }, { name: equipo6 }],
-          },
-          {
-            id: 4,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo7 }, { name: equipo8 }],
-          },
-          {
-            id: 5,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo9 }, { name: equipo10 }],
-          },
-          {
-            id: 6,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo11 }, { name: equipo12 }],
-          },
-          {
-            id: 7,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo13 }, { name: equipo14 }],
-          },
-          {
-            id: 8,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo15 }, { name: equipo16 }],
-          },
-        ],
-      },
-      {
-        title: 'Cuartos',
-        seeds: [
-          {
-            id: 9,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo1 }, { name: equipo2 }],
-          },
-          {
-            id: 10,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo3 }, { name: equipo4 }],
-          },
-          {
-            id: 11,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo5 }, { name: equipo6 }],
-          },
-          {
-            id: 12,
-            date: new Date().toDateString(),
-            teams: [{ name: equipo7 }, { name: equipo8 }],
-          },
-        ],
-      },
-      {
-        title: 'Semifinales',
-        seeds: [
-          {
-            
-              id: 13,
-              date: new Date().toDateString(),
-              teams: [{ name: 'Team A' }, { name: 'Team C' }],
-            },
-            {
-              id: 14,
-              date: new Date().toDateString(),
-              teams: [{ name: 'Team G' }, { name: 'Team F' }],
-            
-          },
-        ],
-      },
-      {
-        title: 'Final',
-        seeds: [
-          {     
-              id: 15,
-              date: new Date().toDateString(),
-              teams: [{ name: 'Team A' }, { name: 'Team F' }],
-            },
-          ],
-      },
-    ]
-  
+    function generateRounds2(){
+      return [
+        {
+          title: 'Octavos',
+          seeds: seeds0
+        },
+        {
+          title: 'Cuartos',
+          seeds: seeds1
+        },
+        {
+          title: 'Semifinales',
+          seeds: seeds2
+        },
+        {
+          title: 'Final',
+          seeds: seeds3
+        },
+      ]
+    }
 
     const ElBrack = () => {
       if (largo){
       return (
-        <Bracket rounds={rounds2}/>
+        <Bracket rounds={generateRounds2()}/>
       );}
       else{
         return (
-          <Bracket rounds={rounds}/>
+          <Bracket rounds={generateRounds1()}/>
         );
       }
     };
@@ -469,9 +390,11 @@ function Tournaments(props) {
       console.log(data)
       if(torneo){
         setTorneo(data);
+        torneoRef.current = data;
         torneoService.updateCurrentTournament(data);
       }else{
         setTorneo(data);
+        torneoRef.current = data;
         torneoService.createCurrentTournament(data);
       }
       setLoadedListaTorneos(false);
@@ -669,15 +592,56 @@ function Tournaments(props) {
 
     useEffect(() => {
       props.socket.on("matches", ( dataMatches ) => {
+        console.log(dataMatches);
         settorneoReady(true);
-        setEquipos(dataMatches);
+        var seeds = [];
+        var team1;
+        var team2;
+        console.log(dataMatches);
+        console.log(torneoRef.current.tipo);
+        var numPart = (torneoRef.current.tipo+1)*2;
         var d;
+        var i = 0;
         for(d of dataMatches){
-          if(d.jugador === username){
-              setPartidaActual(d);
+          if (i%numPart === 0){
+            team1 = "";
+            team2 = "";
           }
+          if(i%2===0){
+            if(team1 !== ""){
+              team1 = team1 + "-"
+            }
+            team1 = team1 + d.jugador
+          }else{
+            if(team2 !== ""){
+              team2 = team2 + "-"
+            }
+            team2 = team2 + d.jugador
+          }
+
+          if (i%numPart === numPart-1){
+            console.log({teams: [{name: team1}, {name: team2}]});
+            seeds.push({teams: [{name: team1}, {name: team2}]});
+          }
+          i = (i+1) %numPart;
         }
-      });
+          console.log(seeds);
+        if(dataMatches[0].fase.charAt(0) === "0"){
+          setSeeds0(seeds);
+        }else if(dataMatches[0].fase.charAt(0) === "1"){
+          setSeeds1(seeds);
+        }else if(dataMatches[0].fase.charAt(0) === "2"){
+          setSeeds2(seeds);
+        }else if(dataMatches[0].fase.charAt(0) === "3"){
+          setSeeds3(seeds);
+        }
+          var d;
+          for(d of dataMatches){
+            if(d.jugador === username){
+                setPartidaActual(d);
+            }
+          }
+        });
     }, []);
 
     return (
