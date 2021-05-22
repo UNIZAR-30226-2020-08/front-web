@@ -148,6 +148,7 @@ function Tournaments(props) {
     const roomName = props.roomName
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [eliminado,setEliminado] = React.useState(false);
     const [torneos,setTorneos] = React.useState([]);
     const [torneosB,setTorneosB] = React.useState({nombre:""});
     const [loadedListaTorneos,setLoadedListaTorneos] = React.useState(false);
@@ -606,7 +607,8 @@ function Tournaments(props) {
         console.log(dataReanudar);
         var dataMatches;
         for (dataMatches of dataReanudar){
-          settorneoReady(false);
+          settorneoReady(true);
+          var estaEliminado = true;
           var seeds = [];
           var team1;
           var team2;
@@ -651,16 +653,18 @@ function Tournaments(props) {
           var d;
           for(d of dataMatches.matches){
             if(d.jugador === username){
-                settorneoReady(true);
+                estaEliminado = true;
                 setPartidaActual(d);
             }
           }
+          setEliminado(estaEliminado);
         }
       });
 
       props.socket.on("matches", ( dataMatches ) => {
         console.log(dataMatches);
         settorneoReady(true);
+        var estaEliminado = true;
         var seeds = [];
         var team1;
         var team2;
@@ -706,8 +710,10 @@ function Tournaments(props) {
           for(d of dataMatches){
             if(d.jugador === username){
                 setPartidaActual(d);
+                estaEliminado = false;
             }
           }
+          setEliminado(estaEliminado);
         });
     }, []);
 
@@ -744,12 +750,12 @@ function Tournaments(props) {
               </Button> 
               </ListItem>
               <ListItem>
-              {torneoReady ?
-              <></>
-              :
+              {!torneoReady || eliminado ?
               <Button  className={Application.actionB}  variant="outlined" onClick={()=>{torneoService.removeCurrentTournament();window.location.reload()}}>
-                  Abandonar
+                Abandonar
               </Button> 
+              :
+              <></>
               }
               </ListItem>
               </List>
@@ -916,7 +922,12 @@ function Tournaments(props) {
         <div>
         {ElBrack()}
         </div>
-        {torneoReady ?
+        {eliminado ?
+        <Button  style={{ margin: "auto",backgroundColor: "#F1948A", width: "60vh"}} variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
+          Estás eliminado
+        </Button>
+        :
+        torneoReady ?
         <Button style={{  margin: "auto",width: "60vh"}}  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(torneo,nombreTorneo)}}>
           Jugar
         </Button>
