@@ -611,7 +611,7 @@ function Tournaments(props) {
         torneo: torneoRef.current.torneo,
         jugador: username,
         partida: partidaActual,
-        fase: torneoRef.current.fase,
+        fase: parseInt(torneoRef.current.fase),
       }
       props.socket.emit('leaveTorneoEmpezado', data, (error) => {
         if(error) {
