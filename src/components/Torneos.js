@@ -385,8 +385,12 @@ function Tournaments(props) {
         torneo: torneoDisp,
         tipo:value.tipo,
         npart:value.npart,
-        username: username
+        username: username,
+        fase: "1",
       };
+      if(value.npart === 16){
+        data.fase = "0"
+      }
       console.log("Torneo")
       console.log(data)
       if(torneo){
@@ -606,6 +610,7 @@ function Tournaments(props) {
       props.socket.on("torneoReanudado", ( dataReanudar ) => {
         console.log(dataReanudar);
         var dataMatches;
+        var maxFase = torneoRef.current.tipo;
         for (dataMatches of dataReanudar){
           settorneoReady(true);
           var estaEliminado = true;
@@ -641,13 +646,14 @@ function Tournaments(props) {
             i = (i+1) %numPart;
           }
           console.log(seeds);
-          if(dataMatches.matches[0].fase.charAt(0) === "0"){
+          maxFase = dataMatches.matches[0].fase.charAt(0);
+          if(maxFase === "0"){
             setSeeds0(seeds);
-          }else if(dataMatches.matches[0].fase.charAt(0) === "1"){
+          }else if(maxFase === "1"){
             setSeeds1(seeds);
-          }else if(dataMatches.matches[0].fase.charAt(0) === "2"){
+          }else if(maxFase === "2"){
             setSeeds2(seeds);
-          }else if(dataMatches.matches[0].fase.charAt(0) === "3"){
+          }else if(maxFase === "3"){
             setSeeds3(seeds);
           }
           var d;
@@ -658,6 +664,9 @@ function Tournaments(props) {
             }
           }
           setEliminado(estaEliminado);
+          torneoRef.current.fase = maxFase;
+          setTorneo(torneoRef.current);
+          torneoService.updateCurrentTournament(torneoRef.current);
         }
       });
 
@@ -695,15 +704,16 @@ function Tournaments(props) {
             seeds.push({teams: [{name: team1}, {name: team2}]});
           }
           i = (i+1) %numPart;
-        }
+          }
           console.log(seeds);
-          if(dataMatches[0].fase.charAt(0) === "0"){
+          var maxFase = dataMatches[0].fase.charAt(0);
+          if(maxFase === "0"){
             setSeeds0(seeds);
-          }else if(dataMatches[0].fase.charAt(0) === "1"){
+          }else if(maxFase === "1"){
             setSeeds1(seeds);
-          }else if(dataMatches[0].fase.charAt(0) === "2"){
+          }else if(maxFase === "2"){
             setSeeds2(seeds);
-          }else if(dataMatches[0].fase.charAt(0) === "3"){
+          }else if(maxFase === "3"){
             setSeeds3(seeds);
           }
           var d;
@@ -714,6 +724,9 @@ function Tournaments(props) {
             }
           }
           setEliminado(estaEliminado);
+          torneoRef.current.fase = maxFase;
+          setTorneo(torneoRef.current);
+          torneoService.updateCurrentTournament(torneoRef.current);
         });
     }, []);
 
