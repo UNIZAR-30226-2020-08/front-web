@@ -595,6 +595,34 @@ function Tournaments(props) {
       }
   };
 
+  function handleAbandonarTorneo(){
+    if(!torneoReady){
+      var data = {
+        torneo: torneoRef.current.torneo,
+        jugador: username
+      }
+      props.socket.emit('leaveTorneo', data, (error) => {
+        if(error) {
+          alert("El torneo ", torneo.torneo, " ya no está disponible");
+        }
+      }) 
+    }else{
+      var data = {
+        torneo: torneoRef.current.torneo,
+        jugador: username,
+        partida: partidaActual,
+        fase: torneoRef.current.fase,
+      }
+      props.socket.emit('leaveTorneoEmpezado', data, (error) => {
+        if(error) {
+          alert("El torneo ", torneo.torneo, " ya no está disponible");
+        }
+      }) 
+    }
+    torneoService.removeCurrentTournament();
+    window.location.reload();
+  }
+
     useEffect(() => {
       //console.log("Component mounted")
       if(torneo){
@@ -763,13 +791,9 @@ function Tournaments(props) {
               </Button> 
               </ListItem>
               <ListItem>
-              {!torneoReady || eliminado ?
-              <Button  className={Application.actionB}  variant="outlined" onClick={()=>{torneoService.removeCurrentTournament();window.location.reload()}}>
+              <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleAbandonarTorneo()}}>
                 Abandonar
               </Button> 
-              :
-              <></>
-              }
               </ListItem>
               </List>
             </div>

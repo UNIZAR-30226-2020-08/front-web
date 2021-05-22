@@ -135,6 +135,7 @@ export default function Board(socket,roomName,tipo) {
     });
 
     socket.on("RepartirCartas", ({ repartidas }) => {
+      console.log("Repartir cartas",repartidas);
       if (repartidas.jugador===username){
         cartas.current = repartidas;
         setCartasM(cartas.current)
@@ -372,6 +373,7 @@ export default function Board(socket,roomName,tipo) {
             partida: roomName.current,
             nronda: round.current
           }
+          console.log("finalizarPartida")
           socket.emit("finalizarPartida",data, (error) => {
             if(error) {
               alert(error);
@@ -928,7 +930,7 @@ export default function Board(socket,roomName,tipo) {
       <Card
         src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
         text="Baraja"
-        onClick={() => {alert("Quedan "+ (28-round.current*2) + " cartas.");}}
+        onClick={() => {alert("Quedan "+ (28-(round.current*2)%20) + " cartas.");}}
       />
       :
       <></>
