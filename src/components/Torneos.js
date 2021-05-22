@@ -581,9 +581,9 @@ function Tournaments(props) {
                 tipo: response.tipo,
                 npart: nparticipantess,
               };
-              console.log("Create tournament")
-              console.log(data)
-              console.log(response.nombre)
+              //console.log("Create tournament")
+              //console.log(data)
+              //console.log(response.nombre)
               UnirseTorneo(data,response.nombre);
             }
             setLoadedListaTorneos(false);
@@ -596,9 +596,9 @@ function Tournaments(props) {
   };
 
     useEffect(() => {
-      console.log("Component mounted")
+      //console.log("Component mounted")
       if(torneo){
-        console.log("Hay torneo")
+        //console.log("Hay torneo")
         var data = {torneo: torneo.torneo};
         props.socket.emit('reanudarTorneo', data, (error) => {
           if(error) {
@@ -608,7 +608,7 @@ function Tournaments(props) {
       }
 
       props.socket.on("torneoReanudado", ( dataReanudar ) => {
-        console.log(dataReanudar);
+        //console.log(dataReanudar);
         var dataMatches;
         var maxFase = torneoRef.current.tipo;
         for (dataMatches of dataReanudar){
@@ -617,8 +617,8 @@ function Tournaments(props) {
           var seeds = [];
           var team1;
           var team2;
-          console.log(dataMatches);
-          console.log(torneoRef.current.tipo);
+          //console.log(dataMatches);
+          //console.log(torneoRef.current.tipo);
           var numPart = (torneoRef.current.tipo+1)*2;
           var d;
           var i = 0;
@@ -640,12 +640,12 @@ function Tournaments(props) {
             }
 
             if (i%numPart === numPart-1){
-              console.log({teams: [{name: team1}, {name: team2}]});
+              //console.log({teams: [{name: team1}, {name: team2}]});
               seeds.push({teams: [{name: team1}, {name: team2}]});
             }
             i = (i+1) %numPart;
           }
-          console.log(seeds);
+          //console.log(seeds);
           maxFase = dataMatches.matches[0].fase.charAt(0);
           if(maxFase === "0"){
             setSeeds0(seeds);
@@ -671,14 +671,14 @@ function Tournaments(props) {
       });
 
       props.socket.on("matches", ( dataMatches ) => {
-        console.log(dataMatches);
+        //console.log(dataMatches);
         settorneoReady(true);
         var estaEliminado = true;
         var seeds = [];
         var team1;
         var team2;
-        console.log(dataMatches);
-        console.log(torneoRef.current.tipo);
+        //console.log(dataMatches);
+        //console.log(torneoRef.current.tipo);
         var numPart = (torneoRef.current.tipo+1)*2;
         var d;
         var i = 0;
@@ -700,12 +700,12 @@ function Tournaments(props) {
           }
 
           if (i%numPart === numPart-1){
-            console.log({teams: [{name: team1}, {name: team2}]});
+            //console.log({teams: [{name: team1}, {name: team2}]});
             seeds.push({teams: [{name: team1}, {name: team2}]});
           }
           i = (i+1) %numPart;
           }
-          console.log(seeds);
+          //console.log(seeds);
           var maxFase = dataMatches[0].fase.charAt(0);
           if(maxFase === "0"){
             setSeeds0(seeds);

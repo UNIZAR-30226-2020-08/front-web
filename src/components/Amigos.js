@@ -174,7 +174,7 @@ function Friends(props) {
 
     const onChangeInput = (e) => {
       setInput(e.target.value);
-      console.log(e.target.value);
+      //console.log(e.target.value);
     }
 
     const handleSolicitar = (amigoo) => {   
@@ -186,7 +186,7 @@ function Friends(props) {
           .then(response => {
           })
           .catch(e => {
-            console.log(e);
+            //console.log(e);
           });
       }
     
@@ -201,7 +201,7 @@ function Friends(props) {
           .then(response => {
           })
           .catch(e => {
-            console.log(e);
+            //console.log(e);
           });
           setLoaded(false);
           setLoaded2(false);
@@ -216,7 +216,7 @@ function Friends(props) {
             .then(response => {
             })
             .catch(e => {
-              console.log(e);
+              //console.log(e);
             });
         }
 
@@ -240,7 +240,7 @@ function Friends(props) {
           setMatched(true);
       })
       .catch(e => {
-        console.log(e);
+        //console.log(e);
       });
     } 
 
@@ -252,11 +252,11 @@ function Friends(props) {
       if (!loaded){
         setLoaded(true);
         AmigoService.findAll(data).then(response => {
-          console.log(response.data)
+          //console.log(response.data)
           setAmigs(response.data);
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
     }
 
@@ -292,11 +292,11 @@ function Friends(props) {
       if (!loaded3){
         setLoaded3(true);
         UserService.find(data).then(response => {
-          console.log(response.data)
+          //console.log(response.data)
           setBusc(response.data);
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
     }
 
@@ -325,11 +325,11 @@ function Friends(props) {
       if (!loaded4){
         setLoaded4(true);
         UserService.findAll(data).then(response => {
-          console.log(response.data)
+          //console.log(response.data)
           setGlobal(response.data);
         })
         .catch(e => {
-          console.log(e);
+          //console.log(e);
         });
     }
 
@@ -358,7 +358,7 @@ function Friends(props) {
     roomName.current = value.nombre;
     setMatched(true);
     let rm = value.nombre;
-    console.log(username , " " , rm, " ")
+    //console.log(username , " " , rm, " ")
     props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
       if(error) {
         alert("La invitacion a la partida ", value.nombre, " ya no está disponible");
@@ -402,7 +402,7 @@ function Friends(props) {
         })
         .catch(e => {
           setBien(false);
-          console.log(e);
+          //console.log(e);
         });
     }
       
@@ -425,8 +425,8 @@ function Friends(props) {
 
     useEffect(() => {
       props.socket.on("invitacionRecibida", ( data ) => {
-        console.log("Invitacion recibida")
-        console.log(data)
+        //console.log("Invitacion recibida")
+        //console.log(data)
         if(data.destinatario === username){
           invitacionesRecibidas.current.push(data);
           setInvitaciones(invitacionesRecibidas.current);

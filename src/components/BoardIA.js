@@ -91,26 +91,26 @@ export default function Board(socket,roomName,tipo) {
 
   function throwRandomCard(){
     if(handleLancarCarta(cartas.current.c1,false)){
-      console.log("Tira c1")
+      //console.log("Tira c1")
     }else if(handleLancarCarta(cartas.current.c2,false)){
-      console.log("Tira c2")
+      //console.log("Tira c2")
     }else if(handleLancarCarta(cartas.current.c3,false)){
-      console.log("Tira c3")
+      //console.log("Tira c3")
     }else if(handleLancarCarta(cartas.current.c4,false)){
-      console.log("Tira c4")
+      //console.log("Tira c4")
     }else if(handleLancarCarta(cartas.current.c5,false)){
-      console.log("Tira c5")
+      //console.log("Tira c5")
     }else if(handleLancarCarta(cartas.current.c6,false)){
-      console.log("Tira c6")
+      //console.log("Tira c6")
     }else{
-      console.log("No puedo tirar")
+      //console.log("No puedo tirar")
     }
   }
 
   function handleCountdownCompleted(){
-    console.log("SE HA COMPLETADO EL TIEMPO")
+    //console.log("SE HA COMPLETADO EL TIEMPO")
     if(jugada0.current === "NO"){
-      console.log("TIRANDO CARTA ALEATORIA...")
+      //console.log("TIRANDO CARTA ALEATORIA...")
       throwRandomCard();
     }
   }
@@ -202,7 +202,7 @@ export default function Board(socket,roomName,tipo) {
     });
 
     socket.on("roba", ({ carta, jugador }) => {
-      console.log(jugador, " roba ", carta);
+      //console.log(jugador, " roba ", carta);
       if(jugador === username){
         if(cartas.current.c1 === "NO"){
           cartas.current.c1 = carta;
@@ -227,7 +227,7 @@ export default function Board(socket,roomName,tipo) {
     });
 
     socket.on("cartaJugadaIA", ({ carta, jugador }) => {
-      console.log("Carta ",carta," jugada por ",jugador, ", mi carta es ",jugada0.current);
+      //console.log("Carta ",carta," jugada por ",jugador, ", mi carta es ",jugada0.current);
       jugada1.current = carta;
       setJugada1M(jugada1.current);
       if(jugada0.current === "NO"){
@@ -244,7 +244,7 @@ export default function Board(socket,roomName,tipo) {
           </CountdownCircleTimer>
         )
         setTurnoM(turno.current);
-        //console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
+        ////console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
       }
       if(jugada0.current !=="NO"){
         setTimeout(handleRonda,2000);  
@@ -252,7 +252,7 @@ export default function Board(socket,roomName,tipo) {
     });    
 
     socket.on("cartaJugada", ({ cartaJugada, jugador }) => {
-      console.log("Carta ",cartaJugada," jugada por ",jugador, ", mi carta es ",jugada0.current);
+      //console.log("Carta ",cartaJugada," jugada por ",jugador, ", mi carta es ",jugada0.current);
       if (jugador === user1.current.jugador){
         jugada1.current = cartaJugada;
         setJugada1M(jugada1.current);
@@ -270,12 +270,12 @@ export default function Board(socket,roomName,tipo) {
             </CountdownCircleTimer>
           )
           setTurnoM(turno.current);
-          //console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
+          ////console.log("El turno era ",turno.current," y ahora es ",(turno.current + 1 ) % 2," y yo soy ", myOrden.current-1, " y el es ",user1.current.orden-1);
         }
       }
       else if(jugador === username){
         if(jugada1.current !== "NO"){
-          console.log("PIDO ROBAR")
+          //console.log("PIDO ROBAR")
           setTimeout(handleRonda,2000);
         }else{
           var data = {
@@ -357,7 +357,7 @@ export default function Board(socket,roomName,tipo) {
           mensaje = "HAS GANADO, +30🏆"
         }
       }      
-      console.log(puntos_e0 + " a " +puntos_e1)
+      //console.log(puntos_e0 + " a " +puntos_e1)
       if(myOrden.current === 1){
         setResultado( "Tienes " + pts_e0 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + pts_e1 + label_e1 + "\n" + mensaje);
       }else{
@@ -373,11 +373,11 @@ export default function Board(socket,roomName,tipo) {
       var i;
       for (i of dataCante){
         palo = i.palo.charAt(0).toLowerCase();
-        console.log(i);
+        //console.log(i);
         if(i.usuario !== username){
           sujeto = i.usuario + " ha";
         }
-        console.log("El palo es " + paloT + " y el del cante es " + palo);
+        //console.log("El palo es " + paloT + " y el del cante es " + palo);
         if(palo === paloT){
           alert(sujeto + " cantado las cuarenta");
         }else{
@@ -410,7 +410,7 @@ export default function Board(socket,roomName,tipo) {
         label_e1 = " buenas";
         pts_e1 = pts_e1 - 50;
       }
-      console.log(puntos_e0 + " a " +puntos_e1)
+      //console.log(puntos_e0 + " a " +puntos_e1)
       if(myOrden.current === 1){
         alert( "Tienes " + pts_e0 + label_e0 + " y " + user1.current.jugador + " ha conseguido " + pts_e1 + label_e1 + "\nPARTIDA DE VUELTAS!");
       }else{
@@ -514,7 +514,7 @@ export default function Board(socket,roomName,tipo) {
       nronda: round.current
     }
 
-    console.log(data)
+    //console.log(data)
 
     socket.emit("contarPuntos",data, (error) => {
       if(error) {
@@ -535,7 +535,7 @@ export default function Board(socket,roomName,tipo) {
     if(baza.current === myOrden.current-1){
       var has7 = false;
       var aux = "6" + triunfo.current.charAt(1);
-      console.log(aux);
+      //console.log(aux);
       if(cartas.current.c1 === aux){
         cartas.current.c1 = triunfo.current;
         setCartasMc1(triunfo.current);
