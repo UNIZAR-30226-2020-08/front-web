@@ -591,6 +591,71 @@ function Tournaments(props) {
   };
 
     useEffect(() => {
+      console.log("Component mounted")
+      if(torneo){
+        console.log("Hay torneo")
+        var data = {torneo: torneo.torneo};
+        props.socket.emit('reanudarTorneo', data, (error) => {
+          if(error) {
+            alert("El torneo ", torneo.torneo, " ya no está disponible");
+          }
+        })
+      }
+
+      props.socket.on("torneoReanudado", ( dataReanudar ) => {
+        console.log(dataReanudar);
+        var dataMatches;
+        for (dataMatches of dataReanudar){
+          var seeds = [];
+          var team1;
+          var team2;
+          console.log(dataMatches);
+          console.log(torneoRef.current.tipo);
+          var numPart = (torneoRef.current.tipo+1)*2;
+          var d;
+          var i = 0;
+          for(d of dataMatches.matches){
+            if (i%numPart === 0){
+              team1 = "";
+              team2 = "";
+            }
+            if(i%2===0){
+              if(team1 !== ""){
+                team1 = team1 + "-"
+              }
+              team1 = team1 + d.jugador
+            }else{
+              if(team2 !== ""){
+                team2 = team2 + "-"
+              }
+              team2 = team2 + d.jugador
+            }
+
+            if (i%numPart === numPart-1){
+              console.log({teams: [{name: team1}, {name: team2}]});
+              seeds.push({teams: [{name: team1}, {name: team2}]});
+            }
+            i = (i+1) %numPart;
+          }
+          console.log(seeds);
+          if(dataMatches.matches[0].fase.charAt(0) === "0"){
+            setSeeds0(seeds);
+          }else if(dataMatches.matches[0].fase.charAt(0) === "1"){
+            setSeeds1(seeds);
+          }else if(dataMatches.matches[0].fase.charAt(0) === "2"){
+            setSeeds2(seeds);
+          }else if(dataMatches.matches[0].fase.charAt(0) === "3"){
+            setSeeds3(seeds);
+          }
+          var d;
+          for(d of dataMatches.matches){
+            if(d.jugador === username){
+                setPartidaActual(d);
+            }
+          }
+        }
+      });
+
       props.socket.on("matches", ( dataMatches ) => {
         console.log(dataMatches);
         settorneoReady(true);
@@ -626,15 +691,15 @@ function Tournaments(props) {
           i = (i+1) %numPart;
         }
           console.log(seeds);
-        if(dataMatches[0].fase.charAt(0) === "0"){
-          setSeeds0(seeds);
-        }else if(dataMatches[0].fase.charAt(0) === "1"){
-          setSeeds1(seeds);
-        }else if(dataMatches[0].fase.charAt(0) === "2"){
-          setSeeds2(seeds);
-        }else if(dataMatches[0].fase.charAt(0) === "3"){
-          setSeeds3(seeds);
-        }
+          if(dataMatches[0].fase.charAt(0) === "0"){
+            setSeeds0(seeds);
+          }else if(dataMatches[0].fase.charAt(0) === "1"){
+            setSeeds1(seeds);
+          }else if(dataMatches[0].fase.charAt(0) === "2"){
+            setSeeds2(seeds);
+          }else if(dataMatches[0].fase.charAt(0) === "3"){
+            setSeeds3(seeds);
+          }
           var d;
           for(d of dataMatches){
             if(d.jugador === username){
