@@ -653,7 +653,7 @@ function Tournaments(props) {
           var d;
           for(d of dataMatches.matches){
             if(d.jugador === username){
-                estaEliminado = true;
+                estaEliminado = false;
                 setPartidaActual(d);
             }
           }
