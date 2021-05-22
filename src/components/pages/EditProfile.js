@@ -409,8 +409,8 @@ const useStyles = makeStyles((theme) => ({
                           >
                             <Fade in={open1}>
                               <div className={classes.paper1}>
-                                <h2 id="transition-modal-title">Logos disponibles</h2>          
-                                <div id="transition-modal-description">
+                                <h2 id="transition-modal-title" style={{ padding: '10px' }}>Logos disponibles</h2>          
+                                <div id="transition-modal-description" >
                                 <Grid container spacing={2}>
                                   {AvailableLogo()}
                                       </Grid>

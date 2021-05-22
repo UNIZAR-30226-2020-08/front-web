@@ -736,7 +736,7 @@ const useStyles = makeStyles((theme) => ({
       >
         <Fade in={open1}>
           <div className={classes.paper1}>
-            <h2 id="transition-modal-title">Tapetes disponibles</h2>          
+            <h2 id="transition-modal-title" style={{ padding: '10px' }}>Tapetes disponibles</h2>          
             <div id="transition-modal-description">
             <Grid container spacing={2}>
               {AvailableTapetes()}
@@ -760,7 +760,7 @@ const useStyles = makeStyles((theme) => ({
       >
         <Fade in={open2}>
           <div className={classes.paper1}>
-            <h2 id="transition-modal-title">Cartas disponibles</h2>          
+            <h2 id="transition-modal-title" style={{ padding: '10px' }}>Cartas disponibles</h2>          
             <div id="transition-modal-description">
             <Grid container spacing={2}>
               {AvailableBarajas()}
