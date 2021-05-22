@@ -251,36 +251,43 @@ export default function Board(socket,roomName,tipo) {
       if(paused.current){
         window.location.reload();
       }
-      if(winner === username){
-        turno.current = myOrden.current-1;
-        setTimer(
-          <CountdownCircleTimer
-            isPlaying
-            duration={30}
-            size={100}
-            colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
-            onComplete={()=>{handleCountdownCompleted()}}
-          >
-            {renderTime}
-          </CountdownCircleTimer>
-        )
-        setTurnoM(turno.current);
-        baza.current = myOrden.current-1;
-        setBazaM(baza.current);
-        setTienesBaza(true);
-      }else{
-        turno.current = user1.current.orden-1;
-        setTurnoM(turno.current);
-        baza.current = user1.current.orden-1;
-        setBazaM(baza.current);
-        setTienenBaza(true);
-      }
       round.current++;
       setRoundM(round.current);
       jugada1.current = "NO";
       setJugada1M(jugada1.current);
       jugada0.current = "NO";
       setJugada0M(jugada0.current);
+      if(winner === username){
+        turno.current = myOrden.current-1;
+        if(round.current !== 20){
+          setTimer(
+            <CountdownCircleTimer
+              isPlaying
+              duration={30}
+              size={100}
+              colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+              onComplete={()=>{handleCountdownCompleted()}}
+            >
+              {renderTime}
+            </CountdownCircleTimer>
+          )
+        }else{
+          turno.current = (turno.current+1)%2;
+        }
+        setTurnoM(turno.current);
+        baza.current = myOrden.current-1;
+        setBazaM(baza.current);
+        setTienesBaza(true);
+      }else{
+        turno.current = user1.current.orden-1;
+        if(round.current === 20){
+          turno.current = (turno.current+1)%2;
+        }
+        setTurnoM(turno.current);
+        baza.current = user1.current.orden-1;
+        setBazaM(baza.current);
+        setTienenBaza(true);
+      }  
     });
 
     socket.on("roba", ({ carta, jugador }) => {
@@ -368,12 +375,11 @@ export default function Board(socket,roomName,tipo) {
         setSusPuntos(pts_e0 + label_e0);
       }  
       if(round.current > 19){
-        if(puntos_e0 > 100 || puntos_e1 > 100){
+        if(puntos_e0 > 100 || puntos_e1 > 100 || round.current === 20){
           var data = {
             partida: roomName.current,
             nronda: round.current
           }
-          console.log("finalizarPartida")
           socket.emit("finalizarPartida",data, (error) => {
             if(error) {
               alert(error);
