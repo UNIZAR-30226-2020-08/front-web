@@ -341,7 +341,7 @@ const useStyles = makeStyles((theme) => ({
         return(
           
           <Grid item xs={12} sm={6} key={value.f_tapete}>
-            {value.f_tapete === "tapete1" && user.data.copas > personalizacion1 ?
+            {value.f_tapete === "tapete1" && user.data.copas >= personalizacion1 ?
           <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
@@ -356,7 +356,7 @@ const useStyles = makeStyles((theme) => ({
               </CardContent>
             </CardActionArea>                                
           </Card> : <></>}
-          {value.f_tapete === "tapete2" && user.data.copas > personalizacion2 ?
+          {value.f_tapete === "tapete2" && user.data.copas >= personalizacion2 ?
           <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
@@ -371,7 +371,7 @@ const useStyles = makeStyles((theme) => ({
               </CardContent>
             </CardActionArea>                                
           </Card> : <></>}
-          {value.f_tapete === "tapete3" && user.data.copas > personalizacion3 ?
+          {value.f_tapete === "tapete3" && user.data.copas >= personalizacion3 ?
           <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
@@ -386,7 +386,7 @@ const useStyles = makeStyles((theme) => ({
               </CardContent>
             </CardActionArea>                                
           </Card> : <></>}
-          {value.f_tapete === "tapete4" && user.data.copas > personalizacion4 ?
+          {value.f_tapete === "tapete4" && user.data.copas >= personalizacion4 ?
           <Card button onClick={() => {handleTapete1(value.f_tapete);;handleClose();}} className={classes.media1}>
             <CardActionArea>
               <CardMedia
