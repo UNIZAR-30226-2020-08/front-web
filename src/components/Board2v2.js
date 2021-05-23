@@ -588,17 +588,46 @@ export default function Board(socket,roomName,tipo) {
     });
 
     socket.on("RepartirTriunfoRP", ({ triunfoRepartido, nronda, winner,puntos_e0,puntos_e1 }) => {
-      console.log(winner, user1.current,user2.current,user3.current);
-      round.current = nronda+1;
-      setRoundM(round.current);
       triunfo.current = triunfoRepartido;
       setTriunfoM(triunfo.current);
       quedanCartas.current = true;
       setQuedanCartasM(quedanCartas.current);
-      cartaSalida.current = "NO";
-      cartaMata.current = "NO";
-      round.current++;
-      setRoundM(round.current);
+      if(winner === username){
+        setTimer(
+          <CountdownCircleTimer
+            isPlaying
+            duration={30}
+            size={100}
+            colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
+            onComplete={()=>{handleCountdownCompleted()}}
+          >
+            {renderTime}
+          </CountdownCircleTimer>
+        )
+        turno.current = myOrden.current-1;
+        setTurnoM(turno.current);
+        baza.current = myOrden.current-1;
+        setBazaM(baza.current);
+        setTienesBaza(true);
+      }else if(winner === user2.current.jugador){
+        turno.current = user2.current.orden-1;
+        setTurnoM(turno.current);
+        baza.current = user2.current.orden-1;
+        setBazaM(baza.current);
+        setTienesBaza(true);
+      }else if(winner === user1.current.jugador){
+        turno.current = user1.current.orden-1;
+        setTurnoM(turno.current);
+        baza.current = user1.current.orden-1;
+        setBazaM(baza.current);
+        setTienenBaza(true);
+      }else if(winner === user3.current.jugador){
+        turno.current = user3.current.orden-1;
+        setTurnoM(turno.current);
+        baza.current = user3.current.orden-1;
+        setBazaM(baza.current);
+        setTienenBaza(true);
+      }
       jugada0.current = "NO";
       setJugada0M(jugada0.current);
       jugada1.current = "NO";
@@ -607,55 +636,6 @@ export default function Board(socket,roomName,tipo) {
       setJugada2M(jugada2.current);
       jugada3.current = "NO";
       setJugada3M(jugada3.current);
-      if(winner === username){
-        turno.current = myOrden.current-1;
-        if(round.current !== 10){
-          setTimer(
-            <CountdownCircleTimer
-              isPlaying
-              duration={30}
-              size={100}
-              colors={[["#0abf00", 0.5], ["#F7B801", 0.5], ["#A30000"]]}
-              onComplete={()=>{handleCountdownCompleted()}}
-            >
-              {renderTime}
-            </CountdownCircleTimer>
-          )
-        }else{
-          turno.current = (turno.current+1)%4;
-        }
-        setTurnoM(turno.current);
-        baza.current = myOrden.current-1;
-        setBazaM(baza.current);
-        setTienesBaza(true);
-      }else if(winner === user2.current.jugador){
-        turno.current = user2.current.orden-1;
-        if(round.current === 10){
-          turno.current = (turno.current+1)%4;
-        }
-        setTurnoM(turno.current);
-        baza.current = user2.current.orden-1;
-        setBazaM(baza.current);
-        setTienesBaza(true);
-      }else if(winner === user1.current.jugador){
-        turno.current = user1.current.orden-1;
-        if(round.current === 10){
-          turno.current = (turno.current+1)%4;
-        }
-        setTurnoM(turno.current);
-        baza.current = user1.current.orden-1;
-        setBazaM(baza.current);
-        setTienenBaza(true);
-      }else if(winner === user3.current.jugador){
-        turno.current = user3.current.orden-1;
-        if(round.current === 10){
-          turno.current = (turno.current+1)%4;
-        }
-        setTurnoM(turno.current);
-        baza.current = user3.current.orden-1;
-        setBazaM(baza.current);
-        setTienenBaza(true);
-      }
       puntose0.current = puntos_e0;
       puntose1.current = puntos_e1;
       var label_e0 = " malas";
@@ -678,6 +658,8 @@ export default function Board(socket,roomName,tipo) {
         setMisPuntos(pts_e1 + label_e1);
         setSusPuntos(pts_e0 + label_e0);
       }
+      round.current = nronda+1;
+      setRoundM(round.current);
     });
 
     socket.on("winner", ({ winner }) => {
