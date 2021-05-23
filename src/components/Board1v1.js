@@ -135,7 +135,7 @@ export default function Board(socket,roomName,tipo) {
     });
 
     socket.on("RepartirCartas", ({ repartidas }) => {
-      console.log("Repartir cartas",repartidas);
+      //console.log("Repartir cartas",repartidas);
       if (repartidas.jugador===username){
         cartas.current = repartidas;
         setCartasM(cartas.current)
