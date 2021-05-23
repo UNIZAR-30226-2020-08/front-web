@@ -151,16 +151,19 @@ function Tournaments(props) {
     const [eliminado,setEliminado] = React.useState(false);
     const [torneos,setTorneos] = React.useState([]);
     const [torneosB,setTorneosB] = React.useState({nombre:""});
+    const [winner,setWinner] = React.useState("")
     const [loadedListaTorneos,setLoadedListaTorneos] = React.useState(false);
     const [loadedTorneoBuscado,setLoadedTorneoBuscado] = React.useState(true);
     const [loadedTorneoUnirse,setLoadedTorneoUnirse] = React.useState(false);
     const [loadedTorneoCreado,setLoadedTorneoCreado] = React.useState(false);
+    const [selectedTournament,setSelectedTournament] = React.useState({});
     const [nombreTorneo,setnombreTorneo] = React.useState("");
     const [torneo,setTorneo] = React.useState(torneoService.getCurrentTournament());
     const torneoRef = useRef(torneoService.getCurrentTournament())
     const user = AuthenticationDataService.getCurrentUser() ? AuthenticationDataService.getCurrentUser() : {data:{username:'anonimo'}};
     const [openBracket, setOpenBracket] = React.useState(false);
     const [openTorneoCreado, setOpenTorneoCreado] = React.useState(false);
+    const [openUnirseTorneoPrivado, setOpenUnirseTorneoPrivado] = React.useState(false);
     const [input,setInput] = React.useState("");
     const [largo, setLargo] = React.useState(false);
     const [TournamentName, setTournamentname] = React.useState("");
@@ -333,6 +336,10 @@ function Tournaments(props) {
       setOpenTorneoCreado(false);
     };
 
+    const handleCloseUnirseTorneoPrivado = () => {
+      setOpenUnirseTorneoPrivado(false);
+    };
+
     function AvailableBTorneos() {
       var data = {
         torneo:input,
@@ -377,7 +384,38 @@ function Tournaments(props) {
     
     };
 
-    
+    function UnirseTorneoPrivado(value,torneoDisp) {
+      setnombreTorneo(torneoDisp);
+      var data = {
+        torneo: torneoDisp,
+        tipo:value.tipo,
+        npart:value.npart,
+        contrasenya: contrasenya,
+        username: username,
+        fase: "1",
+        lastPlayed: "5",
+      };
+      if(value.npart === 16){
+        data.fase = "0"
+      }
+      console.log("Torneo")
+      console.log(data)
+      if(torneo){
+        setTorneo(data);
+        torneoRef.current = data;
+        torneoService.updateCurrentTournament(data);
+      }else{
+        setTorneo(data);
+        torneoRef.current = data;
+        torneoService.createCurrentTournament(data);
+      }
+      setLoadedListaTorneos(false);
+      props.socket.emit('joinTournament', { name:user.data.username, tournament:torneoDisp , tipo: value.tipo, nTeams:value.npart, contrasenya: contrasenya}, (error) => {
+        if(error) {
+          alert("No se ha podido unir al torneo");
+        }
+      })
+    }
 
     function UnirseTorneo(value,torneoDisp) {
       setnombreTorneo(torneoDisp);
@@ -385,6 +423,7 @@ function Tournaments(props) {
         torneo: torneoDisp,
         tipo:value.tipo,
         npart:value.npart,
+        contrasenya: "NO",
         username: username,
         fase: "1",
       };
@@ -403,7 +442,7 @@ function Tournaments(props) {
         torneoService.createCurrentTournament(data);
       }
       setLoadedListaTorneos(false);
-      props.socket.emit('joinTournament', { name:user.data.username, tournament:torneoDisp , tipo: value.tipo, nTeams:value.npart}, (error) => {
+      props.socket.emit('joinTournament', { name:user.data.username, tournament:torneoDisp , tipo: value.tipo, nTeams:value.npart, contrasenya: "NO"}, (error) => {
         if(error) {
           alert("No se ha podido unir al torneo");
         }
@@ -489,7 +528,39 @@ function Tournaments(props) {
       )
     }
 
-
+    function DialogUnirseTorneoPrivado(){
+      return(
+        <Dialog open={openUnirseTorneoPrivado} onClose={handleCloseUnirseTorneoPrivado} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">UNIRSE A TORNEO PRIVADO</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Introduzca la contraseña
+            </DialogContentText>
+                <TextField
+                    label="Contraseña"
+                    onChange={onChangeContrasenya}
+                    id="outlined-margin-normal"
+                    placeholder= "Contraseña"
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    fullWidth
+                    variant="outlined"
+                    value={contrasenya}
+                />
+          </DialogContent>
+          <DialogActions>
+            <Button edge="end"  variant="outlined" aria-label="Cancelar" onClick={handleCloseUnirseTorneoPrivado}>
+              Cancelar
+            </Button>
+            <Button edge="end"  variant="outlined" aria-label="Crear" onClick={() => {UnirseTorneoPrivado(selectedTournament,nombreTorneo);setOpenUnirseTorneoPrivado(false);}}>
+              Unirse
+            </Button>
+          </DialogActions>  
+      </Dialog>
+      )
+    }
     
     function AvailableTournaments(tip,part) {
       var data = {
@@ -505,8 +576,7 @@ function Tournaments(props) {
         .catch(e => {
         });
       }
-
-    
+      
       return torneos.map((value) => {
         return(
           <ListItem key={value.nombre} className="listItem">
@@ -516,18 +586,16 @@ function Tournaments(props) {
                 secondary={value.jugadores_online+" participantes"}
                 />
                 <ListItemSecondaryAction>
-                {torneo && torneo.torneo === value.nombre  ?
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {handleClickBracket(value.nombre); }}>
-                Ver Brackets
-                </Button> :
-                <></> 
+                
+                { value.contrasenya === "NO" ?
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {UnirseTorneo(data,value.nombre);}}>
+                    Unirse 🌍
+                </Button>
+                :
+                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {setSelectedTournament(data); setnombreTorneo(value.nombre);setOpenUnirseTorneoPrivado(true)}}>
+                    Unirse 🔒
+                </Button>
                 }
-
-                {torneo &&  torneo.torneo!=="" ?
-                <></> :
-                <Button edge="end"  variant="outlined" aria-label="Unirse" onClick= {() => {setnombreTorneo(value.nombre); UnirseTorneo(data,value.nombre);}}>
-                    Unirse
-                </Button>}
                 </ListItemSecondaryAction>
             </ListItem>
         )
@@ -541,6 +609,9 @@ function Tournaments(props) {
       roomName.current = partidaActual.partida;
       setMatched(true);
       let rm = partidaActual.partida;
+      torneo.current.last = torneo.current.fase;
+      setTorneo(torneo.current);
+      torneoService.updateCurrentTournament(torneo.current);
       props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
         if(error) {
           alert("La partida ", partidaActual.partida, " del torneo ", nombreeTorneo, " ya no está disponible");
@@ -557,13 +628,16 @@ function Tournaments(props) {
       };
       if (TournamentName != ""){
         if(contrasenyaa!= ""){
+          console.log("Tiene contrasenya")
           var data = {
-                  nombre: nombree,
-                  tipo: tipoo,
-                  nparticipantes: nparticipantess,
-                  contrasenya: contrasenyaa,
-                };
-              }
+            nombre: nombree,
+            tipo: tipoo,
+            nparticipantes: nparticipantess,
+            contrasenya: contrasenyaa,
+          };
+        }else{
+          console.log("No tiene contrasenya")
+        }
       }else{
         correct = false;
         setErrorNameTorneo(true);
@@ -756,6 +830,18 @@ function Tournaments(props) {
           setTorneo(torneoRef.current);
           torneoService.updateCurrentTournament(torneoRef.current);
         });
+
+        props.socket.on("accesoDenegado", ( usuario ) => {
+          if(usuario === username){
+            torneoService.removeCurrentTournament();
+            alert("No te puedes unir a este torneo");
+            window.location.reload();
+          }
+        });
+
+        props.socket.on("ganadorTorneo", ( usuario ) => {
+          setWinner(usuario);
+        });
     }, []);
 
     return (
@@ -815,118 +901,106 @@ function Tournaments(props) {
       <TabPanel value={value} index={1}>
       {torneo && torneo.tipo===1 && torneo.npart === 8?
             <div>           
-              <ListItemText
-              primary={torneo.torneo}
-              secondary="Torneo en Juego"
-              />
-              <List>          
-              <ListItem>
-              <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleClickBracket(value.nombre);}}>
-                  Ver Bracket
-              </Button> 
-              </ListItem>
-              <ListItem>
-              {torneoReady ?
-              <></>
-              :
-              <Button  className={Application.actionB}  variant="outlined" onClick={()=>{torneoService.removeCurrentTournament();window.location.reload()}}>
-                  Abandonar
-              </Button> 
-              }
-              </ListItem>
-              </List>
-            </div>
-            :
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpenCrearTorneo();setLoadedTorneoUnirse(false);}}>
-                Nuevo Torneo
-            </Button>
-            }
-            {torneo && torneo.tipo===1 && torneo.npart === 8?
-            <></>
-            :
-            <List className={classes.lista}>
-              {value === 1 ? AvailableTournaments(1,8) : <></>}
+            <ListItemText
+            primary={torneo.torneo}
+            secondary="Torneo en Juego"
+            />
+            <List>          
+            <ListItem>
+            <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleClickBracket(value.nombre);}}>
+                Ver Bracket
+            </Button> 
+            </ListItem>
+            <ListItem>
+            <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleAbandonarTorneo()}}>
+              Abandonar
+            </Button> 
+            </ListItem>
             </List>
-            }
-            {VerCrearTorneo(1,8)}
+          </div>
+          :
+          <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpenCrearTorneo();setLoadedTorneoUnirse(false);}}>
+              Nuevo Torneo
+          </Button>
+          }
+          {torneo && torneo.tipo===1 && torneo.npart === 8?
+          <></>
+          :
+          <List className={classes.lista}>
+            {value === 1 ? AvailableTournaments(1,8) : <></>}
+          </List>
+          }
+          {VerCrearTorneo(1,8)}
       </TabPanel>
       
       <TabPanel value={value} index={2}>
         {torneo && torneo.tipo===0 && torneo.npart === 16?
             <div>           
-              <ListItemText
-              primary={torneo.torneo}
-              secondary="Torneo en Juego"
-              />
-              <List>          
-              <ListItem>
-              <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleClickBracket(value.nombre);}}>
-                  Ver Bracket
-              </Button> 
-              </ListItem>
-              <ListItem>
-              {torneoReady ?
-              <></>
-              :
-              <Button  className={Application.actionB}  variant="outlined" onClick={()=>{torneoService.removeCurrentTournament();window.location.reload()}}>
-                  Abandonar
-              </Button> 
-              }
-              </ListItem>
-              </List>
-            </div>
-            :
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpenCrearTorneo();setLoadedTorneoUnirse(false);}}>
-                Nuevo Torneo
-            </Button>
-            }
-            {torneo && torneo.tipo===0 && torneo.npart === 16?
-            <></>
-            :
-            <List className={classes.lista}>
-              {value === 2 ? AvailableTournaments(0,16) : <></>}
+            <ListItemText
+            primary={torneo.torneo}
+            secondary="Torneo en Juego"
+            />
+            <List>          
+            <ListItem>
+            <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleClickBracket(value.nombre);}}>
+                Ver Bracket
+            </Button> 
+            </ListItem>
+            <ListItem>
+            <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleAbandonarTorneo()}}>
+              Abandonar
+            </Button> 
+            </ListItem>
             </List>
-            }
-            {VerCrearTorneo(0,16)}
+          </div>
+          :
+          <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpenCrearTorneo();setLoadedTorneoUnirse(false);}}>
+              Nuevo Torneo
+          </Button>
+          }
+          {torneo && torneo.tipo===0 && torneo.npart === 16?
+          <></>
+          :
+          <List className={classes.lista}>
+            {value === 2 ? AvailableTournaments(0,16) : <></>}
+          </List>
+          }
+          {VerCrearTorneo(0,16)}
       </TabPanel>
 
       <TabPanel value={value} index={3}>
       {torneo && torneo.tipo===1 && torneo.npart === 16?
             <div>           
-              <ListItemText
-              primary={torneo.torneo}
-              secondary="Torneo en Juego"
-              />
-              <List>          
-              <ListItem>
-              <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleClickBracket(value.nombre);}}>
-                  Ver Bracket
-              </Button> 
-              </ListItem>
-              <ListItem>
-              {torneoReady ?
-              <></>
-              :
-              <Button  className={Application.actionB}  variant="outlined" onClick={()=>{torneoService.removeCurrentTournament();window.location.reload()}}>
-                  Abandonar
-              </Button> 
-              }     
-              </ListItem>
-              </List>
-            </div>
-            :
-            <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpenCrearTorneo();setLoadedTorneoUnirse(false);}}>
-                Nuevo Torneo
-            </Button>
-            }
-            {torneo && torneo.tipo===1 && torneo.npart === 16?
-            <></>
-            :
-            <List className={classes.lista}>
-              {value === 3 ? AvailableTournaments(1,16) : <></>}
+            <ListItemText
+            primary={torneo.torneo}
+            secondary="Torneo en Juego"
+            />
+            <List>          
+            <ListItem>
+            <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleClickBracket(value.nombre);}}>
+                Ver Bracket
+            </Button> 
+            </ListItem>
+            <ListItem>
+            <Button  className={Application.actionB}  variant="outlined" onClick={()=>{handleAbandonarTorneo()}}>
+              Abandonar
+            </Button> 
+            </ListItem>
             </List>
-            }
-            {VerCrearTorneo(1,16)}
+          </div>
+          :
+          <Button edge="end"  variant="outlined" style={{ marginTop: '10px' }} onClick={() => {handleClickOpenCrearTorneo();setLoadedTorneoUnirse(false);}}>
+              Nuevo Torneo
+          </Button>
+          }
+          {torneo && torneo.tipo===1 && torneo.npart === 16?
+          <></>
+          :
+          <List className={classes.lista}>
+            {value === 3 ? AvailableTournaments(1,16) : <></>}
+          </List>
+          }
+          {VerCrearTorneo(1,16)}
       </TabPanel>
 
       <TabPanel value={value} index={4}>
@@ -959,12 +1033,17 @@ function Tournaments(props) {
         <div>
         {ElBrack()}
         </div>
-        {eliminado ?
+        {winner !== "" ?
+        <Button  style={{ margin: "auto",backgroundColor: "#EFB810", width: "60vh"}} variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
+          {"Ganador " + winner}
+        </Button>
+        :
+        eliminado ?
         <Button  style={{ margin: "auto",backgroundColor: "#F1948A", width: "60vh"}} variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
           Estás eliminado
         </Button>
         :
-        torneoReady ?
+        torneoReady && torneo.current.last !== torneo.current.fase?
         <Button style={{  margin: "auto",width: "60vh"}}  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(torneo,nombreTorneo)}}>
           Jugar
         </Button>
@@ -973,6 +1052,7 @@ function Tournaments(props) {
           Esperando a los demas jugadores
         </Button>}
       </Dialog>
+      {DialogUnirseTorneoPrivado()}
       </div>
     );
 }
