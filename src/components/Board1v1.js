@@ -89,8 +89,6 @@ export default function Board(socket,roomName,tipo) {
 
   const username = user ? user.data.username : "anonimo";
 
-  const torneo = user ? user.data.username : "anonimo";
-
   const renderTime = ({ remainingTime }) => {
     return (
       <div className="timer">
@@ -936,7 +934,7 @@ export default function Board(socket,roomName,tipo) {
       <Card
         src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
         text="Baraja"
-        onClick={() => {alert("Quedan "+ (28-(round.current*2)%20) + " cartas.");}}
+        onClick={() => {alert("Quedan "+ (28-((round.current%20)*2)) + " cartas.");}}
       />
       :
       <></>
