@@ -831,7 +831,7 @@ function Tournaments(props) {
           torneoService.updateCurrentTournament(torneoRef.current);
         });
 
-        props.socket.on("accesoDenegado", ( usuario ) => {
+        props.socket.on("accesoDenegado", ( {usuario} ) => {
           if(usuario === username){
             torneoService.removeCurrentTournament();
             alert("No te puedes unir a este torneo");
