@@ -597,6 +597,8 @@ export default function Board(socket,roomName,tipo) {
       setQuedanCartasM(quedanCartas.current);
       cartaSalida.current = "NO";
       cartaMata.current = "NO";
+      round.current++;
+      setRoundM(round.current);
       jugada0.current = "NO";
       setJugada0M(jugada0.current);
       jugada1.current = "NO";
