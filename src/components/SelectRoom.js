@@ -290,12 +290,6 @@ function SelectRoom(setRoom,setMatched,gamemode,socket,username,roomName) {
                       variant="outlined"
                       value={roomname}
                   />
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox checked={checkbox} onChange={handleCheck} name="checkedB" color="primary" />}
-                      label="Partida privada"
-                    />
-                  </FormGroup>
             </DialogContent>
             <DialogActions>
               <Button edge="end"  variant="outlined" aria-label="Cancelar" onClick={handleClose}>
