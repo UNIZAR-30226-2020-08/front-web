@@ -219,6 +219,7 @@ const useStyles = makeStyles((theme) => ({
     const [mail, setMail] = React.useState("");
     const [numeroo, setNumero] = React.useState();
     const [open3, setOpen3] = React.useState(false);
+    const [open8, setOpen8] = React.useState(false);
     const [cartas,setCartas] = React.useState([]);
     const [tapetes,setTapetes] = React.useState([]);
     const [partidas,setPartidas] = React.useState([]);
@@ -522,6 +523,14 @@ const useStyles = makeStyles((theme) => ({
       setOpen3(false);
     };
 
+    const handleClickOpen8 = () => {
+      setOpen8(true);
+    };
+  
+    const handleClose8 = () => {
+      setOpen8(false);
+    };
+
     const handleClose3Eliminar = () => {
       var data = {
         username: user.data.username,
@@ -681,6 +690,61 @@ const useStyles = makeStyles((theme) => ({
                             </List>
                           </Dialog>
                           </div>
+                          <div>
+                          <Link style={{ textDecoration: 'none' }}>
+                          <Button
+                              type="borrarcuenta"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              className={classes.ultimasPartidas}
+                              onClick={handleClickOpen8}
+                          >
+                              Información de Juego
+                          </Button>  
+                          </Link>                      
+                            <Dialog
+                              open={open8}
+                              onClose3={handleClose8}
+                              aria-labelledby="alert-dialog-title"
+                              aria-describedby="alert-dialog-description"
+                            >
+                              <DialogTitle id="alert-dialog-title">{"Información de juego"}</DialogTitle>
+                              <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                Reglas del juego:<br/>
+                                - Se juega con la baraja española de 40 cartas.<br/>                                                          
+                                - Se puede jugar individualmente (1vs1) o por parejas (2vs2).<br/>                              
+                                - Se hará un sorteo para determinar quién reparte y tras esto repartirá el jugador que se haya llevado las 10 últimas. Los jugadores están puestos de la siguiente manera: cada persona está en frente de su pareja, con el montón de cartas a robar en el centro de los cuatro jugadores. (en el caso de ir por parejas).<br/>
+                                - Se reparten 6 cartas a cada jugador, de 3 en 3, y en el centro de la mesa se coloca una carta boca arriba, que corresponderá con el triunfo y encima se coloca el montón de cartas para robar hacia abajo, dejando ver claramente qué carta está boca arriba. Esta carta también se robará.<br/>        
+                                - El palo de la carta que quede boca arriba debajo del montón para robar, será el palo de triunfo, el cual es superior a todos los demás, es decir, cualquiera de sus cartas “gana” a cualquier carta de otro palo que no sea triunfo y si se juegan más cartas de triunfo gana la más alta.<br/>                               
+                                - Sale el jugador siguiente al que ha repartido, lanzando una carta. Los siguientes jugadores, juegan sus cartas asistiendo (ir al palo de salida), montando (echar carta de mayor valor) o fallando (jugar triunfo), según corresponda. Las cartas se juegan en sentido antihorario. Gana la baza la carta más alta del palo de triunfo y si no se juega ninguna carta de triunfo, gana la carta más alta del palo de salida.<br/>                              
+                                - El jugador que gane la baza, recoge las cartas y sale en la siguiente ronda. La baza es compartida entre los jugadores de la misma pareja, es decir, no importa quién gane de la pareja, las cartas van a la misma baza.<br/>
+                                - Cuando se acaba una ronda, el jugador o jugadores que la hayan ganado podrán cantar. También puede intercambiar el 7 de triunfo con la carta del medio.<br/>                              
+                                - Para cantar es necesario juntar la sota y el rey del mismo palo, en caso de que la pareja sea de triunfo se cantarán las 40, es decir, al final de la partida se sumarán 40 puntos extra a los que se hayan conseguido, y en caso contrario se cantarán las 20. Cuando se cantan las cartas se muestra el palo a todos los jugadores.<br/>
+                                - El juego termina cuando todos los jugadores se han quedado sin cartas, tras esto, se procede al recuento de puntos.<br/>
+                                - El jugador que se ha llevado la última baza se queda con “las 10 últimas” que son 10 puntos extra que se suman a la puntuación final.<br/>
+                                - Para ganar, es necesario juntar un total de 101 puntos.<br/>
+                                - Cuando se acaban las cartas del montón de robar, se juega el arrastre, en este momento el jugador está obligado a matar y si no puede debe tirar una carta del mismo palo del que haya salido el primer jugador. En el caso de que tu compañero tenga el mayor número, no es necesario matar si no tienes cartas del mismo palo que haya salido el primer jugador.<br/>
+                                - Si ninguno de los jugadores consigue alcanzar los 101 puntos se juega una partida de vueltas.<br/>
+                                - En la partida de vueltas se juega otra partida hasta que un jugador (o pareja) alcance los 101 puntos necesarios para ganar. En el momento que se alcance dicha puntuación se termina la partida.<br/>
+                                - En todos los palos, el orden de las cartas, de mayor a menor , es el siguiente: as, tres, rey, sota, caballo, siete, seis, cinco, cuatro y dos.<br/><br/>
+                                El valor de las cartas es:<br/>
+                                - As 11 puntos.<br/>
+                                - Tres 10 puntos. <br/>
+                                - Rey 4 puntos.<br/>
+                                - Sota 3 puntos.<br/>
+                                - Caballo 2 puntos.<br/>
+                                - Resto de cartas 0 puntos.
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions>
+                                <Button onClick={handleClose8} color="primary">
+                                  Volver
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
+                            </div>
                           <div>
                           <Link style={{ textDecoration: 'none' }}>
                           <Button
