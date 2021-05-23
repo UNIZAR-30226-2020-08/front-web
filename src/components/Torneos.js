@@ -398,8 +398,8 @@ function Tournaments(props) {
       if(value.npart === 16){
         data.fase = "0"
       }
-      console.log("Torneo")
-      console.log(data)
+      //console.log("Torneo")
+      //console.log(data)
       if(torneo){
         setTorneo(data);
         torneoRef.current = data;
@@ -430,8 +430,8 @@ function Tournaments(props) {
       if(value.npart === 16){
         data.fase = "0"
       }
-      console.log("Torneo")
-      console.log(data)
+      //console.log("Torneo")
+      //console.log(data)
       if(torneo){
         setTorneo(data);
         torneoRef.current = data;
@@ -628,7 +628,7 @@ function Tournaments(props) {
       };
       if (TournamentName != ""){
         if(contrasenyaa!= ""){
-          console.log("Tiene contrasenya")
+          //console.log("Tiene contrasenya")
           var data = {
             nombre: nombree,
             tipo: tipoo,
@@ -636,7 +636,7 @@ function Tournaments(props) {
             contrasenya: contrasenyaa,
           };
         }else{
-          console.log("No tiene contrasenya")
+          //console.log("No tiene contrasenya")
         }
       }else{
         correct = false;
@@ -840,6 +840,7 @@ function Tournaments(props) {
         });
 
         props.socket.on("ganadorTorneo", ( ganadores ) => {
+          console.log("Ganador/es del torneo ", ganadores);
           var aux = "Ganador ";
           if(ganadores.length > 1){
             aux = "Ganadores ";
