@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Messages from '../Messages/Messages';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
+import InputPred from '../Input/InputPred';
 
 import './Chat.css';
 
@@ -31,6 +32,7 @@ const Chat = (name,socket) => {
       <div className="container">
           <InfoBar room={room} />
           <Messages messages={messages} name={name} />
+          <InputPred message={message} setMessage={setMessage} sendMessage={sendMessage} />
           <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
       </div>
     </div>
