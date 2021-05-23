@@ -729,18 +729,31 @@ function Tournaments(props) {
               team1 = "";
               team2 = "";
             }
-            if(i%2===0){
-              if(team1 !== ""){
-                team1 = team1 + "-"
+            if(torneoRef.current.tipo === 0 || (torneoRef.current.tipo === 1 && d.fase.charAt(0) === "1")){
+              if(i%2===0){
+                if(team1 !== ""){
+                  team1 = team1 + "-"
+                }
+                team1 = team1 + d.jugador
+              }else{
+                if(team2 !== ""){
+                  team2 = team2 + "-"
+                }
+                team2 = team2 + d.jugador
               }
-              team1 = team1 + d.jugador
             }else{
-              if(team2 !== ""){
-                team2 = team2 + "-"
+              if(i < 2){
+                if(team1 !== ""){
+                  team1 = team1 + "-"
+                }
+                team1 = team1 + d.jugador
+              }else{
+                if(team2 !== ""){
+                  team2 = team2 + "-"
+                }
+                team2 = team2 + d.jugador
               }
-              team2 = team2 + d.jugador
             }
-
             if (i%numPart === numPart-1){
               //console.log({teams: [{name: team1}, {name: team2}]});
               seeds.push({teams: [{name: team1}, {name: team2}]});
@@ -789,16 +802,30 @@ function Tournaments(props) {
             team1 = "";
             team2 = "";
           }
-          if(i%2===0){
-            if(team1 !== ""){
-              team1 = team1 + "-"
+          if(torneoRef.current.tipo === 0 || (torneoRef.current.tipo === 1 && d.fase.charAt(0) === "1")){
+            if(i%2===0){
+              if(team1 !== ""){
+                team1 = team1 + "-"
+              }
+              team1 = team1 + d.jugador
+            }else{
+              if(team2 !== ""){
+                team2 = team2 + "-"
+              }
+              team2 = team2 + d.jugador
             }
-            team1 = team1 + d.jugador
           }else{
-            if(team2 !== ""){
-              team2 = team2 + "-"
+            if(i < 2){
+              if(team1 !== ""){
+                team1 = team1 + "-"
+              }
+              team1 = team1 + d.jugador
+            }else{
+              if(team2 !== ""){
+                team2 = team2 + "-"
+              }
+              team2 = team2 + d.jugador
             }
-            team2 = team2 + d.jugador
           }
 
           if (i%numPart === numPart-1){
