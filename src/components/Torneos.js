@@ -609,7 +609,7 @@ function Tournaments(props) {
       roomName.current = partidaActual.partida;
       setMatched(true);
       let rm = partidaActual.partida;
-      torneo.current.last = torneo.current.fase;
+      torneo.current.lastPlayed = torneo.current.fase;
       setTorneo(torneo.current);
       torneoService.updateCurrentTournament(torneo.current);
       props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
@@ -1050,7 +1050,7 @@ function Tournaments(props) {
           Estás eliminado
         </Button>
         :
-        torneoReady && torneo.current.last !== torneo.current.fase?
+        torneoReady && torneo.lastPlayed !== torneo.fase?
         <Button style={{  margin: "auto",width: "60vh"}}  variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {handleUnirsePartida(torneo,nombreTorneo)}}>
           Jugar
         </Button>
