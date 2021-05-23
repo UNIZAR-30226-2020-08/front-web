@@ -1012,7 +1012,7 @@ export default function Board(socket,roomName,tipo) {
      <div className={Application.bazas2}>
       { tienesBaza ?
       <Card
-        onClick={() => {alert("Funcionalidad no implementada.");}}
+        onClick={() => {}}
         src={"images/"+baraja+"/reverso.png"}
         text="Tus Bazas"
       />

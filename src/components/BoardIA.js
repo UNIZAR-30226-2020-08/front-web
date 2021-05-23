@@ -831,7 +831,7 @@ export default function Board(socket,roomName,tipo) {
       <Card
         src={"images/"+baraja+"/"+(quedanCartasM ? "reverso" : "NO") +".png"}
         text="Baraja"
-        onClick={() => {alert("Quedan "+ (28-round.current*2) + " cartas.");}}
+        onClick={() => {alert("Quedan "+ (28-(round.current%20)*2) + " cartas.");}}
       />
       :
       <></>
@@ -909,7 +909,7 @@ export default function Board(socket,roomName,tipo) {
      <div className={Application.bazas2}>
       { tienesBaza ?
       <Card
-        onClick={() => {alert("Funcionalidad no implementada.");}}
+        onClick={() => {}}
         src={"images/"+baraja+"/reverso.png"}
         text="Tus Bazas"
       />
