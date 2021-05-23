@@ -89,8 +89,6 @@ export default function Board(socket,roomName,tipo) {
 
   const username = user ? user.data.username : "anonimo";
 
-  const torneo = user ? user.data.username : "anonimo";
-
   const renderTime = ({ remainingTime }) => {
     return (
       <div className="timer">
