@@ -609,9 +609,9 @@ function Tournaments(props) {
       roomName.current = partidaActual.partida;
       setMatched(true);
       let rm = partidaActual.partida;
-      torneo.current.lastPlayed = torneo.current.fase;
-      setTorneo(torneo.current);
-      torneoService.updateCurrentTournament(torneo.current);
+      torneoRef.current.lastPlayed = torneoRef.current.fase;
+      setTorneo(torneoRef.current);
+      torneoService.updateCurrentTournament(torneoRef.current);
       props.socket.emit('join', { name:username, room:rm , tipo: value.tipo}, (error) => {
         if(error) {
           alert("La partida ", partidaActual.partida, " del torneo ", nombreeTorneo, " ya no está disponible");
