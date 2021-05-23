@@ -241,7 +241,7 @@ export default function Board(socket,roomName,tipo) {
         setMisPuntos(pts_e1 + label_e1);
         setSusPuntos(pts_e0 + label_e0);
       }
-      round.current = nronda;
+      round.current = nronda+1;
       setRoundM(round.current);
     });
 
