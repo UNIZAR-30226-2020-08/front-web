@@ -839,8 +839,15 @@ function Tournaments(props) {
           }
         });
 
-        props.socket.on("ganadorTorneo", ( usuario ) => {
-          setWinner(usuario);
+        props.socket.on("ganadorTorneo", ( ganadores ) => {
+          var aux = "Ganador ";
+          if(ganadores.length > 1){
+            aux = "Ganadores ";
+            aux = aux + ganadores[0] + "-" + ganadores[1];
+          }else{
+            aux = aux + ganadores[0];
+          }
+          setWinner(aux);
         });
     }, []);
 
@@ -1035,7 +1042,7 @@ function Tournaments(props) {
         </div>
         {winner !== "" ?
         <Button  style={{ margin: "auto",backgroundColor: "#EFB810", width: "60vh"}} variant="outlined" aria-label="Unirse" marginTop="15" onClick= {() => {}}>
-          {"Ganador " + winner}
+          {winner}
         </Button>
         :
         eliminado ?
