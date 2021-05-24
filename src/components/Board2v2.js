@@ -587,7 +587,7 @@ export default function Board(socket,roomName,tipo) {
       setQuedanCartasM(quedanCartas.current);
     });
 
-    socket.on("RepartirTriunfoRP", ({ triunfoRepartido, nronda, winner,puntos_e0,puntos_e1 }) => {
+    socket.on("RepartirTriunfoRPW", ({ triunfoRepartido, nronda, winner,puntos_e0,puntos_e1 }) => {
       triunfo.current = triunfoRepartido;
       setTriunfoM(triunfo.current);
       quedanCartas.current = true;
